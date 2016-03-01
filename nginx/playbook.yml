@@ -1,0 +1,26 @@
+- hosts: nginx 
+  vars:
+    https_port: 443
+    http_port: 80 
+    ansible_python_interpreter: /opt/local/bin/python2
+  remote_user: root
+  tasks:
+  - name: install building utils
+    pkgin: name=gcc47 state=present
+  - name: ensure nginx installed
+    pkgin: name=nginx state=present
+  - name: ensure nginx is running (and enable it at boot)
+    service: name=nginx state=started enabled=yes
+  - name: install letsencrypt dependencies 1
+    pkgin: name=py27-virtualenv state=present
+  - name: install letsencrypt dependencies 2  
+    pkgin: name=py27-pip state=present
+  - name: install letsencrypt dependencies 3
+    pkgin: name=py27-augeas state=present
+  - name: install letsencrypt dependencies 4 
+    pkgin: name=py27-dialog state=present
+  - name: install letsencrypt dependencies 5
+    pkgin: name=py27-pip state=present
+  - name: install letsencrypt dependencies 6
+    pkgin: name=augeas state=present 
+  - pip: name=letsencrypt

@@ -24,3 +24,21 @@
   - name: install letsencrypt dependencies 6
     pkgin: name=augeas state=present 
   - pip: name=letsencrypt
+  - template: src=nginx.conf.j2 dest=/opt/local/etc/nginx/nginx.conf owner=root group=root mode=0644
+  - template: src=letsencrypt.ini.j2 dest=/etc/letsencrypt/cli.ini owner=root group=root mode=0644 
+  - template: src=automate-letsencrypt.sh.j2 dest=/root/automate-letsencrypt.sh owner=root group=root mode=0644 
+  - name: Set Timezone
+    command: sm-set-timezone MST
+    tags:
+      - setup
+  - name: Letsencrypt Setup
+    command: letsencrypt certonly --renew-by-default --agree-tos
+    tags:
+      - setup
+  - name: generate dhparam.pem file
+    command: openssl dhparam -out /etc/ssl/certs/dhparam.pem 4096 
+    tags:
+      - setup
+  - cron: name="Letsencrypt renewal" day="1" job="/root/automate-letsencrypt.sh" 
+  - service: name=nginx state=reloaded
+

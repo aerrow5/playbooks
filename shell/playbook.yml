@@ -1,0 +1,16 @@
+- hosts: shell
+  vars:
+    ansible_python_interpreter: /opt/local/bin/python2
+  remote_user: root
+  tasks:
+  - name: add several users
+    user: name={{ item }} state=present groups=adm
+    with_items:
+     - piranha
+  - authorized_key: user=piranha key=https://github.com/precurse.keys
+  - name: install sudo
+    pkgin: name=sudo state=present
+  - name: Set Timezone
+    command: sm-set-timezone MST
+    tags:
+      - setup

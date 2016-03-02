@@ -4,7 +4,7 @@
   remote_user: root
   tasks:
   - name: add several users
-    user: name={{ item }} state=present groups=adm
+    user: name={{ item }} state=present uid=1000 groups=adm
     with_items:
      - piranha
   - authorized_key: user=piranha key=https://github.com/precurse.keys

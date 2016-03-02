@@ -1,0 +1,54 @@
+[global]
+   workgroup = SIGNET 
+   server string = Samba %v (%h)
+   security = user
+   load printers = yes
+   log level = 3
+   syslog = 1
+
+#============================ Share Definitions ==============================
+[homes]
+   comment = Home Directories
+   browseable = no
+   writable = yes
+
+[tmp]
+   comment = Temporary file space
+   path = /tmp
+   read only = no
+   public = yes
+
+[personal]
+   path = /media/personal
+   valid users = piranha
+   public = no
+   writeable = yes
+   browsable = yes
+
+[music]
+   path = /media/music
+   valid users = piranha
+   public = yes
+   guest ok = yes
+   browseable = yes
+
+[tv]
+   path = /media/tv
+   valid users = piranha
+   guest ok = yes
+   public = yes
+   browsable = yes
+
+[movies]
+   path = /media/movies
+   valid users = piranha
+   guest ok =yes
+   public = yes
+   browsable = yes
+
+[incoming]
+   path = /media/incoming
+   valid users = piranha
+   guest ok = no
+   public = yes
+   browsable = yes

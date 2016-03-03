@@ -1,0 +1,19 @@
+- hosts: smartos
+  vars:
+    hypervisor_ip: 10.0.3.2
+    hypervisor_user: root
+    image_uuid: c540b62c-beb2-11e5-8512-8b1694a57f84
+    brand: joyent
+    alias: smb
+    domain: signet
+    ip: 10.0.3.15
+    resolver: 10.0.3.1
+    gateway: 10.0.3.1
+    subnet: 255.255.255.0
+    ansible_python_interpreter: /usr/bin/python2.7
+  remote_user: root
+  tasks:
+  - local_action: command mktemp /tmp/ansible.XXXXXXX
+    register: tmp_json
+  - local_action: template src=samba.json.j2 dest={{ tmp_json.stdout }}
+  - local_action: shell cat {{ tmp_json.stdout }} | /usr/bin/ssh {{ hypervisor_user }}@{{ hypervisor_ip }} vmadm create 

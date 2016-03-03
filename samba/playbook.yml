@@ -1,10 +1,20 @@
 - hosts: samba 
   vars:
+    hypervisor_ip: 10.0.3.2
+    hypervisor_user: root
     ansible_python_interpreter: /opt/local/bin/python2
+    image_uuid: c540b62c-beb2-11e5-8512-8b1694a57f84
+    brand: joyent
+    alias: smb
+    domain: signet
+    ip: 10.0.3.15
+    resolver: 10.0.3.1
+    gateway: 10.0.3.1
+    subnet: 255.255.255.0
   remote_user: root
   tasks:
   - name: add users
-    user: name={{ item }} state=present uid=1000 groups=adm
+    user: name={{ item }} state=present uid=1000 password=$1$Salty$os1z.HuWt0cmUJeIfNeX1. groups=adm
     with_items:
      - piranha
   - authorized_key: user=piranha key=https://github.com/precurse.keys
@@ -16,11 +26,12 @@
     with_items:
       - samba:smbd
       - samba:nmbd 
-  - template: src=smb.conf.j2 dest=/opt/local/etc/samba/smb.conf owner=root group=root mode=0644 
+  - template:
+      src=smb.conf.j2 dest=/opt/local/etc/samba/smb.conf owner=root group=root mode=0644 
   - name: Set Timezone
     command: sm-set-timezone MST
   - name: Samba Setup
-    command: echo -ne "password\npassword\n" | smbpasswd -a -s piranha 
+    shell: (echo password; echo password) | smbpasswd -a -s piranha
     tags:
       - setup
   - service: name={{ item }} state=restarted

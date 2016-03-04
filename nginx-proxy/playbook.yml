@@ -5,6 +5,7 @@
     ansible_python_interpreter: /opt/local/bin/python2
   remote_user: root
   tasks:
+  - include: ../smartos_bootstrap.yml
   - name: add several users
     user: name={{ item }} state=present groups=adm
     with_items:

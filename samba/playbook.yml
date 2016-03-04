@@ -1,24 +1,22 @@
 - hosts: samba 
   vars:
-    hypervisor_ip: 10.0.3.2
-    hypervisor_user: root
     ansible_python_interpreter: /opt/local/bin/python2
-    image_uuid: c540b62c-beb2-11e5-8512-8b1694a57f84
-    brand: joyent
-    alias: smb
-    domain: signet
     ip: 10.0.3.15
-    resolver: 10.0.3.1
-    gateway: 10.0.3.1
-    subnet: 255.255.255.0
   remote_user: root
+  gather_facts: no
   tasks:
+  - name: installing python
+    raw: /opt/local/bin/pkgin -y upgrade; /opt/local/bin/pkgin -y install python27
+  - name: gather facts
+    setup:
   - name: add users
     user: name={{ item }} state=present uid=1000 password=$1$Salty$os1z.HuWt0cmUJeIfNeX1. groups=adm
     with_items:
      - piranha
   - authorized_key: user=piranha key=https://github.com/precurse.keys
   - authorized_key: user=root key=https://github.com/precurse.keys
+  - name: Unlock Account
+    command: passwd -N piranha
   - name: ensure samba installed
     pkgin: name=samba state=present
   - name: ensure samba is running (and enable it at boot)
@@ -38,4 +36,3 @@
     with_items:
       - samba:smbd
       - samba:nmbd 
-

@@ -2,15 +2,21 @@
   vars:
     ansible_python_interpreter: /opt/local/bin/python2
   remote_user: root
+  gather_facts: no
   tasks:
-  - name: add several users
+  - name: installing python
+    raw: /opt/local/bin/pkgin -y upgrade; /opt/local/bin/pkgin -y install python27
+  - name: gather facts
+    setup:
+  - name: add users
     user: name={{ item }} state=present uid=1000 groups=adm
     with_items:
      - piranha
   - authorized_key: user=piranha key=https://github.com/precurse.keys
+  - authorized_key: user=root key=https://github.com/precurse.keys
   - name: install sudo
     pkgin: name=sudo state=present
   - name: Set Timezone
     command: sm-set-timezone MST
-    tags:
-      - setup
+  - name: Unlock Account
+    command: passwd -N piranha

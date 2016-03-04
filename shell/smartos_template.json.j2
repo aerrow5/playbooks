@@ -1,0 +1,29 @@
+{
+ "autoboot": {{ autoboot }},
+ "brand": "{{ brand }}",
+ "image_uuid": "{{ image_uuid }}",
+ "max_physical_memory": {{ max_phy_mem }},
+ "cpu_cap": {{ cpu_cap }},
+ "alias": "{{ alias }}",
+ "hostname": "{{ alias }}.{{ domain }}",
+ "quota": "{{ quota }}",
+ "resolvers": [
+  "{{ resolver }}"
+ ]
+ ,"nics": [
+  {
+   "interface": "net0",
+   "nic_tag": "external",
+   "vlan_id": "{{ vlan }}", 
+   "ip": "{{ ip }}",
+   "gateway": "{{ gateway }}",
+   "netmask": "{{ subnet }}"
+  }
+ ]
+
+,"customer_metadata": {
+     "root_authorized_keys":"{{ ssh_key }}",
+     "user-script" : "{{ first_script }}"
+  }
+}
+

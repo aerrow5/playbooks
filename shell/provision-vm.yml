@@ -1,3 +1,4 @@
+# ansible-playbook -i ../hosts  provision-vm.yml -c local
 - hosts: smartos
   gather_facts: no
   vars:

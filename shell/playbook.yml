@@ -1,3 +1,4 @@
+# ansible-playbook -i ../hosts  playbook.yml 
 - hosts: shell
   vars:
     ansible_python_interpreter: /opt/local/bin/python2

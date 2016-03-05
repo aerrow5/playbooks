@@ -1,0 +1,4 @@
+- hosts: ups
+  remote_user: root
+  roles:
+    - ups

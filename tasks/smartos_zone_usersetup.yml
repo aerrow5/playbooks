@@ -1,0 +1,9 @@
+- name: add users
+  user: name={{ item }} state=present uid=1000 groups=adm
+  with_items:
+   - piranha
+- authorized_key: user=piranha key=https://github.com/precurse.keys
+- authorized_key: user=root key=https://github.com/precurse.keys
+- name: Unlock Account
+  command: passwd -N piranha
+

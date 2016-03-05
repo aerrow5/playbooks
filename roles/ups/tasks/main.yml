@@ -1,0 +1,20 @@
+#  - pacman: update_cache=yes upgrade=yes
+#  - package: name=base-devel state=present
+#  - package: name=git state=present 
+#  - name: checkout network ups tools
+#    git: repo=https://aur.archlinux.org/network-ups-tools.git dest=/home/alarm/nut-build force=yes
+#    become: yes
+#    become_user: alarm
+#  - lineinfile: dest=/home/alarm/nut-build/PKGBUILD regexp="^arch=('i686' 'x86_64')" line="arch=('armv6h')"
+#  - name: compile network ups tools
+#    shell: cd /home/alarm/nut-build && makepkg -s
+#    become: yes
+#    become_user: alarm
+#  - name: install package
+#    shell: pacman -U /home/alarm/nut-build/network-ups-tools-2.7.3-3-armv6h.pkg.tar.xz  --noconfirm
+  - copy: src={{ item }} dest=/etc/ups/ owner=root mode=644
+    with_fileglob:
+      - ./*.conf 
+      - ./*.users
+  - service: name=nut-server state=started enabled=yes
+  - service: name=nut-monitor state=started enabled=yes

@@ -1,4 +1,7 @@
-- name: installing python
-  raw: /opt/local/bin/pkgin -y upgrade; /opt/local/bin/pkgin -y install python27
+- name: Upgrading pkgin packages 
+  raw: /opt/local/bin/pkgin -y update; /opt/local/bin/pkgin -y upgrade
+  tags: update_packages
+- name: Installing python
+  raw: /opt/local/bin/pkgin -y install python27
 - name: gather facts
   setup:

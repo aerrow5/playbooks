@@ -1,13 +1,14 @@
-  - pacman: update_cache=yes upgrade=yes
+  - name: Upgrading packages
+    pacman: update_cache=yes upgrade=yes
     tags:
-      - packages
+      - update_packages
   - package: name=base-devel state=present
   - package: name=git state=present 
   - name: checkout network ups tools
     git: repo=https://aur.archlinux.org/network-ups-tools.git dest=/home/alarm/nut-build force=yes
     become: yes
     become_user: alarm
-  - Adding arm compile support
+  - name: Adding arm compile support
     lineinfile: dest=/home/alarm/nut-build/PKGBUILD regexp="^arch=('i686' 'x86_64')" line="arch=('armv6h')"
   - name: compile network ups tools
     shell: cd /home/alarm/nut-build && makepkg -s

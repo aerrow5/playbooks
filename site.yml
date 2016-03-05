@@ -1,6 +1,8 @@
 # file: site.yml
 
-- include: plexmission.yml
+#- include: plexmission.yml
 - include: shell.yml
 - include: samba.yml
 - include: ups.yml
+- include: nginx.yml
+- include: freebsd.yml

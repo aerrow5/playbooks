@@ -1,0 +1,6 @@
+- hosts: elasticsearch
+  remote_user: root
+  gather_facts: no
+  tasks:
+  - include: tasks/smartos_zone_bootstrap.yml
+  - include: tasks/smartos_zone_usersetup.yml

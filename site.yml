@@ -6,3 +6,7 @@
 - include: ups.yml
 - include: nginx.yml
 - include: freebsd.yml
+- include: syncthing.yml
+- include: dbserver.yml
+- include: elasticsearch.yml
+- include: influxdb.yml

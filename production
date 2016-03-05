@@ -45,6 +45,10 @@ db.signet
 [ups]
 ups.signet
 
+[hvm]
+freebsd
+cybera
+
 [joyent_zones:children]
 elasticsearch
 nginx

@@ -1,0 +1,8 @@
+- name: add users
+  user: name=piranha state=present uid=1000 groups={{ admin_group }}
+- authorized_key: user=piranha key=https://github.com/precurse.keys
+- authorized_key: user=root key=https://github.com/precurse.keys
+- name: Install sudo
+  package: name=sudo state=present
+- name: Install tmux
+  package: name=tmux state=present

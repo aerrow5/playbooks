@@ -4,7 +4,3 @@
   tasks:
   - include: tasks/smartos_zone_bootstrap.yml
   - include: tasks/smartos_zone_usersetup.yml
-  - name: install sudo
-    pkgin: name=sudo state=present
-  - name: Set Timezone
-    command: sm-set-timezone MST

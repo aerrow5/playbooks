@@ -5,3 +5,5 @@
   raw: /opt/local/bin/pkgin -y install python27
 - name: gather facts
   setup:
+- name: Set Timezone
+  command: sm-set-timezone MST

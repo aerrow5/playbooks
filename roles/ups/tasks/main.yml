@@ -1,4 +1,6 @@
   - pacman: update_cache=yes upgrade=yes
+    tags:
+      - packages
   - package: name=base-devel state=present
   - package: name=git state=present 
   - name: checkout network ups tools

@@ -1,6 +1,16 @@
 - hosts: shell
   remote_user: root
   gather_facts: no
-  tasks:
-  - include: tasks/smartos_zone_bootstrap.yml
-  - include: tasks/smartos_zone_usersetup.yml
+  roles:
+    - role: joyent_zone_bootstrap
+    - role: common
+  vars:
+    autoboot: true
+    image_uuid: c540b62c-beb2-11e5-8512-8b1694a57f84  # minimal-64-lts
+    cpu_cap: 100
+    max_phy_mem: 256
+    quota: 5
+    brand: joyent
+    alias: shell 
+    domain: signet
+    ip: 10.0.4.10

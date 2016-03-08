@@ -1,7 +1,7 @@
 # file: production
 
 [smartos]
-127.0.0.1
+smartos.signet ansible_connection=local
 
 [owncloud]
 owncloud.signet
@@ -81,3 +81,8 @@ samba
 dbserver
 ups
 freebsd
+
+[joyent_zones:vars]
+remote_user=root
+gather_facts=no
+ansible_python_interpreter=/opt/local/bin/python2

@@ -1,0 +1,31 @@
+# file: provision_vm.yml 
+
+- hosts: shell
+  gather_facts: no
+  remote_user: root
+  vars:
+    MODE: provision
+    hypervisor_ip: 10.0.3.2
+    hypervisor_user: root
+    ansible_python_interpreter: /usr/bin/python2.7
+    autoboot: "true"
+    image_uuid: c540b62c-beb2-11e5-8512-8b1694a57f84  # minimal-64-lts
+    cpu_cap: 100
+    max_phy_mem: 256
+    quota: 5
+    brand: joyent
+    alias: shell 
+    domain: signet
+    ip: 10.0.4.10
+  roles:
+    - role: smartos_provision
+  tasks:
+    - local_action: command mktemp /tmp/ansible.XXXXXXX
+      register: tmp_json
+      when: MODE == 'provision'
+    - local_action: template src=shell/smartos_template.json.j2 dest={{ tmp_json.stdout }}
+      when: MODE == 'provision'
+    - local_action: shell /usr/bin/ssh {{ hypervisor_user }}@{{ hypervisor_ip }} imgadm import {{ image_uuid }}
+      when: MODE == 'provision'
+    - local_action: shell cat {{ tmp_json.stdout }} | /usr/bin/ssh {{ hypervisor_user }}@{{ hypervisor_ip }} vmadm create
+      when: MODE == 'provision'

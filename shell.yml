@@ -2,10 +2,12 @@
   remote_user: root
   gather_facts: no
   roles:
+    - role: smartos_provision
     - role: joyent_zone_bootstrap
     - role: common
   vars:
-    autoboot: true
+    MODE: blah
+    autoboot: "true"
     image_uuid: c540b62c-beb2-11e5-8512-8b1694a57f84  # minimal-64-lts
     cpu_cap: 100
     max_phy_mem: 256
@@ -14,3 +16,8 @@
     alias: shell 
     domain: signet
     ip: 10.0.4.10
+    ansible_python_interpreter: /usr/bin/python2.7
+    template_file: shell/smartos_template.json.j2
+#    local_ssh_path: /usr/bin/ssh
+#    hypervisor_ip: 10.0.3.2
+#    hypervisor_user: root

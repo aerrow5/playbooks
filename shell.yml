@@ -6,7 +6,6 @@
     - role: joyent_zone_bootstrap
     - role: common
   vars:
-    MODE: blah
     autoboot: "true"
     image_uuid: c540b62c-beb2-11e5-8512-8b1694a57f84  # minimal-64-lts
     cpu_cap: 100

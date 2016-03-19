@@ -18,14 +18,13 @@
   get_url: url='{{ subsonic_url }}'
     dest="/subsonic.deb"
   when: debfile.stat.md5 is not defined
-  #or (debfile.stat.md5 is defined and debfile.stat.md5 != '{{ subsonic_md5 }}')
 - name: Install subsonic
   apt: deb="/subsonic.deb" state=present
+- name: Stop subsonic
+  service: name=subsonic state=stopped
 - name: Update subsonic config context
   lineinfile: dest=/etc/default/subsonic regexp=^SUBSONIC_ARGS= line=SUBSONIC_ARGS="--max-memory=150 --context-path=/subsonic"
 - name: Update subsonic config user
   lineinfile: dest=/etc/default/subsonic regexp=^SUBSONIC_USER= line=SUBSONIC_USER=subsonic
-- name: Restart subsonic
-  service: name=subsonic state=restarted
 - name: Enable subsonic
   service: name=subsonic state=running enabled=yes

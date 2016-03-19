@@ -1,9 +1,20 @@
 - hosts: influxdb
   remote_user: root
   gather_facts: no
-  tasks:
-    - name: Update packages
-      apt: upgrade=dist update_cache=yes
-      tags: update_packages
-    - name: Install influxdb
-      package: name=influxdb state=latest
+  roles:
+    - role: smartos_provision
+    - role: common
+    - role: influxdb
+    - role: grafana
+  vars:
+    autoboot: "true"
+    image_uuid: c0b7ca82-d69f-11e5-a303-4f0b12cb14d6 # debian-8 
+    cpu_cap: 100
+    max_phy_mem: 1536
+    quota: 40
+    brand: lx
+    alias: influxdb 
+    domain: signet
+    ip: 10.0.3.11
+    ansible_python_interpreter: /usr/bin/python2.7
+    template_file: influxdb.json.j2

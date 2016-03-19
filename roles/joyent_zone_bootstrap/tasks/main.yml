@@ -3,8 +3,8 @@
   tags: update_packages 
 - name: Installing python
   raw: /opt/local/bin/pkgin -y install python27
+- set_fact: ansible_python_interpreter={{ smartos_python_path }}
 - name: gather facts    
   setup:
 - name: Set Timezone
   command: sm-set-timezone MST
-

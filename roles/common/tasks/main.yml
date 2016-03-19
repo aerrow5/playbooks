@@ -1,3 +1,5 @@
+- name: gather facts    
+  setup:
 - name: Setup Users
   user: name=piranha state=present groups={{ admin_group }}
 - name: Adding github ssh keys
@@ -5,6 +7,9 @@
   with_items:
     - piranha
     - root
+- name: Enable account
+  command: passwd -N piranha
+  when: ansible_os_family == "Solaris"
 - name: Install sudo
   package: name=sudo state=present
 - name: Install tmux

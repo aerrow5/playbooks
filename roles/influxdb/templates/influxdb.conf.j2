@@ -1,0 +1,93 @@
+reporting-disabled = false
+
+[meta]
+  dir = "/export/influxdb/meta"
+  hostname = "localhost"
+  bind-address = ":8088"
+  retention-autocreate = true
+  election-timeout = "1s"
+  heartbeat-timeout = "1s"
+  leader-lease-timeout = "500ms"
+  commit-timeout = "50ms"
+  cluster-tracing = false
+  raft-promotion-enabled = true
+
+[data]
+  dir = "/export/influxdb/data"
+
+  # engine ="bz1"
+  max-wal-size = 104857600 # Maximum size the WAL can reach before a flush. Defaults to 100MB.
+  wal-flush-interval = "10m" # Maximum time data can sit in WAL before a flush.
+  wal-partition-flush-delay = "2s" # The delay time between each WAL partition being flushed.
+  wal-dir = "/export/influxdb/wal"
+  wal-enable-logging = true
+
+[cluster]
+  shard-writer-timeout = "10s" # The time within which a shard must respond to write.
+  write-timeout = "5s" # The time within which a write operation must complete on the cluster.
+
+[retention]
+  enabled = true
+  check-interval = "30m"
+
+[monitor]
+  store-enabled = true # Whether to record statistics internally.
+  store-database = "_internal" # The destination database for recorded statistics
+  store-interval = "10s" # The interval at which to record statistics
+
+[admin]
+  enabled = true
+  bind-address = ":8083"
+  https-enabled = false
+  https-certificate = "/etc/ssl/influxdb.pem"
+
+[http]
+  enabled = true
+  bind-address = ":8086"
+  auth-enabled = false
+  log-enabled = true
+  write-tracing = false
+  pprof-enabled = false
+  https-enabled = false
+  https-certificate = "/etc/ssl/influxdb.pem"
+
+[[graphite]]
+  enabled = false
+
+[opentsdb]
+  enabled = false
+
+[[udp]]
+  enabled = false
+
+[continuous_queries]
+  log-enabled = true
+  enabled = true
+  recompute-previous-n = 2
+  recompute-no-older-than = "10m"
+  compute-runs-per-interval = 10
+  compute-no-more-than = "2m"
+
+[hinted-handoff]
+  enabled = true
+  dir = "/export/influxdb/hh"
+  max-size = 1073741824
+  max-age = "168h"
+  retry-rate-limit = 0
+  retry-interval = "1s"
+
+[shard-precreation]
+  enabled = true
+  check-interval = "10m"
+  advance-period = "30m"
+
+[collectd]
+  enabled = false
+  bind-address = ":8096" # the bind address
+  database = "collectd" # Name of the database that will be written to
+  retention-policy = ""
+  batch-size = 5000 # will flush if this many points get buffered
+  batch-pending = 10 # number of batches that may be pending in memory
+  batch-timeout = "10s"
+  read-buffer = 0 # UDP read buffer size, 0 means to use OS default
+  typesdb = "/usr/share/collectd/types.db"

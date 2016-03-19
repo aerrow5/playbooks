@@ -1,3 +1,0 @@
-vars:
-  hypervisor_ip = 10.0.3.2
-  hypervisor_user = root

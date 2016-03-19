@@ -1,0 +1,17 @@
+- name: Update apt
+  apt: update_cache=yes
+- name: Update packages
+  apt: upgrade=dist update_cache=yes
+  tags: update_packages
+- name: Adding https apt support
+  package: name=apt-transport-https state=present
+- name: Add influxdb key 
+  apt_key: url=https://repos.influxdata.com/influxdb.key state=present
+- name: Add influxdb repo
+  apt_repository: repo='deb https://repos.influxdata.com/debian wheezy stable' state=present 
+- name: Install influxdb
+  package: name=influxdb state=present
+- name: Influxdb config
+  template: src=influxdb.conf.j2 dest=/etc/influxdb/influxdb.conf owner=root group=root mode=0644 
+- name: Enable influxdb service
+  service: name=influxdb state=running enabled=yes

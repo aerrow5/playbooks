@@ -1,0 +1,30 @@
+- name: Update apt cache
+  apt: update_cache=yes
+- name: Update packages
+  apt: upgrade=dist update_cache=yes
+- name: Installing openjdk
+  package: name=openjdk-7-jre state=present
+- name: Installing lame
+  package: name=lame state=present
+- name: Creating Subsonic group
+  group: name=subsonic state=present gid=80
+- name: Creating Subsonic user
+  user: name=subsonic uid=80 group=subsonic
+- name: Test
+  stat: path=/subsonic.deb
+  register: debfile
+- name: Download subsonic
+  get_url: url='{{ subsonic_url }}'
+    dest="/subsonic.deb"
+  when: debfile.stat.md5 is not defined
+  #or (debfile.stat.md5 is defined and debfile.stat.md5 != '{{ subsonic_md5 }}')
+- name: Install subsonic
+  apt: deb="/subsonic.deb" state=present
+- name: Update subsonic config context
+  lineinfile: dest=/etc/default/subsonic regexp=^SUBSONIC_ARGS= line=SUBSONIC_ARGS="--max-memory=150 --context-path=/subsonic"
+- name: Update subsonic config user
+  lineinfile: dest=/etc/default/subsonic regexp=^SUBSONIC_USER= line=SUBSONIC_USER=subsonic
+- name: Restart subsonic
+  service: name=subsonic state=restarted
+- name: Enable subsonic
+  service: name=subsonic state=running enabled=yes

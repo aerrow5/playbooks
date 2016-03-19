@@ -1,0 +1,49 @@
+{
+ "autoboot": {{ autoboot }},
+ "brand": "{{ brand }}",
+ "kernel_version": "{{ kernel_version }}",
+ "image_uuid": "{{ image_uuid }}",
+ "max_physical_memory": {{ max_phy_mem }},
+ "cpu_cap": {{ cpu_cap }},
+ "alias": "{{ alias }}",
+ "hostname": "{{ alias }}.{{ domain }}",
+ "quota": "{{ quota }}",
+ "resolvers": [
+  "{{ resolver }}"
+ ],
+ "nics": [
+  {
+   "interface": "net0",
+   "nic_tag": "external",
+   "vlan_id": "{{ vlan_id }}", 
+   "ip": "{{ ip }}",
+   "gateway": "{{ gateway }}",
+   "netmask": "{{ subnet }}"
+  }
+ ]
+,"filesystems": [
+    {
+      "source": "/zones/data/media/music",
+      "target": "/var/music",
+      "type": "lofs",
+      "options": [
+        "ro",
+        "nodevices"
+      ]
+    },
+    {
+      "source": "/zones/db/subsonic",
+      "target": "/var/subsonic",
+      "type": "lofs",
+      "options": [
+        "nodevices"
+      ]
+    }
+  ]
+,"customer_metadata": {
+     "root_authorized_keys":"{{ ssh_key }}",
+     "user-script" : "{{ first_script }}"
+  }
+
+}
+

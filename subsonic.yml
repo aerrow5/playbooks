@@ -1,0 +1,19 @@
+- hosts: subsonic
+  remote_user: root
+  gather_facts: no
+  roles:
+    - role: smartos_provision
+    - role: common
+    - role: subsonic
+  vars:
+    autoboot: "true"
+    image_uuid: c0b7ca82-d69f-11e5-a303-4f0b12cb14d6 # debian-8 
+    cpu_cap: 100
+    max_phy_mem: 1024
+    quota: 40
+    brand: lx
+    alias: subsonic 
+    domain: signet
+    ip: 10.0.4.13
+    ansible_python_interpreter: /usr/bin/python2.7
+    template_file: subsonic.json.j2

@@ -1,3 +1,10 @@
+- name: Update apt
+  apt: update_cache=yes
+- name: Update packages
+  apt: upgrade=dist update_cache=yes
+  tags: update_packages
+- name: Adding https apt support
+  package: name=apt-transport-https state=present
 - name: Add grafana key
   apt_key: url=https://packagecloud.io/gpg.key state=present
 - name: Add grafana repo

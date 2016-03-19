@@ -16,7 +16,7 @@
     domain: signet
     ip: 10.0.4.10
     ansible_python_interpreter: /usr/bin/python2.7
-    template_file: shell/smartos_template.json.j2
+    template_file: smartos_json/shell.json.j2
 #    local_ssh_path: /usr/bin/ssh
 #    hypervisor_ip: 10.0.3.2
 #    hypervisor_user: root

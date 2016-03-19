@@ -16,4 +16,4 @@
     domain: signet
     ip: 10.0.4.13
     ansible_python_interpreter: /usr/bin/python2.7
-    template_file: subsonic.json.j2
+    template_file: smartos_json/subsonic.json.j2

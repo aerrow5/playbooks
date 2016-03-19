@@ -17,4 +17,4 @@
     domain: signet
     ip: 10.0.3.11
     ansible_python_interpreter: /usr/bin/python2.7
-    template_file: influxdb.json.j2
+    template_file: smartos_json/influxdb.json.j2

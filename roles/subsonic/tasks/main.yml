@@ -2,6 +2,7 @@
   apt: update_cache=yes
 - name: Update packages
   apt: upgrade=dist update_cache=yes
+  tags: update_packages
 - name: Installing openjdk
   package: name=openjdk-7-jre state=present
 - name: Installing lame

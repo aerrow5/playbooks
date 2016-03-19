@@ -12,3 +12,4 @@
 - include: influxdb.yml
 - include: owncloud.yml
 - include: plexmission.yml
+- include: subsonic.yml

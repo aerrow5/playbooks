@@ -1,1 +1,2 @@
 *.retry
+roles/smartos_provision/*

@@ -14,6 +14,9 @@
     brand: lx
     alias: subsonic 
     domain: signet
-    ip: 10.0.4.13
     ansible_python_interpreter: /usr/bin/python2.7
-    template_file: smartos_json/subsonic.json.j2
+    nics:
+      - {interface: "eth0", nic_tag: "external", vlan_id: "4", ip: "10.0.4.13", netmask: "255.255.255.0", gateway: "10.0.4.1"}
+    filesystems:
+      - {source: "/zones/data/media/music", target: "/var/music", read_only: true}
+      - {source: "/zones/db/subsonic", target: "/var/subsonic", read_only: false } 

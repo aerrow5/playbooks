@@ -9,7 +9,7 @@
     - root
 - name: Enable account
   command: passwd -N piranha
-  when: ansible_os_family == "Solaris"
+  when: ansible_distribution == "SmartOS"
 - name: Install sudo
   package: name=sudo state=present
 - name: Install tmux

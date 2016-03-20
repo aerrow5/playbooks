@@ -15,6 +15,10 @@
     brand: lx
     alias: influxdb 
     domain: signet
-    ip: 10.0.3.11
     ansible_python_interpreter: /usr/bin/python2.7
     template_file: smartos_json/influxdb.json.j2
+    nics:
+      - {interface: "eth0", nic_tag: "external", vlan_id: "3", ip: "10.0.3.11", netmask: "255.255.255.0", gateway: "10.0.3.1"}
+    filesystems:
+      - {source: "/zones/db/influxdb", target: "/export/influxdb", read_only: false } 
+

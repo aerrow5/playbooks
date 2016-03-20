@@ -1,4 +1,5 @@
 vlan_id: 4
 gateway: 10.0.4.1
 subnet: 255.255.255.0
-resolver: 10.0.4.1
+resolvers:
+  - 10.0.4.1

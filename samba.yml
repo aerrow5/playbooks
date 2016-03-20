@@ -1,21 +1,24 @@
 # ansible-playbook -i ../hosts  playbook.yml 
 - hosts: samba 
-  vars:
-    ansible_python_interpreter: /opt/local/bin/python2
-    ip: 10.0.3.15
   remote_user: root
-  gather_facts: no
+  gather_facts: no  
+  roles:
+    - role: smartos_provision
+    - role: common
+    - role: samba
+  vars:
+    nics:
+      - {interface: "net0", nic_tag: "external", vlan_id: "3", ip: "10.0.3.15", netmask: "255.255.255.0", gateway: "10.0.3.1"}
+    filesystems:
+      - {source: "/zones/data/personal", target: "/media/personal", read_only: false}
+      - {source: "/zones/data/media/movies", target: "/media/movies", read_only: false}
+      - {source: "/zones/data/media/tv", target: "/media/tv", read_only: false}
+      - {source: "/zones/data/media/incoming", target: "/media/incoming", read_only: false}
+      - {source: "/zones/data/training", target: "/media/training", read_only: false}
+      - {source: "/zones/data/music", target: "/media/music", read_only: false}
+
+
   tasks:
-  - include: tasks/smartos_zone_bootstrap.yml
-  #- include: tasks/smartos_zone_usersetup.yml
-  - name: add users
-    user: name={{ item }} state=present uid=1000 password=$1$Salty$os1z.HuWt0cmUJeIfNeX1. groups=adm
-    with_items:
-     - piranha
-  - authorized_key: user=piranha key=https://github.com/precurse.keys
-  - authorized_key: user=root key=https://github.com/precurse.keys
-  - name: Unlock Account
-    command: passwd -N piranha
   - name: ensure samba installed
     pkgin: name=samba state=present
   - name: ensure samba is running (and enable it at boot)
@@ -25,8 +28,6 @@
       - samba:nmbd 
   - template:
       src=smb.conf.j2 dest=/opt/local/etc/samba/smb.conf owner=root group=root mode=0644 
-  - name: Set Timezone
-    command: sm-set-timezone MST
   - name: Samba Setup
     shell: (echo password; echo password) | smbpasswd -a -s piranha
     tags:

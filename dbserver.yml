@@ -5,12 +5,18 @@
     - role: smartos_provision
     - role: joyent_zone_bootstrap
     - role: common
+    - role: postgresql
   vars:
+    autoboot: "true"
+    image_uuid: 088b97b0-e1a1-11e5-b895-9baa2086eb33  # minimal-64-lts
+    cpu_cap: 100
+    max_phy_mem: 4096
+    quota: 100
+    brand: joyent 
+    alias: db
+    domain: signet
     nics:
       - {interface: "net0", nic_tag: "external", vlan_id: "3", ip: "10.0.3.13", netmask: "255.255.255.0", gateway: "10.0.3.1"}
       - {interface: "net1", nic_tag: "stub0", ip: "10.0.1.2", netmask: "255.255.255.0"}
     filesystems:
       - {source: "/zones/db/pgsql", target: "/var/pgsql/data", read_only: false}
-  tasks:
-  - name: Install postgresql
-    package: name=postgresql94-server state=latest

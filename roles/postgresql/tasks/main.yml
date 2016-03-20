@@ -1,0 +1,6 @@
+- name: Install postgresql
+  package: name=postgresql94-server state=present
+- name: Install postgresql adminpack
+  package: name=postgresql94-adminpack state=present
+- name: Enable postgresql
+  service: name=postgresql state=started enabled=yes

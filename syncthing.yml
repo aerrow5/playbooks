@@ -1,6 +1,19 @@
 - hosts: syncthing
   remote_user: root
   gather_facts: no
-  tasks:
-  - include: tasks/smartos_zone_bootstrap.yml
-  - include: tasks/smartos_zone_usersetup.yml
+  roles:
+    - role: smartos_provision
+    - role: common
+  vars:
+    autoboot: "true"
+    image_uuid: c0b7ca82-d69f-11e5-a303-4f0b12cb14d6 # debian-8 
+    cpu_cap: 100
+    max_phy_mem: 512
+    quota: 20
+    brand: lx
+    alias: syncthing
+    domain: signet
+    nics:
+      - {interface: "net0", nic_tag: "external", vlan_id: "4", ip: "10.0.4.17", netmask: "255.255.255.0", gateway: "10.0.4.1"}
+    filesystems:
+      - {source: "/zones/data/syncthing_data", target: "/export/syncthing_data", read_only: false}

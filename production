@@ -7,46 +7,46 @@ smartos.signet ansible_connection=local
 10.0.4.99
 
 [owncloud]
-owncloud.signet ip=10.0.4.14
+owncloud.signet
 
 [influxdb]
-influxdb.signet ip=10.0.3.11
+influxdb.signet
 
 [plexmission]
 plexmission.signet
 
 [subsonic]
-subsonic.signet ip=10.0.4.13
+subsonic.signet
 
 [cybera]
 cybera.signet
 
 [elasticsearch]
-elasticsearch.signet ip=10.0.3.16
+elasticsearch.signet
 
 [logging]
 logging.signet
 
 [nginx]
-webproxy.signet ip=10.0.4.12
+webproxy.signet 
 
 [shell]
 shell.signet
 
 [samba]
-smb.signet ip=10.0.3.15
+smb.signet 
 
 [rundeck]
 rundeck.signet
 
 [freebsd]
-fbsd.signet ip=10.0.3.10
+fbsd.signet
 
 [syncthing]
-syncthing.signet ip=10.0.4.17
+syncthing.signet 
 
 [dbserver]
-db.signet ip=10.0.3.13
+db.signet
 
 [ups]
 ups.signet ansible_python_interpreter=/usr/bin/python2

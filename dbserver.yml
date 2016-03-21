@@ -15,7 +15,6 @@
     brand: joyent 
     alias: db
     domain: signet
-#    ansible_python_interpreter: /opt/local/bin/python2
     nics:
       - {interface: "net0", nic_tag: "external", vlan_id: "3", ip: "10.0.3.13", netmask: "255.255.255.0", gateway: "10.0.3.1"}
       - {interface: "net1", nic_tag: "stub0", ip: "10.0.1.2", netmask: "255.255.255.0"}

@@ -51,9 +51,8 @@ db.signet
 [ups]
 ups.signet ansible_python_interpreter=/usr/bin/python2
 
-[hvm]
-freebsd
-cybera
+[kim]
+kim.signet
 
 [joyent_zones:children]
 elasticsearch

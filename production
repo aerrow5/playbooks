@@ -1,10 +1,15 @@
 # file: production
 
 [smartos]
-smartos.signet ansible_connection=local 
+smartos.signet
+
+[smartos:vars]
+ansible_user=root
+ansible_python_interpreter=/opt/tools/bin/python2
+hypervisor_install_python=true
 
 [test]
-10.0.4.99
+10.0.3.99
 
 [owncloud]
 owncloud.signet
@@ -69,7 +74,6 @@ plexmission
 subsonic
 elasticsearch
 logging
-rundeck
 
 [dmz:children]
 syncthing
@@ -87,14 +91,13 @@ samba
 dbserver
 ups
 freebsd
-rundeck
 
 [joyent_zones:vars]
-hypervisor_ip=10.0.3.2
+hypervisor_host=smartos.signet
 remote_user=root
 gather_facts=no
 ansible_python_interpreter=/opt/local/bin/python2
 
 [lx_zones:vars]
-hypervisor_ip=10.0.3.2
+hypervisor_host=smartos.signet
 remote_user=root

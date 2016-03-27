@@ -7,13 +7,12 @@
     - role: common
   vars:
     autoboot: "true"
-    image_uuid: 088b97b0-e1a1-11e5-b895-9baa2086eb33  # minimal-64-lts
+    image_name: minimal-64-lts
     cpu_cap: 100
     max_phy_mem: 256
     quota: 5
     brand: joyent
     alias: shell 
     domain: signet
-    ansible_python_interpreter: /usr/bin/python2.7
     nics:
       - {interface: "net0", nic_tag: "external", vlan_id: "4", ip: "10.0.4.10", netmask: "255.255.255.0", gateway: "10.0.4.1"}

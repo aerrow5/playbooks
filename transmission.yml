@@ -1,0 +1,21 @@
+- hosts: transmission
+  remote_user: root
+  gather_facts: no
+  roles:
+    - smartos_provision
+    - common
+    - transmission
+  vars:
+    autoboot: "true"
+    image_name: debian-8
+    cpu_cap: 100
+    max_phy_mem: 1024
+    quota: 20
+    brand: lx
+    alias: transmission
+    domain: signet
+    nics:
+      - {interface: "eth0", nic_tag: "external", vlan_id: "4", ip: "10.0.4.16", netmask: "255.255.255.0", gateway: "10.0.4.1"}
+    filesystems:
+      - {source: "/zones/db/transmission", target: "/var/lib/transmission-daemon", read_only: false }
+      - {source: "/zones/data/media", target: "/media", read_only: false}

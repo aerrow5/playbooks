@@ -17,8 +17,11 @@ owncloud.signet
 [influxdb]
 influxdb.signet
 
-[plexmission]
-plexmission.signet
+[transmission]
+transmission.signet
+
+[plex]
+plex.signet
 
 [subsonic]
 subsonic.signet
@@ -70,7 +73,8 @@ dbserver
 [lx_zones:children]
 owncloud
 influxdb
-plexmission
+transmission
+plex
 subsonic
 elasticsearch
 logging
@@ -78,7 +82,8 @@ logging
 [dmz:children]
 syncthing
 owncloud
-plexmission
+transmission
+plex
 nginx
 shell
 subsonic

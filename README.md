@@ -10,7 +10,7 @@ ansible-playbook -i production site.yml --tags update_packages
 ```
 
 ```
-ansible-playbook -i production shell.yml --extra-vars "provision_mode=1"
+ansible-playbook -i production shell.yml --extra-vars "provision_mode=true"
 ```
 
 Image UUID from https://docs.joyent.com/public-cloud/instances/infrastructure/images/smartos/minimal

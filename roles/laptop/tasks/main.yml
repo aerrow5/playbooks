@@ -3,14 +3,15 @@
   pacman: name={{ item }} update_cache=yes
   with_items:
     - "{{x_pkgs}}"
+    - "{{network_pkgs}}"
     - "{{install_pkgs}}" 
 
-## X Setup
-- name: Setup greeter
+## X Greeter Setup
+- name: Setup greeter fix. https://wiki.archlinux.org/index.php/LightDM#LightDM_doesn.27t_appear
   ini_file: dest=/etc/lightdm/lightdm.conf
             state=present
             section=LightDM
-            option=logind-check-graphical=true
+            option=logind-check-graphical
             value=true 
 
 

@@ -1,0 +1,65 @@
+## Packages
+- name: Install packages
+  pacman: name={{ item }} update_cache=yes
+  with_items:
+    - "{{x_pkgs}}"
+    - "{{install_pkgs}}" 
+
+## X Setup
+- name: Setup greeter
+  ini_file: dest=/etc/lightdm/lightdm.conf
+            state=present
+            section=LightDM
+            option=logind-check-graphical=true
+            value=true 
+
+
+- name: Setup greeter hidpi
+  ini_file: dest=/etc/lightdm/lightdm.conf
+              state=present
+              section='Seat:*'
+              option=xserver-command
+              value='X -dpi 192'
+
+- name: Setup greeter  
+  ini_file: dest=/etc/lightdm/lightdm.conf
+              state=present
+              section='Seat:*'
+              option=greeter-session
+              value=lightdm-gtk-greeter
+
+- name: Setup greeter
+  ini_file: dest=/etc/lightdm/lightdm.conf
+              state=present
+              section='Seat:*'
+              option=greeter-hide-users
+              value=false
+
+- name: Setup greeter hidpi
+  ini_file: dest=/etc/lightdm/lightdm.conf
+              state=present
+              section='Seat:*'
+              option=allow-guest
+              value=true
+
+
+## Users
+- name: Allow wheel to elevate with sudo
+  lineinfile: "dest=/etc/sudoers state=present regexp='^%wheel' line='%wheel ALL=(ALL) ALL'"
+
+- name: Change Makeflags for multi-cpi
+  lineinfile: dest=/etc/makepkg.conf state=present regexp='^.*MAKEFLAGS=' line='MAKEFLAGS="-j4"'
+
+
+## Network
+- name: Limit amount of systemd journal size. https://wiki.archlinux.org/index.php/Systemd#Journal_size_limit
+  lineinfile: dest=/etc/systemd/journald.conf regexp=^SystemMaxUse= line=SystemMaxUse=50M 
+
+- name: Setup ipv6 privacy for NetworkManager
+  ini_file: dest=/etc/NetworkManager/NetworkManager.conf 
+            state=present
+            section=connection
+            option=ipv6.ip6-privacy
+            value=2
+            backup=yes
+

@@ -44,8 +44,8 @@ shell.signet
 [samba]
 smb.signet 
 
-[rundeck]
-rundeck.signet
+[zabbix]
+zabbix.signet
 
 [freebsd]
 fbsd.signet
@@ -78,6 +78,7 @@ plex
 subsonic
 elasticsearch
 logging
+zabbix
 
 [dmz:children]
 syncthing
@@ -96,6 +97,7 @@ samba
 dbserver
 ups
 freebsd
+zabbix
 
 [joyent_zones:vars]
 hypervisor_host=smartos.signet

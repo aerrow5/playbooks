@@ -1,0 +1,11 @@
+install_pkgs:
+  - virtualbox
+  - chromium
+  - firefox
+
+x_pkgs:
+  - lightdm
+  - lightdm-gtk-greeter
+  - i3-wm
+  - i3status
+  - i3lock

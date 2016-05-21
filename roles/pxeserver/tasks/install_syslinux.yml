@@ -1,0 +1,23 @@
+- name: Download syslinux
+  get_url: url="{{ syslinux_url }}" dest="{{ tftpdir }}/syslinux-{{ syslinux_ver }}.tar.xz"
+
+- name: Extract syslinux
+  unarchive: src="{{ tftpdir }}/syslinux-{{ syslinux_ver }}.tar.xz" dest="/srv/tftp/" copy=no
+
+- name: Copy c32 files
+  copy: remote_src=True src="{{ tftpdir }}/syslinux-{{ syslinux_ver }}/{{ item }}" dest="/srv/tftp/"
+  with_items:
+    - bios/com32/lib/libcom32.c32 
+    - bios/com32/elflink/ldlinux/ldlinux.c32
+
+- name: Copy mboot.c32 file
+  copy: remote_src=True
+        src="{{ tftpdir }}/syslinux-{{ syslinux_ver }}/bios/com32/mboot/mboot.c32"
+        dest="{{ webdir }}/"
+
+- name: Copy pxelinux.0 file
+  shell: "cp {{ tftpdir }}/syslinux-{{ syslinux_ver }}/bios/core/lpxelinux.0 {{ tftpdir }}/pxelinux.0"
+
+- name: Create pxelinux conf directory
+  file: path="{{ tftpdir }}/pxelinux.cfg" state=directory mode=0755
+

@@ -1,0 +1,64 @@
+- name: Install tftp-hpa
+  pacman: name=tftp-hpa state=present
+- name: Install nginx
+  pacman: name=nginx state=present
+
+- name: Create webdir if needed
+  file: dest={{ webdir }} state=directory mode=0755
+
+- name: Download smartos platform
+  get_url: url={{ smartos_url }} dest="{{ webdir }}/platform.tgz"
+  tags:
+    - update_packages
+
+- name: Check for existing platform directory
+  stat: path="{{ webdir }}/platform"
+  register: platform_stat
+  tags:
+    - update_packages
+
+- name: Move existing platform directory
+  command: creates="{{ webdir }}/platform_{{ ansible_date_time.date }}"
+           mv {{ webdir }}/platform {{ webdir }}/platform_{{ ansible_date_time.date }}
+  when: platform_stat.stat.isdir is defined and platform_stat.stat.isdir == True
+  tags:
+    - update_packages
+
+- name: Extract platform
+  unarchive: src="{{ webdir }}/platform.tgz" dest="{{ webdir }}/" copy=no
+  tags:
+    - update_packages
+
+- name: Create platform directory
+  file: path="{{ webdir }}/platform" state=directory mode=0755
+  tags:
+    - update_packages
+
+- name: Rename to platform directory
+  shell: "mv {{ webdir }}/platform-*/* {{ webdir }}/platform"
+  tags:
+    - update_packages
+
+## Only download syslinux if not already 
+
+- name: Check if syslinux exists
+  stat: path="{{ tftpdir }}/pxelinux.0"
+  register: pxelinux_stat
+  tags:
+    - syslinux
+
+- name: Install syslinux 
+  include: tasks/install_syslinux.yml
+  when: pxelinux_stat.stat.exists is not defined or pxelinux_stat.stat.exists == False
+  tags:
+    - syslinux
+
+- name: Setup pxelinux template
+  template: src=pxelinux.cfg.j2 dest={{ tftpdir }}/pxelinux.cfg/default
+  tags:
+    - syslinux
+
+- name: Enable nginx
+  service: name=nginx state=started enabled=yes
+- name: Enable tftpd
+  service: name=tftpd state=started enabled=yes

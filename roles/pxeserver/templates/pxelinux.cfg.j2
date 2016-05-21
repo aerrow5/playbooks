@@ -1,0 +1,7 @@
+default smartos
+prompt 1
+timeout 50
+label smartos
+kernel http://{{ pxe_host }}/smartos/mboot.c32
+append http://{{ pxe_host }}/smartos/platform/i86pc/kernel/amd64/unix -B smartos=true --- http://{{ pxe_host }}/smartos/platform/i86pc/amd64/boot_archive
+

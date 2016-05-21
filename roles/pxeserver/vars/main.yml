@@ -1,0 +1,9 @@
+webdir: "/usr/share/nginx/html/smartos"
+tftpdir: "/srv/tftp"
+
+smartos_url: https://us-east.manta.joyent.com/Joyent_Dev/public/SmartOS/platform-latest.tgz
+
+syslinux_ver: "6.03"
+syslinux_url: https://www.kernel.org/pub/linux/utils/boot/syslinux/syslinux-{{ syslinux_ver }}.tar.xz
+
+pxe_host: 10.0.3.4

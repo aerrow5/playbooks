@@ -1,4 +1,6 @@
 # file: production
+[laptop]
+127.0.0.1 connection=local
 
 [smartos]
 smartos.signet
@@ -7,6 +9,9 @@ smartos.signet
 ansible_user=root
 ansible_python_interpreter=/opt/tools/bin/python2
 hypervisor_install_python=true
+
+[consul]
+10.0.3.18
 
 [test]
 10.0.3.99
@@ -59,6 +64,9 @@ db.signet
 [ups]
 ups.signet ansible_python_interpreter=/usr/bin/python2
 
+[pxe]
+10.0.3.4 ansible_python_interpreter=/usr/bin/python2
+
 [kim]
 kim.signet
 
@@ -79,6 +87,7 @@ subsonic
 elasticsearch
 logging
 zabbix
+consul
 
 [dmz:children]
 syncthing
@@ -98,6 +107,7 @@ dbserver
 ups
 freebsd
 zabbix
+consul
 
 [joyent_zones:vars]
 hypervisor_host=smartos.signet

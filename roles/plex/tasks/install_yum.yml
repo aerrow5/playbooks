@@ -1,0 +1,2 @@
+- name: Install package
+  yum: name={{ plex_yum_url }} state=present

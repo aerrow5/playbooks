@@ -1,0 +1,16 @@
+- name: Update apt
+  apt: update_cache=yes
+- apt_key: url=http://shell.ninthgate.se/packages/shell-ninthgate-se-keyring.key state=present
+- apt_key: id=5C808C2B65558117  keyserver=pgp.mit.edu state=present
+- apt_repository: repo='deb http://www.deb-multimedia.org jessie main non-free' state=present
+- apt_repository: repo='deb http://shell.ninthgate.se/packages/debian wheezy main' state=present 
+
+- name: Update apt
+  apt: update_cache=yes
+
+- name: install packages 
+  apt: name={{ item }} state=present update_cache=yes 
+  with_items:
+    - plexmediaserver
+    - deb-multimedia-keyring
+

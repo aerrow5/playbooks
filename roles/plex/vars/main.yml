@@ -1,0 +1,2 @@
+plex_ver: "0.9.16.6.1993-5089475"
+plex_yum_url: "https://downloads.plex.tv/plex-media-server/{{ plex_ver }}/plexmediaserver-{{ plex_ver }}.x86_64.rpm"

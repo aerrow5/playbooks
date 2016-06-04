@@ -1,0 +1,10 @@
+- name: checkout network ups tools
+  git: repo=https://aur.archlinux.org/network-ups-tools.git dest=/home/alarm/nut-build force=yes
+  become: yes
+  become_user: alarm
+- name: Adding arm compile support
+  lineinfile: dest=/home/alarm/nut-build/PKGBUILD regexp="^arch=" line="arch=('armv6h' 'armv7h')"
+- name: compile network ups tools
+  shell: cd /home/alarm/nut-build && makepkg -s
+  become: yes
+  become_user: alarm

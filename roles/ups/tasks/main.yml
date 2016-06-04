@@ -2,23 +2,37 @@
     pacman: update_cache=yes upgrade=yes
     tags:
       - update_packages
-  - package: name=base-devel state=present
-  - package: name=git state=present 
-  - name: checkout network ups tools
-    git: repo=https://aur.archlinux.org/network-ups-tools.git dest=/home/alarm/nut-build force=yes
-    become: yes
-    become_user: alarm
-  - name: Adding arm compile support
-    lineinfile: dest=/home/alarm/nut-build/PKGBUILD regexp="^arch=('i686' 'x86_64')" line="arch=('armv6h')"
-  - name: compile network ups tools
-    shell: cd /home/alarm/nut-build && makepkg -s
-    become: yes
-    become_user: alarm
+  - package: name={{ item }} state=present
+    with_items:
+      - base-devel
+      - git
+      - neon
+      - net-snmp
+      - libusb-compat
+      - docbook-xml
+      - docbook-xsl
+      - libxml2
+      - libxslt
+      - asciidoc
+
+  - name: Check if NUT installed
+    command: pacman -Q network-ups-tools
+    register: is_installed
+    failed_when: is_installed.rc > 1
+    changed_when: no
+
+  - name: Build NUT if not installed
+    include: tasks/build_nut.yml
+    when: is_installed.rc == 1
+
   - name: install package
-    shell: pacman -U /home/alarm/nut-build/network-ups-tools-2.7.3-3-armv6h.pkg.tar.xz  --noconfirm
+    shell: pacman -U /home/alarm/nut-build/network-ups-tools-*.pkg.tar.xz  --noconfirm
   - copy: src={{ item }} dest=/etc/ups/ owner=root mode=644
     with_fileglob:
       - ./*.conf 
       - ./*.users
+    tags:
+      - config
+
   - service: name=nut-server state=started enabled=yes
   - service: name=nut-monitor state=started enabled=yes

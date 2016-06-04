@@ -14,3 +14,7 @@
   package: name=sudo state=present
 - name: Install tmux
   package: name=tmux state=present
+  ignore_errors: yes
+#- name: Seting hostname
+#  hostname: name={{ alias }}
+#  when: alias is defined

@@ -8,6 +8,7 @@
 
 - name: Download smartos platform
   get_url: url={{ smartos_url }} dest="{{ webdir }}/platform.tgz"
+           force=yes
   tags:
     - update_packages
 

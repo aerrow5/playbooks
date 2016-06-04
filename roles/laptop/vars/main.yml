@@ -18,15 +18,16 @@ install_pkgs:
   - syncthing
   - syncthing-gtk
   - sudo
-  - 
 
 aur_pkgs:
   - j4-dmenu-desktop
   - chromium-pepper-flash
   - android-sdk-platform-tools
   - pa-applet-git
-  - slack
+  - slack-desktop
   - transmission-remote-gui-gtk2
+  - pycharm-community
+  - ntfs-3g-fuse
 
 network_pkgs:
   - tcpdump

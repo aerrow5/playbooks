@@ -7,7 +7,7 @@
     - role: common
   vars:
     autoboot: "true"
-    image_name: minimal-64-lts
+    image_name: minimal-64
     cpu_cap: 100
     max_phy_mem: 256
     quota: 5

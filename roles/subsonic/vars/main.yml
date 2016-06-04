@@ -1,3 +1,4 @@
-subsonic_url: 'http://subsonic.org/download/subsonic-5.3.deb'
-subsonic_md5: 'fe88642e4e236937eaa2f0c39d63fd0e'
+subsonic_ver: '6.0'
+subsonic_url: 'http://subsonic.org/download/subsonic-{{ subsonic_ver }}.deb'
+subsonic_md5: '2389abd9ae2afec7c5767b76b84add6b'
 

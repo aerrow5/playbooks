@@ -11,11 +11,11 @@
   group: name=subsonic state=present gid=80
 - name: Creating Subsonic user
   user: name=subsonic uid=80 group=subsonic
-- name: Test
+- name: Check for subsonic.deb file
   stat: path=/subsonic.deb
   register: debfile
 - name: Download subsonic
-  get_url: url='{{ subsonic_url }}'
+  get_url: url={{ subsonic_url }}
     dest="/subsonic.deb"
   when: debfile.stat.md5 is not defined
 - name: Install subsonic

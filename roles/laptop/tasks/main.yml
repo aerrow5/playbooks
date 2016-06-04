@@ -64,3 +64,14 @@
             value=2
             backup=yes
 
+- name: Set sysctl ipv6 privacy
+  ini_file: dest=/etc/sysctl.d/ipv6.conf
+            state=present
+            option=net.ipv6.conf.all.use_tempaddr
+            value=1
+
+- name: Set sysctl ipv6 privacy
+  ini_file: dest=/etc/sysctl.d/ipv6.conf
+            state=present
+            option=net.ipv6.conf.default.use_tempaddr                         
+            value=1    

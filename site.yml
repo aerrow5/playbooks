@@ -10,5 +10,6 @@
 - include: elasticsearch.yml
 - include: influxdb.yml
 - include: owncloud.yml
-- include: plexmission.yml
+- include: plex.yml
+- include: transmission.yml
 - include: subsonic.yml

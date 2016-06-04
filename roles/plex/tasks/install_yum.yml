@@ -1,2 +1,12 @@
-- name: Install package
-  yum: name={{ plex_yum_url }} state=present
+- name: Get current installed version
+  command: rpm -q plexmediaserver-{{ plex_ver }}.x86_64
+  register: rpm_check
+
+
+- name: Download version if needed
+  get_url: url={{ plex_yum_url }} dest=/tmp/plex-{{ plex_ver }}.rpm
+  when: rpm_check.rc == 1
+
+- name: Install package if needed
+  yum: name=/tmp/plex-{{ plex_ver }}.rpm state=present
+  when: rpm_check.rc == 1

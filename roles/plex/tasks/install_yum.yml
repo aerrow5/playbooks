@@ -1,9 +1,32 @@
+- name: Install epel
+  yum: name=epel-release state=present
+
+- name: Install python bs4
+  yum: name={{ item }} state=present
+  with_items:
+    - python-requests
+    - python-beautifulsoup4
+
+- name: Copy plex version script
+  copy: src=files/get_latest_plex_version.py dest=/tmp/get_latest_plex_version.py
+
+- name: Run plex version script
+  command: python2 /tmp/get_latest_plex_version.py
+  register: plextv_ver
+  failed_when: plextv_ver.rc > 0
+  changed_when: no
+
+- name: Set new plex version
+  set_fact: plex_ver = plextv_ver.stdout
+  when: plextv_ver.rc == 0
+
 - name: Get current installed version
   command: rpm -q plexmediaserver-{{ plex_ver }}.x86_64
   register: rpm_check
+  failed_when: rpm_check.rc > 1
+  changed_when: no
 
-
-- name: Download version if needed
+- name: Download var version if needed
   get_url: url={{ plex_yum_url }} dest=/tmp/plex-{{ plex_ver }}.rpm
   when: rpm_check.rc == 1
 

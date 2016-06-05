@@ -11,6 +11,10 @@
   command: passwd -N piranha
   when: ansible_distribution == "SmartOS"
 
+- name: Enable EPEL Repo for CentOS		
+  yum: name=epel-release state=present		
+  when: ansible_distribution == "CentOS"
+
 - name: Disable Debian auto-start daemons on install
   shell: echo "exit 101" > /usr/sbin/policy-rc.d creates=/usr/sbin/policy-rc.d
   when: ansible_os_family == "Debian" 

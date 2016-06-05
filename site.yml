@@ -3,6 +3,7 @@
 - include: shell.yml
 - include: samba.yml
 - include: ups.yml
+- include: pxe.yml
 - include: nginx.yml
 - include: freebsd.yml
 - include: syncthing.yml

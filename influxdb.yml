@@ -8,7 +8,7 @@
     - role: grafana
   vars:
     autoboot: "true"
-    image_name: debian-8
+    image_name: centos-7
     cpu_cap: 100
     max_phy_mem: 1536
     quota: 40

@@ -6,5 +6,11 @@
   include: tasks/install_yum.yml
   when: ansible_pkg_mgr == "yum"
 
+- name: Ensure plex user created
+  user: name=plex state=present
+
+- name: Set owner for plex directory
+  file: path=/var/lib/plexmediaserver owner=plex group=plex recurse=yes
+
 - name: ensure plexmediaserver is running (and enable it at boot)
   service: name=plexmediaserver state=started enabled=yes

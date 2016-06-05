@@ -1,14 +1,10 @@
-- name: Update apt
-  apt: update_cache=yes
 - name: Update packages
-  apt: upgrade=dist update_cache=yes
+  yum: name=* state=latest
   tags: update_packages
-- name: Adding https apt support
-  package: name=apt-transport-https state=present
 - name: Add grafana key
-  apt_key: url=https://packagecloud.io/gpg.key state=present
+  rpm_key: state=present key=https://grafanarel.s3.amazonaws.com/RPM-GPG-KEY-grafana
 - name: Add grafana repo
-  apt_repository: repo='deb https://packagecloud.io/grafana/stable/debian/ wheezy main' state=present
+  template: src=grafana.repo.j2 dest=/etc/yum.repos.d/grafana.repo owner=root group=root
 - name: Install grafana
   package: name=grafana state=present
 - name: Enable grafana service

@@ -1,14 +1,12 @@
-- name: Update apt
-  apt: update_cache=yes
 - name: Update packages
-  apt: upgrade=dist update_cache=yes
+  yum: name=* state=latest
   tags: update_packages
-- name: Adding https apt support
-  package: name=apt-transport-https state=present
 - name: Add influxdb key 
-  apt_key: url=https://repos.influxdata.com/influxdb.key state=present
-- name: Add influxdb repo
-  apt_repository: repo='deb https://repos.influxdata.com/debian wheezy stable' state=present 
+  rpm_key: state=present key=https://repos.influxdata.com/influxdb.key
+
+- name: Add yum repo
+  template: src=influxdb.repo.j2 dest=/etc/yum.repos.d/influxdb.repo owner=root group=root
+
 - name: Install influxdb
   package: name=influxdb state=present
 - name: Influxdb config

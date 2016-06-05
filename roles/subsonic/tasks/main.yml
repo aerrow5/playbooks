@@ -1,6 +1,18 @@
-- name: Do apt stuff
-  include: tasks/install_apt.yml
-  when: ansible_pkg_mgr == "apt"
+- name: Update packages
+  apt: upgrade=dist update_cache=yes
+  tags: update_packages
+
+- name: Installing openjdk
+  apt: name=openjdk-7-jre state=present update_cache=yes cache_valid_time=3600
+
+- name: Check if Subsonic installed
+  shell: dpkg-query -s subsonic |grep Version | grep "{{ subsonic_ver }}"
+  register: deb_installed
+  changed_when: no
+
+- name: Install subsonic if not present
+  apt: deb={{ subsonic_url }}
+  when: deb_installed.rc > 0
 
 - name: Installing lame
   package: name=lame state=present
@@ -11,11 +23,15 @@
 - name: Creating Subsonic user
   user: name=subsonic uid=80 group=subsonic
 
-- name: Stop subsonic
-  service: name=subsonic state=stopped
 - name: Update subsonic config context
   lineinfile: dest=/etc/default/subsonic regexp=^SUBSONIC_ARGS= line=SUBSONIC_ARGS="--max-memory=150 --context-path=/subsonic"
+  notify:
+    - stop subsonic
+
 - name: Update subsonic config user
   lineinfile: dest=/etc/default/subsonic regexp=^SUBSONIC_USER= line=SUBSONIC_USER=subsonic
+  notify:
+    - stop subsonic
+
 - name: Enable subsonic
   service: name=subsonic state=running enabled=yes

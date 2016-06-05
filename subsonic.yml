@@ -1,6 +1,6 @@
 - hosts: subsonic
   remote_user: root
-  gather_facts: no
+  gather_facts: yes
   roles:
     - role: smartos_provision
     - role: common

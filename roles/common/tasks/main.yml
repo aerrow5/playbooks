@@ -15,6 +15,14 @@
   yum: name=epel-release state=present
   when: ansible_distribution == "CentOS"
 
+- name: Check for Debian policy-rc.d file 
+  stat: path=/usr/sbin/policy-rc.d
+  register: p
+
+- name: Disable Debian auto-start daemons on install
+  shell: echo "exit 101" > /usr/sbin/policy-rc.d creates=/usr/sbin/policy-rc.d
+  when: ansible_os_family == "Debian" 
+
 - name: Install sudo
   package: name=sudo state=present
 - name: Install tmux

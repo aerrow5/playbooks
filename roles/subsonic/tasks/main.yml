@@ -1,25 +1,16 @@
-- name: Update apt cache
-  apt: update_cache=yes
-- name: Update packages
-  apt: upgrade=dist update_cache=yes
-  tags: update_packages
-- name: Installing openjdk
-  package: name=openjdk-7-jre state=present
+- name: Do apt stuff
+  include: tasks/install_apt.yml
+  when: ansible_pkg_mgr == "apt"
+
 - name: Installing lame
   package: name=lame state=present
+
 - name: Creating Subsonic group
   group: name=subsonic state=present gid=80
+
 - name: Creating Subsonic user
   user: name=subsonic uid=80 group=subsonic
-- name: Check for subsonic.deb file
-  stat: path=/subsonic.deb
-  register: debfile
-- name: Download subsonic
-  get_url: url={{ subsonic_url }}
-    dest="/subsonic.deb"
-  when: debfile.stat.md5 is not defined
-- name: Install subsonic
-  apt: deb="/subsonic.deb" state=present
+
 - name: Stop subsonic
   service: name=subsonic state=stopped
 - name: Update subsonic config context

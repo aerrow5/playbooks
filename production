@@ -65,7 +65,7 @@ db.signet
 ups.signet ansible_python_interpreter=/usr/bin/python2
 
 [pxe]
-10.0.3.4 ansible_python_interpreter=/usr/bin/python2
+pxe.signet ansible_python_interpreter=/usr/bin/python2
 
 [kim]
 kim.signet

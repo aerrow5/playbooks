@@ -10,6 +10,11 @@
 - name: Enable account
   command: passwd -N piranha
   when: ansible_distribution == "SmartOS"
+
+- name: Enable EPEL Repo for CentOS
+  yum: name=epel-release state=present
+  when: ansible_distribution == "CentOS"
+
 - name: Install sudo
   package: name=sudo state=present
 - name: Install tmux

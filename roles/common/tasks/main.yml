@@ -29,7 +29,9 @@
 - name: Setting hostname on SmartOS
   command: sm-set-hostname {{ alias }}
   when: alias is defined and ansible_distribution == "SmartOS"
+  changed_when: no
 
 - name: Setting hostname on Linux	
   hostname: name={{ alias }}		
   when: alias is defined and ansible_system == "Linux"
+  changed_when: no

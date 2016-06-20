@@ -29,7 +29,7 @@ elasticsearch.signet
 [logging]
 logging.signet
 
-[nginx]
+[webproxy]
 webproxy.signet 
 
 [shell]
@@ -58,6 +58,6 @@ owncloud
 transmission
 plex
 subsonic
-nginx
+webproxy
 shell
 syncthing

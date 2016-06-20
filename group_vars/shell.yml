@@ -1,5 +1,4 @@
 ansible_python_interpreter: /opt/local/bin/python2
-admin_group: adm
 
 image_name: minimal-64
 cpu_cap: 100

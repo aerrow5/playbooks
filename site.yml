@@ -1,11 +1,17 @@
 # file: site.yml
 
 - hosts: shell
-  gather_facts: no
   roles:
     - role: smartos_provision
     - role: joyent_zone_bootstrap
     - role: common
+
+- hosts: dbserver
+  roles:
+#    - role: smartos_provision
+#    - role: joyent_zone_bootstrap
+    - role: common
+    - role: postgresql
 
 - hosts: zabbix_server
   roles:
@@ -68,7 +74,7 @@
     - role: common
     - role: subsonic
 
-- hosts: nginx 
+- hosts: webproxy
   tasks:
   - include: tasks/smartos_zone_bootstrap.yml
   - include: tasks/smartos_zone_usersetup.yml

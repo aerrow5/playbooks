@@ -1,0 +1,10 @@
+- name: Ensure openldap is installed
+  yum: name={{ item }} state=present
+  with_items:
+    - openldap
+    - openldap-servers
+    - openldap-clients
+
+
+- name: Ensure openldap-server enabled
+  service: name=slapd state=started enabled=yes

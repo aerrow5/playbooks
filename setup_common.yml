@@ -1,0 +1,18 @@
+- hosts: all
+  gather_facts: true
+  tasks:
+     - group_by: key=os_{{ ansible_distribution }}
+  vars:
+    ansible_user: root
+
+- hosts: os_Debian
+  gather_facts: False
+  roles:
+    - common
+  vars:
+    ansible_user: root
+
+- hosts: os_SmartOS
+  gather_facts: False
+  roles:
+    - common

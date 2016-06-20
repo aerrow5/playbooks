@@ -1,0 +1,13 @@
+ansible_remote_user: root
+admin_group: adm
+
+image_name: centos-7
+cpu_cap: 100
+max_phy_mem: 1024
+quota: 20
+brand: lx
+alias: zabbix
+domain: signet
+nics:
+  - {interface: "eth0", nic_tag: "external", vlan_id: "3", ip: "10.0.3.17", netmask: "255.255.255.0", gateway: "10.0.3.1"}
+  - {interface: "eth1", nic_tag: "stub0", ip: "10.0.1.4", netmask: "255.255.255.0"}

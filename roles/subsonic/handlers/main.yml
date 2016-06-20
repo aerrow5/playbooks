@@ -1,0 +1,8 @@
+- name: stop subsonic
+  service: name=subsonic state=stopped
+
+- name: restart subsonic
+  service: name=subsonic state=retarted
+
+- name: start subsonic
+  service: name=subsonic state=started

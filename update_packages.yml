@@ -1,0 +1,51 @@
+- hosts: all
+  gather_facts: true
+  tasks:
+     - group_by: key=os_{{ ansible_distribution }}
+
+- hosts: os_Archlinux
+  gather_facts: False
+  tasks:
+    - name: Update packages
+      pacman: update_cache=yes upgrade=yes
+      become: yes
+
+- hosts: os_CentOS
+  gather_facts: False
+  tasks:
+    - name: Update packages
+      yum: name=* state=latest
+      become: yes
+  vars:
+    ansible_user: root
+
+- hosts: os_Debian
+  gather_facts: False
+  tasks:
+    - name: Update packages
+      apt: upgrade=dist update_cache=yes 
+  vars:
+    ansible_user: root
+
+- hosts: os_Ubuntu
+  gather_facts: False
+  tasks:
+    - name: Update packages
+      apt: upgrade=dist update_cache=yes 
+      become: yes
+
+- hosts: os_SmartOS
+  gather_facts: False
+  tasks:
+    - name: Update packages
+      pkgin: full_upgrade=yes
+      when: smartos_hypervisor is not defined
+  vars:
+    ansible_user: root
+
+- hosts: os_FreeBSD
+  gather_facts: False
+  tasks:
+    - name: Update packages
+      pkgng: full_upgrade=yes
+

@@ -1,4 +1,0 @@
-- hosts: pxe
-  remote_user: alarm 
-  roles:
-    - pxeserver

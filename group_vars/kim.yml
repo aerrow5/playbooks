@@ -1,0 +1,2 @@
+admin_group: adm
+ansible_python_interpreter: /usr/bin/python2

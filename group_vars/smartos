@@ -1,0 +1,4 @@
+smartos_hypervisor: true
+ansible_user: root
+ansible_python_interpreter: /opt/tools/bin/python2
+hypervisor_install_python: true

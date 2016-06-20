@@ -1,4 +1,0 @@
-- hosts: ups
-  remote_user: alarm
-  roles:
-    - ups

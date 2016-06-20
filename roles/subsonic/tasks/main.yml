@@ -12,7 +12,7 @@
 
 - name: Install subsonic if not present
   apt: deb={{ subsonic_url }}
-  when: deb_installed.rc > 0
+  when: deb_installed is defined and deb_installed.rc > 0
 
 - name: Installing lame
   package: name=lame state=present

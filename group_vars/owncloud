@@ -1,0 +1,12 @@
+ansible_user: root
+
+image_name: centos-6
+quota: 40
+brand: lx
+alias: owncloud
+domain: signet
+nics:
+  - {interface: "eth0", nic_tag: "external", vlan_id: "4", ip: "10.0.4.14", netmask: "255.255.255.0", gateway: "10.0.4.1"}
+  - {interface: "eth1", nic_tag: "stub0", ip: "10.0.1.3", netmask: "255.255.255.0"}
+filesystems:
+  - {source: "/zones/data/owncloud_data", target: "/media/owncloud_data", read_only: false}

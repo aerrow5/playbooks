@@ -5,16 +5,8 @@
 [smartos]
 smartos.signet
 
-[smartos:vars]
-ansible_user=root
-ansible_python_interpreter=/opt/tools/bin/python2
-hypervisor_install_python=true
-
-[consul]
-10.0.3.18
-
-[test]
-10.0.3.99
+[ldap]
+ldap.signet
 
 [owncloud]
 owncloud.signet
@@ -31,9 +23,6 @@ plex.signet
 [subsonic]
 subsonic.signet
 
-[cybera]
-cybera.signet
-
 [elasticsearch]
 elasticsearch.signet
 
@@ -46,14 +35,11 @@ webproxy.signet
 [shell]
 shell.signet
 
-[samba]
+[fileserver]
 smb.signet 
 
-[zabbix]
+[zabbix_server]
 zabbix.signet
-
-[freebsd]
-fbsd.signet
 
 [syncthing]
 syncthing.signet 
@@ -61,60 +47,17 @@ syncthing.signet
 [dbserver]
 db.signet
 
-[ups]
-ups.signet ansible_python_interpreter=/usr/bin/python2
-
-[pxe]
-pxe.signet ansible_python_interpreter=/usr/bin/python2
+[pimon]
+ups.signet 
 
 [kim]
-kim.signet
-
-[joyent_zones:children]
-elasticsearch
-nginx
-shell
-samba
-syncthing
-dbserver
-
-[lx_zones:children]
-owncloud
-influxdb
-transmission
-plex
-subsonic
-elasticsearch
-logging
-zabbix
-consul
+kim.signet 
 
 [dmz:children]
-syncthing
 owncloud
 transmission
 plex
+subsonic
 nginx
 shell
-subsonic
-
-[lan:children]
-influxdb
-elasticsearch
-logging
-samba
-dbserver
-ups
-freebsd
-zabbix
-consul
-
-[joyent_zones:vars]
-hypervisor_host=smartos.signet
-remote_user=root
-gather_facts=no
-ansible_python_interpreter=/opt/local/bin/python2
-
-[lx_zones:vars]
-hypervisor_host=smartos.signet
-remote_user=root
+syncthing

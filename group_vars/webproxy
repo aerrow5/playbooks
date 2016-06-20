@@ -1,0 +1,4 @@
+ansible_user: root
+
+https_port: 443
+http_port: 80 

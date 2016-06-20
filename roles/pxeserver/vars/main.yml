@@ -7,3 +7,4 @@ syslinux_ver: "6.03"
 syslinux_url: https://www.kernel.org/pub/linux/utils/boot/syslinux/syslinux-{{ syslinux_ver }}.tar.xz
 
 pxe_host: 10.0.3.4
+admin_group: wheel

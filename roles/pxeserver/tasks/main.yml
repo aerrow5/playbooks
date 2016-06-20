@@ -1,13 +1,17 @@
-- name: Install tftp-hpa
-  pacman: name=tftp-hpa state=present
-- name: Install nginx
-  pacman: name=nginx state=present
+- name: Install packages
+  pacman: name={{ item }} state=present
+  with_items:
+    - tftp-hpa
+    - nginx
+  become: yes
 
 - name: Create webdir if needed
   file: dest={{ webdir }} state=directory mode=0755
+  become: yes
 
 - name: Download smartos platform
-  get_url: url={{ smartos_url }} dest="{{ webdir }}/platform.tgz"
+  get_url: url={{ smartos_url }}
+           dest="{{ webdir }}/platform.tgz"
            force=yes
   tags:
     - update_packages
@@ -18,15 +22,16 @@
   tags:
     - update_packages
 
-- name: Move existing platform directory
-  command: creates="{{ webdir }}/platform_{{ ansible_date_time.date }}"
-           mv {{ webdir }}/platform {{ webdir }}/platform_{{ ansible_date_time.date }}
-  when: platform_stat.stat.isdir is defined and platform_stat.stat.isdir == True
+
+- name: Extract new platform directory
+  unarchive: src="{{ webdir }}/platform.tgz" dest="{{ webdir }}/" copy=no
   tags:
     - update_packages
 
-- name: Extract platform
-  unarchive: src="{{ webdir }}/platform.tgz" dest="{{ webdir }}/" copy=no
+- name: Move old platform directory
+  command: mv {{ webdir }}/platform {{ webdir }}/platform_{{ ansible_date_time.date }}
+          creates="{{ webdir }}/platform_{{ ansible_date_time.date }}"
+  when: platform_stat.stat.isdir is defined and platform_stat.stat.isdir == True
   tags:
     - update_packages
 
@@ -61,5 +66,10 @@
 
 - name: Enable nginx
   service: name=nginx state=started enabled=yes
+  tags:
+    - services
+
 - name: Enable tftpd
   service: name=tftpd state=started enabled=yes
+  tags:
+    - services

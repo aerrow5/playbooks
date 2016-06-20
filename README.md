@@ -10,3 +10,8 @@ ansible-playbook -i production update_packages.yml --limit=subsonic
 ```
 ansible-playbook -i production site.yml --limit=owncloud --extra-vars "provision_mode=true"
 ```
+
+### Get version of openssl on every server
+```
+ansible all -a "openssl version" -i production
+```

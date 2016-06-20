@@ -1,16 +1,12 @@
 # Infrastructure Setup Using Ansible and SmartOS
 
+
+### Updating Packages on subsonic group
 ```
-ssh-agent bash
-ssh-add ~/.ssh/id_rsa
+ansible-playbook -i production update_packages.yml --limit=subsonic 
 ```
 
+### Run playbook to provision owncloud server and configure
 ```
-ansible-playbook -i production site.yml --tags update_packages
+ansible-playbook -i production site.yml --limit=owncloud --extra-vars "provision_mode=true"
 ```
-
-```
-ansible-playbook -i production shell.yml --extra-vars "provision_mode=true"
-```
-
-Image UUID from https://docs.joyent.com/public-cloud/instances/infrastructure/images/smartos/minimal

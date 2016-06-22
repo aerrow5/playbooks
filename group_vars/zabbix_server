@@ -1,7 +1,7 @@
 ansible_remote_user: root
 admin_group: adm
 
-image_name: centos-7
+image_name: centos-6
 cpu_cap: 100
 max_phy_mem: 1024
 quota: 20

@@ -38,6 +38,7 @@
     - common
     - ups
     - pxeserver
+    - rsyslog_server
 
 - hosts: owncloud
   roles:
@@ -132,3 +133,13 @@
     with_items:
       - samba:smbd
       - samba:nmbd 
+
+- hosts: influxdb
+  remote_user: root
+  gather_facts: no
+  roles:
+    - role: smartos_provision
+    - role: common
+    - role: influxdb
+    - role: grafana
+  vars:

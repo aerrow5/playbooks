@@ -1,38 +1,42 @@
-  - name: Upgrading packages
-    pacman: update_cache=yes upgrade=yes
-    tags:
-      - update_packages
-  - package: name={{ item }} state=present
-    with_items:
-      - base-devel
-      - git
-      - neon
-      - net-snmp
-      - libusb-compat
-      - docbook-xml
-      - docbook-xsl
-      - libxml2
-      - libxslt
-      - asciidoc
+- name: Install needed packages  
+  pacman: name={{ item }} update_cache=yes state=present
+  with_items:
+    - base-devel
+    - git
+    - neon
+    - net-snmp
+    - libusb-compat
+    - docbook-xml
+    - docbook-xsl
+    - libxml2
+    - libxslt
+    - asciidoc
 
-  - name: Check if NUT installed
-    command: pacman -Q network-ups-tools
-    register: is_installed
-    failed_when: is_installed.rc > 1
-    changed_when: no
+- name: Check if NUT installed
+  command: pacman -Q network-ups-tools
+  register: is_installed
+  failed_when: is_installed.rc > 1
+  changed_when: no
 
-  - name: Build NUT if not installed
-    include: tasks/build_nut.yml
-    when: is_installed.rc == 1
+- name: Build NUT if not installed
+  include: tasks/build_nut.yml
+  when: is_installed.rc == 1
 
-  - name: install package
-    shell: pacman -U /home/alarm/nut-build/network-ups-tools-*.pkg.tar.xz  --noconfirm
-  - copy: src={{ item }} dest=/etc/ups/ owner=root mode=644
-    with_fileglob:
-      - ./*.conf 
-      - ./*.users
-    tags:
-      - config
+- name: install package
+  shell: pacman -U /home/alarm/nut-build/network-ups-tools-*.pkg.tar.xz  --noconfirm
 
-  - service: name=nut-server state=started enabled=yes
-  - service: name=nut-monitor state=started enabled=yes
+- name: Configure templates
+  template: src={{ item }}.j2 dest=/etc/ups/{{ item }} 
+  with_items:
+    - nut.conf
+    - ups.conf
+    - upsd.conf
+    - upsd.users
+    - upsmon.conf
+    - upssched.conf
+  notify:
+    - restart nut-server
+    - restart nut-monitor
+
+- service: name=nut-server state=started enabled=yes
+- service: name=nut-monitor state=started enabled=yes

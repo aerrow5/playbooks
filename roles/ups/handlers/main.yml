@@ -1,0 +1,6 @@
+- name: restart nut-server
+  service: name=nut-server state=restarted
+
+- name: restart nut-monitor
+  service: name=nut-monitor state=restarted
+

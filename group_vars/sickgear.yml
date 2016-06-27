@@ -1,0 +1,12 @@
+image_name: debian-7
+cpu_cap: 100
+max_phy_mem: 2048
+quota: 100
+brand: lx
+alias: sickgear
+nics:
+  - {interface: "net0", nic_tag: "external", vlan_id: "3", ip: "10.0.3.19", netmask: "255.255.255.0", gateway: "10.0.3.1"}
+filesystems:
+  - {source: "/zones/db/sickgear", target: "/opt/sickgear", read_only: false}
+  - {source: "/zones/data/media", target: "/media", read_only: false}
+

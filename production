@@ -32,6 +32,9 @@ logging.signet
 [webproxy]
 webproxy.signet 
 
+[webproxy2]
+blah.signet
+
 [shell]
 shell.signet
 
@@ -52,6 +55,9 @@ ups.signet
 
 [kim]
 kim.signet 
+
+[sickgear]
+10.0.3.19
 
 [dmz:children]
 owncloud

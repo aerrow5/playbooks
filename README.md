@@ -6,9 +6,9 @@
 ansible-playbook -i production update_packages.yml --limit=subsonic 
 ```
 
-### Run playbook to provision owncloud server and configure
+### Run playbook to provision owncloud server
 ```
-ansible-playbook -i production site.yml --limit=owncloud --extra-vars "provision_mode=true"
+ansible-playbook -i production provision_vm.yml --limit=owncloud
 ```
 
 ### Get version of openssl on every server

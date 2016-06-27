@@ -3,8 +3,6 @@
 - hosts: shell
   roles:
     - role: smartos_provision
-    - role: joyent_zone_bootstrap
-    - role: common
 
 - hosts: dbserver
   roles:
@@ -27,19 +25,6 @@
     - role: common
     - role: openldap
 
-- hosts: kim
-  remote_user: piranha
-  become: true
-  roles:
-    - common
-
-- hosts: pimon
-  roles:
-    - common
-    - ups
-    - pxeserver
-    - rsyslog_server
-
 - hosts: owncloud
   roles:
     - smartos_provision
@@ -51,11 +36,12 @@
       apt_repository: repo='deb https://download.owncloud.org/download/repositories/stable/Debian_8.0/ /' state=present
 
 - hosts: sickgear
+  gather_facts: false
   remote_user: root
   roles:
     - smartos_provision
-    - common
-    - sickgear
+  vars:
+    provision_mode: true
 
 - hosts: plex
   remote_user: root

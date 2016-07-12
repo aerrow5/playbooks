@@ -1,21 +1,24 @@
 # file: site.yml
 
 - hosts: shell
+  gather_facts: false
   roles:
-    - role: smartos_provision
-    - role: joyent_zone_bootstrap
-    - role: common
+    - joyent_zone_bootstrap
+    - common
+
+- hosts: git
+  roles:
+    - joyent_zone_bootstrap
+    - common
 
 - hosts: dbserver
   roles:
-#    - role: smartos_provision
-#    - role: joyent_zone_bootstrap
-    - role: common
-    - role: postgresql
+#    - joyent_zone_bootstrap
+    - common
+    - postgresql
 
 - hosts: zabbix_server
   roles:
-    - smartos_provision
     - common
     - zabbix_server
 
@@ -23,9 +26,8 @@
   remote_user: root
   gather_facts: no
   roles:
-    - role: smartos_provision
-    - role: common
-    - role: openldap
+    - common
+    - openldap
 
 - hosts: kim
   remote_user: piranha
@@ -42,7 +44,6 @@
 
 - hosts: owncloud
   roles:
-    - smartos_provision
     - common
   tasks:
     - name: Adding https apt support
@@ -53,39 +54,29 @@
 - hosts: sickgear
   remote_user: root
   roles:
-    - smartos_provision
     - common
     - sickgear
 
 - hosts: plex
   remote_user: root
   roles:
-    - smartos_provision
     - common
     - plex
 
 - hosts: transmission
   roles:
-    - smartos_provision
     - common
     - transmission
 
 - hosts: syncthing
   remote_user: root
   roles:
-    - role: smartos_provision
-    - role: common
+    - common
 
 - hosts: subsonic
   roles:
-    - role: smartos_provision
-    - role: common
-    - role: subsonic
-
-- hosts: webproxy2
-  gather_facts: no
-  roles:
-    - role: smartos_provision
+    - common
+    - subsonic
 
 - hosts: webproxy
   tasks:
@@ -124,9 +115,8 @@
 - hosts: samba 
   gather_facts: no  
   roles:
-    - role: smartos_provision
-    - role: common
-    - role: samba
+    - common
+    - samba
   tasks:
   - name: ensure samba installed
     pkgin: name=samba state=present
@@ -150,8 +140,6 @@
   remote_user: root
   gather_facts: no
   roles:
-    - role: smartos_provision
-    - role: common
-    - role: influxdb
-    - role: grafana
-  vars:
+    - common
+    - influxdb
+    - grafana

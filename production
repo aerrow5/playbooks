@@ -2,6 +2,9 @@
 [laptop]
 127.0.0.1 connection=local
 
+[git]
+10.0.4.15
+
 [smartos]
 smartos.signet
 
@@ -57,7 +60,7 @@ ups.signet
 kim.signet 
 
 [sickgear]
-10.0.3.19
+sickgear.signet
 
 [dmz:children]
 owncloud
@@ -67,3 +70,4 @@ subsonic
 webproxy
 shell
 syncthing
+git

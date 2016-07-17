@@ -1,0 +1,4 @@
+- name: restart cups
+  service:
+    name=org.cups.cupsd
+    state=restarted

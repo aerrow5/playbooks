@@ -5,4 +5,21 @@
   roles:
     - role: smartos_provision
   vars:
-    provision_mode: true
+    - provision_mode: true
+    - smartos_python_path: /opt/local/bin/python2
+  tasks:
+    # Install python on joyent zones
+    - name: Upgrading pkgin packages
+      raw: /opt/local/bin/pkgin -y update; /opt/local/bin/pkgin -y upgrade
+      when: brand == 'joyent'
+      become: yes
+    - name: Installing python
+      raw: /opt/local/bin/pkgin -y install python27
+      when: brand == 'joyent'
+      become: yes
+    - set_fact: ansible_python_interpreter={{ smartos_python_path }}
+      when: brand == 'joyent'
+    - name: Test python install
+      setup:
+      when: brand == 'joyent'
+

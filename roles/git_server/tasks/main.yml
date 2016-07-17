@@ -1,0 +1,31 @@
+- name: Install scmgit
+  package:
+    name=scmgit
+    state=present
+  become: yes
+
+- name: Create git group
+  group:
+    name=git
+    gid=104
+    state=present
+  become: yes
+
+- name: Create git user
+  user:
+    name=git
+    uid=104
+    groups=git
+    state=present
+  become: yes
+
+- name: Adding git authorized keys
+  authorized_key: user=git key=https://github.com/precurse.keys
+
+- name: Change git repo permissions
+  file:
+    path=/export/git
+    state=directory
+    recurse=yes
+    owner=git
+    group=git

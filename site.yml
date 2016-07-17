@@ -3,13 +3,12 @@
 - hosts: shell
   gather_facts: false
   roles:
-    - joyent_zone_bootstrap
     - common
 
 - hosts: git
   roles:
-    - joyent_zone_bootstrap
     - common
+    - git_server
 
 - hosts: dbserver
   roles:
@@ -38,6 +37,7 @@
 - hosts: pimon
   roles:
     - common
+    - { role: cups_server, tags: cups }
     - ups
     - pxeserver
     - rsyslog_server

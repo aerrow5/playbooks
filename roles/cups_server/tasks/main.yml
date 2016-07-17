@@ -1,0 +1,29 @@
+- name: Install cups
+  pacman:
+    name={{ item }}
+    update_cache=yes
+    state=present
+  with_items:
+    - cups
+    - ghostscript
+    - gsfonts
+
+- name: Configure cupsd.conf
+  template:
+    src=templates/cupsd.conf.j2
+    dest=/etc/cups/cupsd.conf
+  notify: restart cups
+
+- name: Ensure username part of sys group
+  user:
+    name=alarm
+    groups=sys
+
+- name: Start services
+  service:
+    name={{ item }}
+    state=started
+    enabled=yes
+  with_items:
+    - org.cups.cupsd
+    - cups-browsed

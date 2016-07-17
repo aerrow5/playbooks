@@ -1,2 +1,1 @@
-ansible_user: alarm
 ansible_python_interpreter: /usr/bin/python2

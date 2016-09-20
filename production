@@ -2,23 +2,15 @@
 [laptop]
 127.0.0.1 connection=local
 
-[git]
-10.0.4.15
-
 [smartos]
 smartos.signet
 
-[ldap]
-ldap.signet
+## DMZ
+[shell]
+shell.signet
 
-[owncloud]
-owncloud.signet
-
-[influxdb]
-influxdb.signet
-
-[transmission]
-transmission.signet
+[git]
+git.signet
 
 [plex]
 plex.signet
@@ -26,48 +18,58 @@ plex.signet
 [subsonic]
 subsonic.signet
 
+[webproxy]
+webproxy.signet
+
+[owncloud]
+owncloud.signet
+
+[transmission]
+transmission.signet
+
+[syncthing]
+syncthing.signet
+
+[prometheus]
+10.0.3.19
+
+## LAN
+[fileserver]
+smb.signet
+
+[dbserver]
+db.signet
+
+[ldap]
+ldap.signet
+
+[influxdb]
+influxdb.signet
+
 [elasticsearch]
 elasticsearch.signet
 
 [logging]
 logging.signet
 
-[webproxy]
-webproxy.signet 
-
-[webproxy2]
-blah.signet
-
-[shell]
-shell.signet
-
-[fileserver]
-smb.signet 
-
 [zabbix_server]
 zabbix.signet
 
-[syncthing]
-syncthing.signet 
-
-[dbserver]
-db.signet
-
 [pimon]
-ups.signet 
+ups.signet
 
 [kim]
-kim.signet 
+kim.signet
 
-[sickgear]
-sickgear.signet
+[cyberahome]
+10.0.3.12
 
 [dmz:children]
+shell
+git
+plex
 owncloud
 transmission
-plex
 subsonic
 webproxy
-shell
 syncthing
-git

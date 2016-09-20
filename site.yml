@@ -112,8 +112,8 @@
   - cron: name="Letsencrypt renewal" day="1" job="/root/automate-letsencrypt.sh" 
   - service: name=nginx state=reloaded
 
-- hosts: samba 
-  gather_facts: no  
+- hosts: samba
+  gather_facts: no
   roles:
     - common
     - samba

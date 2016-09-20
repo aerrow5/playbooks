@@ -2,4 +2,4 @@ ansible_user: root
 ansible_python_interpreter: /opt/local/bin/python2
 
 https_port: 443
-http_port: 80 
+http_port: 80

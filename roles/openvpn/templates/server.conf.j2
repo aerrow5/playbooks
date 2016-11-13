@@ -1,5 +1,4 @@
 # listen on? (optional)
-;local a.b.c.d
 port 1194
 proto udp
 ;dev tap
@@ -8,7 +7,7 @@ dev tun
 ca ca.crt
 cert server.crt
 key server.key  # This file should be kept secret
-#   openssl dhparam -out dh1024.pem 1024
+tls-auth ta.key 0 # This file is secret
 dh dh2048.pem
 server 10.8.0.0 255.255.255.0
 ifconfig-pool-persist ipp.txt
@@ -16,127 +15,20 @@ cipher AES-256-CBC
 auth SHA256
 tls-version-min 1.2
 tls-cipher TLS-DHE-RSA-WITH-AES-256-GCM-SHA384:TLS-DHE-RSA-WITH-AES-128-GCM-SHA256:TLS-DHE-RSA-WITH-AES-256-CBC-SHA:TLS-DHE-RSA-WITH-CAMELLIA-256-CBC-SHA:TLS-DHE-RSA-WITH-AES-128-CBC-SHA:TLS-DHE-RSA-WITH-CAMELLIA-128-CBC-SHA
-
-
-;server-bridge 10.8.0.4 255.255.255.0 10.8.0.50 10.8.0.100
-;push "route 192.168.10.0 255.255.255.0"
-;push "route 192.168.20.0 255.255.255.0"
-;client-config-dir ccd
-;route 192.168.40.128 255.255.255.248
-;client-config-dir ccd
-;route 10.9.0.0 255.255.255.252
-;learn-address ./script
-
-# If enabled, this directive will configure
-# all clients to redirect their default
-# network gateway through the VPN, causing
-# all IP traffic such as web browsing and
-# and DNS lookups to go through the VPN
-# (The OpenVPN server machine may need to NAT
-# the TUN/TAP interface to the internet in
-# order for this to work properly).
-# CAVEAT: May break client's network config if
-# client's local DHCP server packets get routed
-# through the tunnel.  Solution: make sure
-# client's local DHCP server is reachable via
-# a more specific route than the default route
-# of 0.0.0.0/0.0.0.0.
-;push "redirect-gateway"
-
-# Certain Windows-specific network settings
-# can be pushed to clients, such as DNS
-# or WINS server addresses.  CAVEAT:
-# http://openvpn.net/faq.html#dhcpcaveats
-;push "dhcp-option DNS 10.8.0.1"
-;push "dhcp-option WINS 10.8.0.1"
-
-# Uncomment this directive to allow different
-# clients to be able to "see" each other.
-# By default, clients will only see the server.
-# To force clients to only see the server, you
-# will also need to appropriately firewall the
-# server's TUN/TAP interface.
-;client-to-client
-
-# Uncomment this directive if multiple clients
-# might connect with the same certificate/key
-# files or common names.  This is recommended
-# only for testing purposes.  For production use,
-# each client should have its own certificate/key
-# pair.
-#
-# IF YOU HAVE NOT GENERATED INDIVIDUAL
-# CERTIFICATE/KEY PAIRS FOR EACH CLIENT,
-# EACH HAVING ITS OWN UNIQUE "COMMON NAME",
-# UNCOMMENT THIS LINE OUT.
-;duplicate-cn
-
-# The keepalive directive causes ping-like
-# messages to be sent back and forth over
-# the link so that each side knows when
-# the other side has gone down.
-# Ping every 10 seconds, assume that remote
-# peer is down if no ping received during
-# a 120 second time period.
+#fragment 1472
+server-ipv6 2607:5300:60:db9::/64
+push "redirect-gateway"
+push "route-ipv6 2000::/3"
+push "dhcp-option DNS 8.8.8.8"
 keepalive 10 120
-
-# For extra security beyond that provided
-# by SSL/TLS, create an "HMAC firewall"
-# to help block DoS attacks and UDP port flooding.
-#
-# Generate with:
-#   openvpn --genkey --secret ta.key
-#
-# The server and each client must have
-# a copy of this key.
-# The second parameter should be '0'
-# on the server and '1' on the clients.
-tls-auth ta.key 0 # This file is secret
-
-# Enable compression on the VPN link.
-# If you enable it here, you must also
-# enable it in the client config file.
 comp-lzo
-
-# The maximum number of concurrently connected
-# clients we want to allow.
-;max-clients 100
+max-clients 10
 
 user nobody
 group nobody
 
-# The persist options will try to avoid
-# accessing certain resources on restart
-# that may no longer be accessible because
-# of the privilege downgrade.
 persist-key
 persist-tun
 
-# Output a short status file showing
-# current connections, truncated
-# and rewritten every minute.
 status openvpn-status.log
-
-# By default, log messages will go to the syslog (or
-# on Windows, if running as a service, they will go to
-# the "\Program Files\OpenVPN\log" directory).
-# Use log or log-append to override this default.
-# "log" will truncate the log file on OpenVPN startup,
-# while "log-append" will append to it.  Use one
-# or the other (but not both).
-;log         openvpn.log
-;log-append  openvpn.log
-
-# Set the appropriate level of log
-# file verbosity.
-#
-# 0 is silent, except for fatal errors
-# 4 is reasonable for general usage
-# 5 and 6 can help to debug connection problems
-# 9 is extremely verbose
 verb 3
-
-# Silence repeating messages.  At most 20
-# sequential messages of the same message
-# category will be output to the log.
-;mute 20

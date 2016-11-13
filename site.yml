@@ -33,6 +33,7 @@
   become: true
   roles:
     - common
+    - openvpn
 
 - hosts: pimon
   roles:

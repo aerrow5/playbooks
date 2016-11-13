@@ -1,0 +1,28 @@
+- name: Copy crts/key
+  copy:
+    src=files/{{ item }}
+    dest=/etc/openvpn/{{ item }}
+  with_items:
+    - ca.crt
+    - server.crt
+    - server.key
+  become: yes
+
+- name: setup ta.key
+  shell: openvpn --genkey --secret ta.key
+  args:
+    creates: /etc/openvpn/ta.key
+    chdir: /etc/openvpn
+
+- name: setup dhparam
+  shell: openssl dhparam -out dh2048.pem 2048
+  args:
+    creates: /etc/openvpn/dh2048.pem
+    chdir: /etc/openvpn
+  become: yes
+
+- name: Install openvpn tmeplate
+  template:
+    src=templates/server.conf.j2
+    dest=/etc/openvpn/server.conf
+  become: yes

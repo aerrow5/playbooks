@@ -21,7 +21,19 @@
     chdir: /etc/openvpn
   become: yes
 
-- name: Install openvpn tmeplate
+- name: Set file permissions for secret files
+  file:
+    path=/etc/openvpn/{{ item }}
+    mode=0600
+    owner=root
+    group=root
+  with_items:
+    - ta.key
+    - dh2048.pem
+    - server.key
+  become: yes
+
+- name: Install openvpn template
   template:
     src=templates/server.conf.j2
     dest=/etc/openvpn/server.conf

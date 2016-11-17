@@ -75,11 +75,19 @@ http{
 
         location /subsonic {
             proxy_pass http://10.0.4.13:4040/subsonic;
+            proxy_redirect http:// https://;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             access_log off;
         }
 
         location /owncloud/ {
             proxy_pass http://owncloud.signet/owncloud/;
+            proxy_redirect http:// https://;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 
         }
 
@@ -100,6 +108,10 @@ http{
 
         location /owncloud {
             proxy_pass http://owncloud.signet/owncloud;
+            proxy_redirect http:// https://;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             access_log off;
         }
 
@@ -117,6 +129,10 @@ http{
 
         location ^~ /subsonic {
             proxy_pass http://10.0.4.13:4040/subsonic;
+            proxy_redirect http:// https://;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             access_log off;
         }
 

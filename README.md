@@ -1,6 +1,9 @@
 # Infrastructure Setup Using Ansible and SmartOS
 
-
+### Create new Virtual Machine called "shell"
+```
+ansible-playbook -i production provision_vm.yml --limit=shell
+```
 ### Updating Packages on subsonic group
 ```
 ansible-playbook -i production update_packages.yml --limit=subsonic 

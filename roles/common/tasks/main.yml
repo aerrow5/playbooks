@@ -1,8 +1,11 @@
-- name: gather facts    
+- name: gather facts
   setup:
 
 - name: Setup Users
-  user: name=piranha state=present groups={{ admin_group }}
+  user:
+    name=piranha
+    state=present
+    groups={{ admin_group }}
 
 - name: Adding github ssh keys
   authorized_key: user={{ item }} key=https://github.com/precurse.keys
@@ -20,7 +23,7 @@
 
 - name: Disable Debian auto-start daemons on install
   shell: echo "exit 101" > /usr/sbin/policy-rc.d creates=/usr/sbin/policy-rc.d
-  when: ansible_os_family == "Debian" 
+  when: ansible_os_family == "Debian"
 
 - name: Install common packages
   package: name={{ item }} state=present

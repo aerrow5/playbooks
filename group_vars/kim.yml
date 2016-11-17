@@ -1,2 +1,2 @@
-admin_group: adm
+admin_group: wheel
 ansible_python_interpreter: /usr/bin/python2

@@ -5,6 +5,6 @@ quota: 100
 brand: lx
 alias: ldap
 nics:
-  - {interface: "net0", nic_tag: "external", vlan_id: "3", ip: "10.0.3.18", netmask: "255.255.255.0", gateway: "10.0.3.1"}
+  - {interface: "net0", nic_tag: "external", ip: "10.0.3.18", netmask: "255.255.255.0", gateway: "10.0.3.1"}
 filesystems:
   - {source: "/zones/db/ldap", target: "/var/lib/ldap", read_only: false}

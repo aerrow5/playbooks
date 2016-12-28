@@ -1,2 +1,3 @@
+domain: dmz
 resolvers:
   - 10.0.4.1

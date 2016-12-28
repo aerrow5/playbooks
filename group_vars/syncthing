@@ -6,7 +6,6 @@ max_phy_mem: 512
 quota: 20
 brand: joyent 
 alias: syncthing
-domain: signet
 nics:
   - {interface: "net0", nic_tag: "external", vlan_id: "4", ip: "10.0.4.17", netmask: "255.255.255.0", gateway: "10.0.4.1"}
 filesystems:

@@ -9,5 +9,5 @@ brand: lx
 alias: zabbix
 domain: signet
 nics:
-  - {interface: "eth0", nic_tag: "external", vlan_id: "3", ip: "10.0.3.17", netmask: "255.255.255.0", gateway: "10.0.3.1"}
+  - {interface: "eth0", nic_tag: "external", ip: "10.0.3.17", netmask: "255.255.255.0", gateway: "10.0.3.1"}
   - {interface: "eth1", nic_tag: "stub0", ip: "10.0.1.4", netmask: "255.255.255.0"}

@@ -8,6 +8,7 @@
 - name: Check if Subsonic installed
   shell: dpkg-query -s subsonic |grep Version | grep "{{ subsonic_ver }}"
   register: deb_installed
+  ignore_errors: yes
   changed_when: no
 
 - name: Install subsonic if not present
@@ -32,6 +33,8 @@
   lineinfile: dest=/etc/default/subsonic regexp=^SUBSONIC_USER= line=SUBSONIC_USER=subsonic
   notify:
     - stop subsonic
+
+- meta: flush_handlers
 
 - name: Enable subsonic
   service: name=subsonic state=running enabled=yes

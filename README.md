@@ -14,6 +14,11 @@ ansible-playbook -i production update_packages.yml --limit=subsonic
 ansible-playbook -i production provision_vm.yml --limit=owncloud
 ```
 
+### Run playbook to setup shell server
+```
+ansible-playbook -i production site.yml --limit=shell
+```
+
 ### Get version of openssl on every server
 ```
 ansible all -a "openssl version" -i production

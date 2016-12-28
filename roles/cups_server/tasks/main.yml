@@ -7,17 +7,20 @@
     - cups
     - ghostscript
     - gsfonts
+  become: yes
 
 - name: Configure cupsd.conf
   template:
     src=templates/cupsd.conf.j2
     dest=/etc/cups/cupsd.conf
+  become: yes
   notify: restart cups
 
 - name: Ensure username part of sys group
   user:
     name=alarm
     groups=sys
+  become: yes
 
 - name: Start services
   service:
@@ -27,3 +30,4 @@
   with_items:
     - org.cups.cupsd
     - cups-browsed
+  become: yes

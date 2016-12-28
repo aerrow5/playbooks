@@ -5,43 +5,58 @@
   roles:
     - common
 
-- hosts: git
+- hosts: all
   roles:
     - common
+
+- hosts: git
+  roles:
     - git_server
+
+- hosts: ceph
+  tasks:
+    - name: Create ceph group
+      group: name=ceph
+    - name: Create ceph user
+      user:
+        name=ceph
+        state=present
+        groups=ceph
+    - name: Add cep repository
+      yum_repository:
+        name: ceph-noarch
+        description: Ceph noarch packages
+        baseurl: https://download.ceph.com/rpm-{{ ceph_release }}/{{ distro }}/noarch
+        gpgcheck: yes
+        gpgkey: https://download.ceph.com/keys/release.asc
+    - name: Update yum repos
+      yum:
+        name=ceph-deploy
+        state=present
+
 
 - hosts: dbserver
   roles:
 #    - joyent_zone_bootstrap
-    - common
     - postgresql
 
 - hosts: zabbix_server
   roles:
-    - common
     - zabbix_server
 
 - hosts: ldap
   remote_user: root
   gather_facts: no
   roles:
-    - common
     - openldap
 
 - hosts: kim
   remote_user: piranha
   become: true
   roles:
-    - common
     - openvpn
 
-- hosts: pimon
-  roles:
-    - common
-    - { role: cups_server, tags: cups }
-    - ups
-    - pxeserver
-    - rsyslog_server
+- include: setup_pimon.yml
 
 - hosts: owncloud
   roles:
@@ -55,13 +70,11 @@
 - hosts: sickgear
   remote_user: root
   roles:
-    - common
     - sickgear
 
 - hosts: plex
   remote_user: root
   roles:
-    - common
     - plex
 
 - hosts: transmission

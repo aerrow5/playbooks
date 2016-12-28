@@ -1,41 +1,48 @@
 # file: production
-[laptop]
-127.0.0.1 connection=local
-
 [smartos]
 smartos.signet
 
 ## DMZ
 [shell]
-shell.signet
+shell.dmz
 
 [git]
-git.signet
+git.dmz
 
 [plex]
-plex.signet
+plex.dmz
 
 [subsonic]
-subsonic.signet
+subsonic.dmz
 
 [webproxy]
-webproxy.signet
+webproxy.dmz
 
 [owncloud]
-owncloud.signet
+owncloud.dmz
 
 [transmission]
-transmission.signet
+transmission.dmz
 
 [syncthing]
-syncthing.signet
+syncthing.dms
 
-[prometheus]
-10.0.3.19
+[dmz:children]
+shell
+git
+plex
+subsonic
+owncloud
+transmission
+webproxy
+syncthing
 
 ## LAN
 [fileserver]
 smb.signet
+
+[switch]
+switch.signet
 
 [dbserver]
 db.signet
@@ -56,7 +63,7 @@ logging.signet
 zabbix.signet
 
 [pimon]
-ups.signet
+alarmpi.signet
 
 [kim]
 kim.signet
@@ -64,12 +71,9 @@ kim.signet
 [cyberahome]
 10.0.3.12
 
-[dmz:children]
-shell
-git
-plex
-owncloud
-transmission
-subsonic
-webproxy
-syncthing
+[prometheus]
+10.0.3.19
+
+[ceph]
+10.0.3.20
+

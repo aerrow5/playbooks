@@ -1,0 +1,6 @@
+- hosts: pimon
+  roles:
+    - { role: cups_server, tags: cups }
+    - ups
+    - pxeserver
+    - rsyslog_server

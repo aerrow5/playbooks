@@ -1,10 +1,4 @@
 # file: site.yml
-
-- hosts: shell
-  gather_facts: false
-  roles:
-    - common
-
 - hosts: all
   roles:
     - common
@@ -66,11 +60,6 @@
       package: name=apt-transport-https state=present
     - name: Add owncloud repos
       apt_repository: repo='deb https://download.owncloud.org/download/repositories/stable/Debian_8.0/ /' state=present
-
-- hosts: sickgear
-  remote_user: root
-  roles:
-    - sickgear
 
 - hosts: plex
   remote_user: root

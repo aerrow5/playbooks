@@ -1,0 +1,34 @@
+- hosts: webproxy
+  tasks:
+  - include: tasks/smartos_zone_bootstrap.yml
+  - include: tasks/smartos_zone_usersetup.yml
+  - name: install building utils
+    pkgin: name=gcc47 state=present
+  - name: ensure nginx installed
+    pkgin: name=nginx state=present
+  - name: ensure nginx is running (and enable it at boot)
+    service: name=nginx state=started enabled=yes
+  - name: install letsencrypt dependencies
+    pkgin: name={{ item }} state=present
+    with_items:
+      - py27-pip
+      - augeas
+  - pip: name=letsencrypt
+  - template: src=nginx.conf.j2 dest=/opt/local/etc/nginx/nginx.conf owner=root group=root mode=0644
+  - template: src=letsencrypt.ini.j2 dest=/etc/letsencrypt/cli.ini owner=root group=root mode=0644 
+  - template: src=automate-letsencrypt.sh.j2 dest=/root/automate-letsencrypt.sh owner=root group=root mode=0644 
+  - name: Set Timezone
+    command: sm-set-timezone MST
+    tags:
+      - setup
+  - name: Letsencrypt Setup
+    command: letsencrypt certonly --renew-by-default --agree-tos
+    tags:
+      - setup
+  - name: generate dhparam.pem file (Be prepared to wait)
+    command: openssl dhparam -out /etc/ssl/certs/dhparam.pem 4096 
+    tags:
+      - setup
+  - cron: name="Letsencrypt renewal" day="1" job="/root/automate-letsencrypt.sh" 
+  - service: name=nginx state=reloaded
+

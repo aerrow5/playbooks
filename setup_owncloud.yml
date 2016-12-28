@@ -1,0 +1,8 @@
+- hosts: owncloud
+  roles:
+    - common
+  tasks:
+    - name: Adding https apt support
+      package: name=apt-transport-https state=present
+    - name: Add owncloud repos
+      apt_repository: repo='deb https://download.owncloud.org/download/repositories/stable/Debian_8.0/ /' state=present

@@ -1,6 +1,7 @@
 - hosts: pimon
   roles:
     - { role: cups_server, tags: cups }
+    - { role: consul, tags: consul }
     - ups
     - pxeserver
     - rsyslog_server

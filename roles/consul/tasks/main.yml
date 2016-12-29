@@ -1,0 +1,60 @@
+- name: Ensure consul user exists
+  user:
+    name: consul
+    comment: "Consul user"
+    shell: /bin/false
+    state: present
+
+- name: Ensure unzip binary exists
+  package:
+    name: unzip
+    state: present
+  become_user: consul
+  become: true
+
+- name: Download consul binary
+  get_url:
+    url: https://releases.hashicorp.com/consul/{{ consul_ver }}/consul_{{ consul_ver }}_linux_arm.zip
+    dest: /tmp/consul.zip
+    mode: 0644
+    checksum: sha256:e18934a3a38b980bc0cfaa8d74379a6bfe58cf1ecf4b164e28ff37dd6c7198b0
+  become_user: consul
+  become: true
+
+- name: Extract consul
+  unarchive:
+    src: /tmp/consul.zip
+    dest: /usr/local/sbin
+    remote_src: True
+  become: true
+
+- name: Ensure consul.d directory exists
+  file:
+    path: /etc/consul.d
+    state: directory
+    mode: 0755
+  become: true
+
+- name: Ensure consul data directory exists and proper permissions
+  file:
+    path: /var/lib/consul
+    state: directory
+    mode: 0755
+    recurse: yes
+    owner: consul
+    group: consul
+  become: true
+
+- name: setup systemd service file
+  template:
+    src: templates/consul.service.j2
+    dest: /etc/systemd/system/consul.service
+  become: true
+
+- name: Setup consul service
+  systemd:
+    name: consul
+    daemon_reload: yes
+    state: started
+    enabled: yes
+  become: true

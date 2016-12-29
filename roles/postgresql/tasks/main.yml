@@ -1,7 +1,6 @@
 - name: Install postgresql
   package: name={{ item }} state=present
   with_items:
-    - postgresql94-server
-    - postgresql94-adminpack
+    - postgresql94
 - name: Enable postgresql
   service: name=postgresql state=started enabled=yes

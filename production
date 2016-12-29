@@ -45,7 +45,7 @@ smb.signet
 switch.signet
 
 [dbserver]
-db.signet
+dbserver.signet
 
 [ldap]
 ldap.signet

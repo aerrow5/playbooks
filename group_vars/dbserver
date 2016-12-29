@@ -6,7 +6,7 @@ cpu_cap: 100
 max_phy_mem: 4096
 quota: 100
 brand: joyent
-alias: db
+alias: dbserver
 nics:
   - {interface: "net0", nic_tag: "external", ip: "10.0.3.13", netmask: "255.255.255.0", gateway: "10.0.3.1"}
   - {interface: "net1", nic_tag: "stub0", ip: "10.0.1.2", netmask: "255.255.255.0"}

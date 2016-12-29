@@ -1,0 +1,11 @@
+ansible_user: root
+ansible_python_interpreter: /opt/local/bin/python
+
+image_name: base-64-lts
+cpu_cap: 200
+max_phy_mem: 512
+quota: 5
+brand: joyent
+alias: haproxy
+nics:
+  - {interface: "eth0", nic_tag: "external", vlan_id: "4", ip: "10.0.4.20", netmask: "255.255.255.0", gateway: "10.0.4.1"}

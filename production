@@ -18,6 +18,9 @@ subsonic.dmz
 [webproxy]
 webproxy.dmz
 
+[haproxy]
+haproxy.dmz
+
 [owncloud]
 owncloud.dmz
 
@@ -32,9 +35,10 @@ shell
 git
 plex
 subsonic
+webproxy
+haproxy
 owncloud
 transmission
-webproxy
 syncthing
 
 ## LAN

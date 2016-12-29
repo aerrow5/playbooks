@@ -2,6 +2,7 @@
 - hosts: all
   roles:
     - common
+  tags: common
 
 - include: setup_pimon.yml
 - include: setup_webproxy.yml

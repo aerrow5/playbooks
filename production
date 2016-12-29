@@ -59,9 +59,6 @@ elasticsearch.signet
 [logging]
 logging.signet
 
-[zabbix_server]
-zabbix.signet
-
 [pimon]
 alarmpi.signet
 

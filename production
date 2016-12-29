@@ -74,3 +74,5 @@ kim.signet
 [ceph]
 10.0.3.20
 
+[consul:children]
+pimon

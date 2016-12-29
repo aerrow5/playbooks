@@ -1,6 +1,13 @@
 ansible_user: root
 ansible_python_interpreter: /opt/local/bin/python2
 
+image_name: base-64-lts
+cpu_cap: 100
+max_phy_mem: 1024
+quota: 100
+brand: joyent
+alias: fileserver
+
 nics:
   - {interface: "net0", nic_tag: "external", ip: "10.0.3.15", netmask: "255.255.255.0", gateway: "10.0.3.1"}
 filesystems:

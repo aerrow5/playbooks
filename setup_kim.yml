@@ -1,0 +1,5 @@
+- hosts: kim
+  remote_user: piranha
+  become: true
+  roles:
+    - openvpn

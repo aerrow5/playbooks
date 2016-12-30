@@ -14,7 +14,7 @@ ansible-playbook site.yml --limit=shell
 ansible-playbook update_packages.yml --limit=shell
 ```
 
-### Run playbook to setup shell server
+### Run playbook to only setup common tag on shell server
 ```
 ansible-playbook site.yml --limit=shell --tags=common
 ```

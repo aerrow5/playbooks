@@ -1,17 +1,4 @@
 - hosts: haproxy
   roles:
     - common
-  tasks:
-    - name: Install haproxy
-      pkgin:
-        name: haproxy
-        state: present
-        update_cache: yes
-      become: yes
-
-    - name: Enable haproxy
-      service:
-        name: haproxy
-        state: started
-        enabled: yes
-      become: yes
+    - haproxy

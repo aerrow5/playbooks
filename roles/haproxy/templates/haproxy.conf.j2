@@ -1,0 +1,80 @@
+global
+  log         127.0.0.1 local2
+  log-send-hostname
+  chroot      /var/lib/haproxy
+  pidfile     /var/run/haproxy.pid
+  maxconn     4000
+  user        haproxy
+  group       haproxy
+  nbproc      1
+  ulimit-n    9000
+  daemon
+  tune.ssl.default-dh-param 2048
+  ssl-default-bind-options no-sslv3
+  ssl-default-bind-ciphers ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS
+  ssl-default-server-options no-sslv3
+  ssl-default-server-ciphers ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:
+
+defaults
+    mode                    http
+    log                     global
+    option                  httplog
+#   option                  dontlognull
+    option                  http-ignore-probes
+    option                  http-server-close
+    option                  forwardfor       except 127.0.0.0/8
+    option                  redispatch
+
+    retries                 3
+    timeout http-request    10s
+    timeout queue           1m
+    timeout connect         10s
+    timeout client          1m
+    timeout server          1m
+    timeout http-keep-alive 10s
+    timeout check           10s
+    maxconn                 3000
+
+
+frontend http-in
+    bind *:80
+
+    # Hosts
+    acl host_subsonic hdr(host) -i subsonic.aklaus.ca
+    acl host_owncloud hdr(host) -i owncloud.aklaus.ca
+
+
+    use_backend host_subsonic_be if host_subsonic
+    use_backend host_owncloud_be if host_owncloud
+
+frontend https-in
+    bind *:443 ssl crt /opt/local/etc/haproxy.pem
+
+    # Hosts
+    acl host_subsonic hdr(host) -i subsonic.aklaus.ca
+    acl host_owncloud hdr(host) -i owncloud.aklaus.ca
+
+
+    use_backend host_subsonic_be if host_subsonic
+    use_backend host_owncloud_be if host_owncloud
+
+backend host_subsonic_be
+    option forwardfor # This sets X-Forwarded-For
+    rspdel ^Strict-Transport-Security:.* #Remove hsts header from backend applications
+    mode http
+    balance roundrobin
+    option httpclose
+  
+    cookie HTTPSERVERID insert nocache indirect httponly secure
+    server subsonic subsonic.dmz:4040 cookie A check
+
+
+backend host_owncloud_be
+    option forwardfor # This sets X-Forwarded-For
+    rspdel ^Strict-Transport-Security:.* #Remove hsts header from backend applications
+    mode http
+    balance roundrobin
+    option httpclose
+  
+    cookie HTTPSERVERID insert nocache indirect httponly secure
+    server subsonic owncloud.dmz:80 cookie A check

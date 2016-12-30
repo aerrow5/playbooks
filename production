@@ -15,9 +15,6 @@ plex.dmz
 [subsonic]
 subsonic.dmz
 
-[webproxy]
-webproxy.dmz
-
 [haproxy]
 haproxy.dmz
 
@@ -35,7 +32,6 @@ shell
 git
 plex
 subsonic
-webproxy
 haproxy
 owncloud
 transmission

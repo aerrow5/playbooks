@@ -1,0 +1,9 @@
+
+haproxy_cb_email: user@example.com
+haproxy_cb_domains:
+  - www.example.com
+  - example.com
+
+haproxy_cb_prehook: "svcadm disable haproxy"
+haproxy_cb_posthook: "svcadm enable haproxy"
+

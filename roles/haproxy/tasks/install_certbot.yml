@@ -1,0 +1,34 @@
+- name: Copy certbot auto
+  copy:
+    src=files/certbot-auto
+    dest=/root/certbot-auto
+    mode=0744
+
+- name: Run certbot-auto dependencies
+  command: /root/certbot-auto --os-packages-only --debug -n -q
+  register: cb_reg
+  changed_when: cb_reg.rc != 0
+
+- name: Combine certs + key for haproxy
+  shell: "cat /etc/letsencrypt/live/{{ haproxy_cb_domains[0] }}/{fullchain,privkey}.pem > /opt/local/etc/haproxy.pem"
+  ignore_errors: yes
+
+- name: Create certbot certs if needed
+  command: /root/certbot-auto certonly --debug \
+          --standalone \
+          --preferred-challenges tls-sni-01 \
+          --agree-tos \
+          --email {{ haproxy_cb_email }} \
+          --keep-until-expiring \
+          --quiet \
+          --expand \
+          -n \
+          {% for i in haproxy_cb_domains %} -d {{ i }} {% endfor %} \
+          --pre-hook "{{ haproxy_cb_prehook }}" --post-hook "{{ haproxy_cb_posthook }}"
+
+- name: Setup certbot crontab if needed
+  cron: name="Autorenew certbot"
+        minute="8" hour="0"
+        job="/root/certbot-auto renew --quiet --preferred-challenges tls-sni-01 --debug --pre-hook '{{ haproxy_cb_prehook }}' --post-hook '{{ haproxy_cb_posthook }}'"
+        cron_file=certbot
+        user="root"

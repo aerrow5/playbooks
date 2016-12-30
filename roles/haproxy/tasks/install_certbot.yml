@@ -29,6 +29,6 @@
 - name: Setup certbot crontab if needed
   cron: name="Autorenew certbot"
         minute="8" hour="0"
-        job="/root/certbot-auto renew --quiet --preferred-challenges tls-sni-01 --debug --pre-hook '{{ haproxy_cb_prehook }}' --post-hook '{{ haproxy_cb_posthook }}'"
+        job="/root/certbot-auto renew --keep-until-expiring -q -n --preferred-challenges tls-sni-01 --debug --pre-hook '{{ haproxy_cb_prehook }}' --post-hook '{{ haproxy_cb_posthook }}'"
         cron_file=certbot
         user="root"

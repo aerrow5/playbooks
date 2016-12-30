@@ -35,20 +35,13 @@ defaults
     timeout check           10s
     maxconn                 3000
 
-
-frontend http-in
-    bind *:80
-
-    # Hosts
-    acl host_subsonic hdr(host) -i subsonic.aklaus.ca
-    acl host_owncloud hdr(host) -i owncloud.aklaus.ca
-
-
-    use_backend host_subsonic_be if host_subsonic
-    use_backend host_owncloud_be if host_owncloud
-
 frontend https-in
     bind *:443 ssl crt /opt/local/etc/haproxy.pem
+    bind *:80 transparent
+
+    rspadd  Strict-Transport-Security:\ max-age=15768000
+    capture request header User-agent len 100
+    redirect scheme https code 301 if !{ ssl_fc }
 
     # Hosts
     acl host_subsonic hdr(host) -i subsonic.aklaus.ca

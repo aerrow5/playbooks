@@ -25,7 +25,7 @@
   user: name=subsonic uid=80 group=subsonic
 
 - name: Update subsonic config context
-  lineinfile: dest=/etc/default/subsonic regexp=^SUBSONIC_ARGS= line=SUBSONIC_ARGS="--max-memory=150 --context-path=/subsonic"
+  lineinfile: dest=/etc/default/subsonic regexp=^SUBSONIC_ARGS= line=SUBSONIC_ARGS="--max-memory=150 --context-path=/"
   notify:
     - stop subsonic
 

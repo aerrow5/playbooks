@@ -5,5 +5,5 @@ haproxy_cb_domains:
   - example.com
 
 haproxy_cb_prehook: "svcadm disable haproxy"
-haproxy_cb_posthook: "svcadm enable haproxy"
+haproxy_cb_posthook: "svcadm enable haproxy; cat /etc/letsencrypt/live/{{ haproxy_cb_domains[0] }}/{fullchain,privkey}.pem > /opt/local/etc/haproxy.pem"
 

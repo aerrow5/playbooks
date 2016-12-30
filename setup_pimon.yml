@@ -1,5 +1,6 @@
 - hosts: pimon
   roles:
+    - common
     - { role: cups_server, tags: cups }
     - { role: consul, tags: consul }
     - ups

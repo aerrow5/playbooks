@@ -1,3 +1,4 @@
 - hosts: subsonic
   roles:
+    - common
     - subsonic

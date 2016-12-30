@@ -2,4 +2,5 @@
   remote_user: piranha
   become: true
   roles:
+    - common
     - openvpn

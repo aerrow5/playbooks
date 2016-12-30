@@ -1,3 +1,4 @@
 - hosts: git
   roles:
+    - common
     - git_server

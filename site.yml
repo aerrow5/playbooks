@@ -1,9 +1,4 @@
 # file: site.yml
-- hosts: all
-  roles:
-    - common
-  tags: common
-
 - include: setup_kim.yml
 - include: setup_pimon.yml
 - include: setup_webproxy.yml

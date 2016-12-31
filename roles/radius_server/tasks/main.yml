@@ -1,0 +1,24 @@
+- name: Install packages
+  package:
+      name: "{{ item }}"
+      state: present
+  with_items:
+      - freeradius
+      - freeradius-utils
+  become: yes
+
+- name: Setup radius files module
+  file:
+      src: /etc/raddb/mods-available/files
+      dest: /etc/raddb/mods-enabled/files
+      state: link
+  notify: restart radius
+  become: yes
+
+- name: Enable radius service
+  service:
+      name: radiusd
+      state: started
+      enabled: yes
+  become: yes
+

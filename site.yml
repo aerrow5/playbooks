@@ -2,6 +2,7 @@
 - include: setup_kim.yml
 - include: setup_pimon.yml
 - include: setup_webproxy.yml
+- include: setup_radius.yml
 - include: setup_gitserver.yml
 - include: setup_samba.yml
 - include: setup_dbserver.yml

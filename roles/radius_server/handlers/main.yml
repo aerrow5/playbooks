@@ -1,0 +1,6 @@
+- name: restart radius
+  service:
+      name: radiusd
+      state: started
+      enabled: yes
+  become: yes

@@ -1,0 +1,14 @@
+[Unit]
+Description=rwflowpack
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Restart=on-failure
+ExecStart=/usr/local/sbin/rwflowpack --sensor-configuration=/data/sensors.conf --site-config-file=/data/silk.conf --output-mode=local-storage --log-destination=syslog --root-directory=/data/ --pidfile=/var/log/rwflowpack.pid --log-level=info --no-daemon
+ExecReload=/bin/kill -HUP $MAINPID
+KillSignal=SIGINT
+
+[Install]
+WantedBy=multi-user.target
+

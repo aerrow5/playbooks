@@ -1,0 +1,14 @@
+[Unit]
+Description=yaf
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Restart=on-failure
+ExecStart=/usr/local/bin/yaf --silk --ipfix=tcp --live=pcap  --out=127.0.0.1 --ipfix-port=18001 --in={{ silk_yaf_interface }} --applabel --max-payload=384 --become-user={{ silk_user }} --become-group={{ silk_group }}
+ExecReload=/bin/kill -HUP $MAINPID
+KillSignal=SIGINT
+
+[Install]
+WantedBy=multi-user.target
+

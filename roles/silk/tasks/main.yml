@@ -43,12 +43,18 @@
 
 ## TODO: Check if installed already
 
-- block:
-  - name: Ensure tmp_dir exists
-    file:
-      state: directory
-      path: "{{ silk_tmp_dir }}"
+- name: Ensure dirs exist
+  file:
+    state: directory
+    path: "{{ item }}"
+    owner: "{{ silk_user }}"
+    group: "{{ silk_group }}"
+  with_items:
+    - "{{ silk_tmp_dir }}"
+    - /data
+  become: yes
 
+- block:
   - name: download libfixbuf
     get_url:
       url: "{{ silk_lfb_url }}"
@@ -60,6 +66,7 @@
       url: "{{ silk_yaf_url }}"
       dest: "{{ silk_tmp_dir }}"
       checksum: sha256:{{ silk_yaf_sha256 }}
+    when: not silk_no_yaf
 
   - name: download silk
     get_url:
@@ -78,6 +85,7 @@
       src: "{{ silk_tmp_dir }}/{{ silk_yaf_fn }}"
       dest: "{{ silk_tmp_dir }}"
       remote_src: true
+    when: not silk_no_yaf
 
   - name: Extract silk
     unarchive:
@@ -104,11 +112,13 @@
   with_items:
     - ./configure --enable-applabel
     - make
+  when: not silk_no_yaf
   become_user: "{{ silk_user }}"
   become: yes
 
 - name: install yaf
   command: "make install chdir={{ silk_tmp_dir }}/{{ silk_yaf_fn.split('.tar')[0]  }}"
+  when: not silk_no_yaf
   become: yes
 
 - name: compile silk
@@ -121,4 +131,63 @@
 
 - name: install silk
   command: "make install chdir={{ silk_tmp_dir }}/{{ silk_silk_fn.split('.tar')[0]  }}"
+  become: yes
+
+- name: Copy silk.conf to ld.so
+  copy:
+    src: files/silk.conf
+    dest: /etc/ld.so.conf.d/silk.conf
+  become: yes
+
+- name: ldconfig
+  command: ldconfig
+  become: yes
+
+- name: copy silk.conf
+  copy:
+    remote_src: true
+    src: "{{ silk_tmp_dir }}/{{ silk_silk_fn.split('.tar')[0]  }}/site/twoway/silk.conf"
+    dest: /data/silk.conf
+  become_user: "{{ silk_user }}"
+  become: yes
+
+- name: copy sensors.conf template
+  template:
+    src: templates/sensors.conf.j2
+    dest: /data/sensors.conf
+  become_user: "{{ silk_user }}"
+  become: yes
+
+- name: copy rwflowpack.conf template
+  template:
+    src: templates/rwflowpack.conf.j2
+    dest: /usr/local/etc/rwflowpack.conf
+  become: yes
+
+- name: copy rwflowpack systemd service file
+  template:
+    src: templates/rwflowpack.service.j2
+    dest: "/etc/systemd/system/rwflowpack.service"
+  become: yes
+
+- name: copy yaf systemd service file
+  template:
+    src: templates/yaf.service.j2
+    dest: "/etc/systemd/system/yaf.service"
+  when: not silk_no_yaf
+  become: yes
+
+- name: Enable rwflowpack service at boot
+  service:
+    name: rwflowpack
+    state: started
+    enabled: yes
+  become: yes
+
+- name: Enable yaf service at boot
+  service:
+    name: yaf
+    state: started
+    enabled: yes
+  when: not silk_no_yaf
   become: yes

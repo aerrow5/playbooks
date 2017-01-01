@@ -1,0 +1,14 @@
+probe S0 netflow-v9
+    listen-on-port 9988
+    protocol udp
+    listen-as-host {{ ansible_default_ipv4.address }}
+end probe
+group my-network
+    ipblocks 192.168.1.0/24 # address of eth0. CHANGE THIS.
+    ipblocks 10.0.0.0/8 # other blocks you consider internal
+end group
+sensor S0
+    netflow-v9-probes S0
+    internal-ipblocks @my-network
+    external-ipblocks remainder
+end sensor

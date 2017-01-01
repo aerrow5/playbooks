@@ -1,6 +1,9 @@
 silk_user: silk
 silk_group: silk
 
+silk_no_yaf: true
+
+silk_yaf_interface: eth0
 silk_tmp_dir: /home/{{ silk_user }}/tmp
 # Latest version/hashes from:
   # http://tools.netsa.cert.org/fixbuf/download.html

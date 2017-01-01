@@ -44,6 +44,9 @@ smb.signet
 [radius]
 10.0.3.10
 
+[netflow]
+10.0.3.14
+
 [switch]
 switch.signet
 

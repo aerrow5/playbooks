@@ -1,0 +1,22 @@
+silk_user: silk
+silk_group: silk
+
+silk_tmp_dir: /home/{{ silk_user }}/tmp
+# Latest version/hashes from:
+  # http://tools.netsa.cert.org/fixbuf/download.html
+  # http://tools.netsa.cert.org/yaf/download.html 
+  # http://tools.netsa.cert.org/silk/download.html
+silk_lfb_ver: 1.7.1
+silk_lfb_sha256: 961296ed000d4fdb4ae8690613bba2af2e4d634c044f947795abc24e9caf644a
+silk_lfb_fn: libfixbuf-{{ silk_lfb_ver }}.tar.gz
+silk_lfb_url: http://tools.netsa.cert.org/releases/{{ silk_lfb_fn }}
+
+silk_yaf_ver: 2.8.4
+silk_yaf_sha256: 4ce75938de40f2a27dcc360ac6a4930e55e9d5c1bd27fd77e4c66fd48faa8d02 
+silk_yaf_fn: yaf-{{ silk_yaf_ver }}.tar.gz
+silk_yaf_url: http://tools.netsa.cert.org/releases/{{ silk_yaf_fn  }}
+
+silk_silk_ver: 3.14.0
+silk_silk_sha256: a871fa74de79e79c4d81220edf225ae4e2c596a9f500a572e228156976ac7e6e
+silk_silk_fn: silk-{{ silk_silk_ver }}.tar.gz
+silk_silk_url: http://tools.netsa.cert.org/releases/{{ silk_silk_fn }}

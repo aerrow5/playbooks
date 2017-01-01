@@ -1,0 +1,5 @@
+- hosts: netflow
+  roles:
+    - common
+    - silk
+    - flowbat

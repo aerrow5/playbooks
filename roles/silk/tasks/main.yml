@@ -1,0 +1,124 @@
+- name: Setup silk group
+  group:
+    name: "{{ silk_group }}"
+    state: present
+  become: yes
+
+- name: Setup silk user
+  user:
+    name: "{{ silk_user }}"
+    group: "{{ silk_group }}"
+    state: present
+  become: yes
+
+- name: Install packages
+  yum:
+    name: "{{ item }}"
+    state: present
+    update_cache: true
+  with_items:
+    - gcc
+    - make
+    - c-ares
+    - c-ares-devel
+    - doxygen
+    - git-core
+    - glib2
+    - glib2-devel
+    - gnutls
+    - gnutls-devel
+    - openssl-devel
+    - lzo
+    - lzo-devel
+    - libpcap
+    - libpcap-devel
+    - net-tools
+    - pcre-devel
+    - python
+    - python-devel
+    - wget
+    - zlib
+    - zlib-devel
+  become: yes
+
+## TODO: Check if installed already
+
+- block:
+  - name: Ensure tmp_dir exists
+    file:
+      state: directory
+      path: "{{ silk_tmp_dir }}"
+
+  - name: download libfixbuf
+    get_url:
+      url: "{{ silk_lfb_url }}"
+      dest: "{{ silk_tmp_dir }}"
+      checksum: sha256:{{ silk_lfb_sha256 }}
+
+  - name: download yaf
+    get_url:
+      url: "{{ silk_yaf_url }}"
+      dest: "{{ silk_tmp_dir }}"
+      checksum: sha256:{{ silk_yaf_sha256 }}
+
+  - name: download silk
+    get_url:
+      url: "{{ silk_silk_url }}"
+      dest: "{{ silk_tmp_dir }}"
+      checksum: sha256:{{ silk_silk_sha256 }}
+
+  - name: Extract libfixbuf
+    unarchive:
+      src: "{{ silk_tmp_dir }}/{{ silk_lfb_fn }}"
+      dest: "{{ silk_tmp_dir }}"
+      remote_src: true
+
+  - name: Extract yaf
+    unarchive:
+      src: "{{ silk_tmp_dir }}/{{ silk_yaf_fn }}"
+      dest: "{{ silk_tmp_dir }}"
+      remote_src: true
+
+  - name: Extract silk
+    unarchive:
+      src: "{{ silk_tmp_dir }}/{{ silk_silk_fn }}"
+      dest: "{{ silk_tmp_dir }}"
+      remote_src: true
+
+  - name: compile libfixbuf
+    command: "{{ item }} chdir={{ silk_tmp_dir }}/{{ silk_lfb_fn.split('.tar')[0]  }}"
+    with_items:
+      - ./configure
+      - make
+  become_user: "{{ silk_user }}"
+  become: yes
+
+- name: install libfixbuf
+  command: "make install chdir={{ silk_tmp_dir }}/{{ silk_lfb_fn.split('.tar')[0]  }}"
+  become: yes
+
+- name: compile yaf
+  environment:
+    PKG_CONFIG_PATH: /usr/local/lib/pkgconfig
+  command: "{{ item }} chdir={{ silk_tmp_dir }}/{{ silk_yaf_fn.split('.tar')[0]  }}"
+  with_items:
+    - ./configure --enable-applabel
+    - make
+  become_user: "{{ silk_user }}"
+  become: yes
+
+- name: install yaf
+  command: "make install chdir={{ silk_tmp_dir }}/{{ silk_yaf_fn.split('.tar')[0]  }}"
+  become: yes
+
+- name: compile silk
+  command: "{{ item }} chdir={{ silk_tmp_dir }}/{{ silk_silk_fn.split('.tar')[0]  }}"
+  with_items:
+    - ./configure --with-libfixbuf=/usr/local/lib/pkgconfig/ --with-python
+    - make
+  become_user: "{{ silk_user }}"
+  become: yes
+
+- name: install silk
+  command: "make install chdir={{ silk_tmp_dir }}/{{ silk_silk_fn.split('.tar')[0]  }}"
+  become: yes

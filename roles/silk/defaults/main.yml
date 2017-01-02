@@ -24,3 +24,5 @@ silk_silk_ver: 3.14.0
 silk_silk_sha256: a871fa74de79e79c4d81220edf225ae4e2c596a9f500a572e228156976ac7e6e
 silk_silk_fn: silk-{{ silk_silk_ver }}.tar.gz
 silk_silk_url: http://tools.netsa.cert.org/releases/{{ silk_silk_fn }}
+
+silk_geoip_url: http://geolite.maxmind.com/download/geoip/database/GeoIPCountryCSV.zip

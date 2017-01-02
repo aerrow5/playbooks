@@ -49,24 +49,61 @@
     path: "{{ item }}"
     owner: "{{ silk_user }}"
     group: "{{ silk_group }}"
+    recurse: yes
   with_items:
     - "{{ silk_tmp_dir }}"
     - "{{ silk_data_dir }}"
   become: yes
 
+## YAF Setup
+- block:
+  - name: download yaf
+    get_url:
+      url: "{{ silk_yaf_url }}"
+      dest: "{{ silk_tmp_dir }}"
+      checksum: sha256:{{ silk_yaf_sha256 }}
+
+  - name: Extract yaf
+    unarchive:
+      src: "{{ silk_tmp_dir }}/{{ silk_yaf_fn }}"
+      dest: "{{ silk_tmp_dir }}"
+      remote_src: true
+
+  - name: compile yaf
+    environment:
+      PKG_CONFIG_PATH: /usr/local/lib/pkgconfig
+    command: "{{ item }} chdir={{ silk_tmp_dir }}/{{ silk_yaf_fn.split('.tar')[0]  }}"
+    with_items:
+      - ./configure --enable-applabel
+      - make
+  become_user: "{{ silk_user }}"
+  become: yes
+  when: not silk_no_yaf
+
+- block:
+  - name: install yaf
+    command: "make install chdir={{ silk_tmp_dir }}/{{ silk_yaf_fn.split('.tar')[0]  }}"
+
+  - name: copy yaf systemd service file
+    template:
+      src: templates/yaf.service.j2
+      dest: "/etc/systemd/system/yaf.service"
+
+  - name: Enable yaf service at boot
+    service:
+      name: yaf
+      state: started
+      enabled: yes
+  become: yes
+  when: not silk_no_yaf
+
+## SILK SETUP
 - block:
   - name: download libfixbuf
     get_url:
       url: "{{ silk_lfb_url }}"
       dest: "{{ silk_tmp_dir }}"
       checksum: sha256:{{ silk_lfb_sha256 }}
-
-  - name: download yaf
-    get_url:
-      url: "{{ silk_yaf_url }}"
-      dest: "{{ silk_tmp_dir }}"
-      checksum: sha256:{{ silk_yaf_sha256 }}
-    when: not silk_no_yaf
 
   - name: download silk
     get_url:
@@ -79,13 +116,6 @@
       src: "{{ silk_tmp_dir }}/{{ silk_lfb_fn }}"
       dest: "{{ silk_tmp_dir }}"
       remote_src: true
-
-  - name: Extract yaf
-    unarchive:
-      src: "{{ silk_tmp_dir }}/{{ silk_yaf_fn }}"
-      dest: "{{ silk_tmp_dir }}"
-      remote_src: true
-    when: not silk_no_yaf
 
   - name: Extract silk
     unarchive:
@@ -105,21 +135,6 @@
   command: "make install chdir={{ silk_tmp_dir }}/{{ silk_lfb_fn.split('.tar')[0]  }}"
   become: yes
 
-- name: compile yaf
-  environment:
-    PKG_CONFIG_PATH: /usr/local/lib/pkgconfig
-  command: "{{ item }} chdir={{ silk_tmp_dir }}/{{ silk_yaf_fn.split('.tar')[0]  }}"
-  with_items:
-    - ./configure --enable-applabel
-    - make
-  when: not silk_no_yaf
-  become_user: "{{ silk_user }}"
-  become: yes
-
-- name: install yaf
-  command: "make install chdir={{ silk_tmp_dir }}/{{ silk_yaf_fn.split('.tar')[0]  }}"
-  when: not silk_no_yaf
-  become: yes
 
 - name: compile silk
   command: "{{ item }} chdir={{ silk_tmp_dir }}/{{ silk_silk_fn.split('.tar')[0]  }}"
@@ -164,17 +179,52 @@
     dest: /usr/local/etc/rwflowpack.conf
   become: yes
 
+
+- block:
+  - name: get geoip zip
+    get_url:
+      url: "{{ silk_geoip_url }}"
+      dest: "{{ silk_tmp_dir }}/geoip.zip"
+
+  - name: unzip geoip data
+    unarchive:
+      src: "{{ silk_tmp_dir }}/geoip.zip"
+      dest: "{{ silk_tmp_dir }}/"
+      remote_src: True
+
+  - name: create geoip data file
+    shell: cat {{ silk_tmp_dir }}/GeoIPCountryWhois.csv | /usr/local/bin/rwgeoip2ccmap --csv-input > {{ silk_tmp_dir }}/country_codes.pmap
+
+  - name: import geoip data file
+    shell: mv {{ silk_tmp_dir }}/country_codes.pmap {{ silk_data_dir }}/
+  tags: geoip
+  become_user: "{{ silk_user }}"
+  become: yes
+
+- name: symlink geoip file
+  file:
+    src: "{{ silk_data_dir }}/country_codes.pmap"
+    dest: /usr/local/share/silk/country_codes.pmap
+    state: link
+    force: yes
+  tags: geoip
+  become: yes
+
+- name: Create cron for geoip
+  cron:
+    name: "Update geoip data"
+    cron_file: update_geoip
+    special_time: weekly
+    user: "{{ silk_user }}"
+    job: "wget {{ silk_geoip_url }} -O {{ silk_tmp_dir }}/geoip.zip; unzip -f {{ silk_tmp_dir }}/geoip.zip; cat {{ silk_tmp_dir }}/GeoIPCountryWhois.csv | /usr/local/bin/rwgeoip2ccmap --csv-input > {{ silk_tmp_dir }}/country_codes.pmap; mv {{ silk_tmp_dir }}/country_codes.pmap {{ silk_data_dir }}/country_codes.pmap"
+    state: present
+  tags: geoip
+  become: yes
+
 - name: copy rwflowpack systemd service file
   template:
     src: templates/rwflowpack.service.j2
     dest: "/etc/systemd/system/rwflowpack.service"
-  become: yes
-
-- name: copy yaf systemd service file
-  template:
-    src: templates/yaf.service.j2
-    dest: "/etc/systemd/system/yaf.service"
-  when: not silk_no_yaf
   become: yes
 
 - name: Enable rwflowpack service at boot
@@ -184,10 +234,3 @@
     enabled: yes
   become: yes
 
-- name: Enable yaf service at boot
-  service:
-    name: yaf
-    state: started
-    enabled: yes
-  when: not silk_no_yaf
-  become: yes

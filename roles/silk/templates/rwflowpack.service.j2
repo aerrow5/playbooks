@@ -4,6 +4,8 @@ Requires=network-online.target
 After=network-online.target
 
 [Service]
+User={{ silk_user }}
+Group={{ silk_group }}
 Restart=on-failure
 ExecStart=/usr/local/sbin/rwflowpack --sensor-configuration={{ silk_data_dir }}/sensors.conf --site-config-file={{ silk_data_dir }}/silk.conf --output-mode=local-storage --log-destination=syslog --root-directory={{ silk_data_dir }}/ --pidfile=/var/log/rwflowpack.pid --log-level=info --no-daemon
 ExecReload=/bin/kill -HUP $MAINPID

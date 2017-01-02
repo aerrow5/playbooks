@@ -2,12 +2,13 @@ silk_user: silk
 silk_group: silk
 
 silk_no_yaf: true
-
 silk_yaf_interface: eth0
+
 silk_tmp_dir: /home/{{ silk_user }}/tmp
+silk_data_dir: /data
 # Latest version/hashes from:
   # http://tools.netsa.cert.org/fixbuf/download.html
-  # http://tools.netsa.cert.org/yaf/download.html 
+  # http://tools.netsa.cert.org/yaf/download.html
   # http://tools.netsa.cert.org/silk/download.html
 silk_lfb_ver: 1.7.1
 silk_lfb_sha256: 961296ed000d4fdb4ae8690613bba2af2e4d634c044f947795abc24e9caf644a

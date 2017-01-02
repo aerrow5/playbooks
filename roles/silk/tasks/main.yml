@@ -51,7 +51,7 @@
     group: "{{ silk_group }}"
   with_items:
     - "{{ silk_tmp_dir }}"
-    - /data
+    - "{{ silk_data_dir }}"
   become: yes
 
 - block:
@@ -147,14 +147,14 @@
   copy:
     remote_src: true
     src: "{{ silk_tmp_dir }}/{{ silk_silk_fn.split('.tar')[0]  }}/site/twoway/silk.conf"
-    dest: /data/silk.conf
+    dest: "{{ silk_data_dir }}/silk.conf"
   become_user: "{{ silk_user }}"
   become: yes
 
 - name: copy sensors.conf template
   template:
     src: templates/sensors.conf.j2
-    dest: /data/sensors.conf
+    dest: "{{ silk_data_dir }}/sensors.conf"
   become_user: "{{ silk_user }}"
   become: yes
 

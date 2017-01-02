@@ -5,7 +5,7 @@ After=network-online.target
 
 [Service]
 Restart=on-failure
-ExecStart=/usr/local/sbin/rwflowpack --sensor-configuration=/data/sensors.conf --site-config-file=/data/silk.conf --output-mode=local-storage --log-destination=syslog --root-directory=/data/ --pidfile=/var/log/rwflowpack.pid --log-level=info --no-daemon
+ExecStart=/usr/local/sbin/rwflowpack --sensor-configuration={{ silk_data_dir }}/sensors.conf --site-config-file={{ silk_data_dir }}/silk.conf --output-mode=local-storage --log-destination=syslog --root-directory={{ silk_data_dir }}/ --pidfile=/var/log/rwflowpack.pid --log-level=info --no-daemon
 ExecReload=/bin/kill -HUP $MAINPID
 KillSignal=SIGINT
 

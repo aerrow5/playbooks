@@ -124,10 +124,13 @@
       remote_src: true
 
   - name: compile libfixbuf
+    environment:
+      CFLAGS: "-DFB_SUPPRESS_LOGS=1"
     command: "{{ item }} chdir={{ silk_tmp_dir }}/{{ silk_lfb_fn.split('.tar')[0]  }}"
     with_items:
+      - make clean
       - ./configure
-      - make
+      - make -e
   become_user: "{{ silk_user }}"
   become: yes
 
@@ -139,7 +142,8 @@
 - name: compile silk
   command: "{{ item }} chdir={{ silk_tmp_dir }}/{{ silk_silk_fn.split('.tar')[0]  }}"
   with_items:
-    - ./configure --with-libfixbuf=/usr/local/lib/pkgconfig/ --with-python
+    - make clean
+    - ./configure --with-libfixbuf=/usr/local/lib/pkgconfig/ --with-python --enable-ipv6
     - make
   become_user: "{{ silk_user }}"
   become: yes
@@ -216,7 +220,7 @@
     cron_file: update_geoip
     special_time: weekly
     user: "{{ silk_user }}"
-    job: "wget {{ silk_geoip_url }} -O {{ silk_tmp_dir }}/geoip.zip; unzip -f {{ silk_tmp_dir }}/geoip.zip; cat {{ silk_tmp_dir }}/GeoIPCountryWhois.csv | /usr/local/bin/rwgeoip2ccmap --csv-input > {{ silk_tmp_dir }}/country_codes.pmap; mv {{ silk_tmp_dir }}/country_codes.pmap {{ silk_data_dir }}/country_codes.pmap"
+    job: "wget {{ silk_geoip_url }} -O {{ silk_tmp_dir }}/geoip.zip && unzip -f {{ silk_tmp_dir }}/geoip.zip && cat {{ silk_tmp_dir }}/GeoIPCountryWhois.csv | /usr/local/bin/rwgeoip2ccmap --csv-input > {{ silk_tmp_dir }}/country_codes.pmap && mv {{ silk_tmp_dir }}/country_codes.pmap {{ silk_data_dir }}/country_codes.pmap"
     state: present
   tags: geoip
   become: yes

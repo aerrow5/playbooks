@@ -1,14 +1,21 @@
-probe S0 netflow-v9
-    listen-on-port 9988
-    protocol udp
-    listen-as-host {{ ansible_default_ipv4.address }}
+{% for p in silk_probes %}
+probe {{ p.name }} {{ p.type }}
+    listen-on-port {{ p.port }}
+    protocol {{ p.protocol }}
+    listen-as-host {{ p.address }}
 end probe
-group my-network
-    ipblocks 192.168.1.0/24 # address of eth0. CHANGE THIS.
-    ipblocks 10.0.0.0/8 # other blocks you consider internal
+{% endfor %}
+{% for n in silk_networks %}
+group {{ n.name }}
+    {% for b in n.ipblocks %}
+    ipblocks {{ b }}
+    {% endfor %}
 end group
-sensor S0
-    netflow-v9-probes S0
-    internal-ipblocks @my-network
+{% endfor %}
+{% for s in silk_sensors %}
+sensor {{ s.name }}
+    {{ s.type }}-probes {{ s.probe }}
+    internal-ipblocks @{{ s.internal_network }}
     external-ipblocks remainder
 end sensor
+{% endfor %}

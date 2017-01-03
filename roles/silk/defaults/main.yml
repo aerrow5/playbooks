@@ -26,3 +26,33 @@ silk_silk_fn: silk-{{ silk_silk_ver }}.tar.gz
 silk_silk_url: http://tools.netsa.cert.org/releases/{{ silk_silk_fn }}
 
 silk_geoip_url: http://geolite.maxmind.com/download/geoip/database/GeoIPCountryCSV.zip
+silk_geoip_cron: True
+
+silk_probes:
+  - name: S0
+    protocol: udp
+    address: "{{ ansible_default_ipv4.address }}"
+    port: 9988
+    type: netflow-v9
+  - name: S1
+    protocol: udp
+    address: "{{ ansible_default_ipv4.address }}"
+    port: 5600
+    type: sflow
+
+silk_networks:
+  - name: my_net
+    ipblocks:
+      - 192.168.0.0/16
+      - 10.0.0.0/8
+
+silk_sensors:
+  - name: S0
+    type: netflow-v9
+    probe: S0
+    internal_network: my_net
+  - name: S1
+    type: sflow
+    probe: S1
+    internal_network: my_net
+

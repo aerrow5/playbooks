@@ -167,6 +167,8 @@
     remote_src: true
     src: "{{ silk_tmp_dir }}/{{ silk_silk_fn.split('.tar')[0]  }}/site/twoway/silk.conf"
     dest: "{{ silk_data_dir }}/silk.conf"
+  tags: config
+  notify: restart rwflowpack
   become_user: "{{ silk_user }}"
   become: yes
 
@@ -174,6 +176,8 @@
   template:
     src: templates/sensors.conf.j2
     dest: "{{ silk_data_dir }}/sensors.conf"
+  tags: config
+  notify: restart rwflowpack
   become_user: "{{ silk_user }}"
   become: yes
 
@@ -222,8 +226,11 @@
     user: "{{ silk_user }}"
     job: "wget {{ silk_geoip_url }} -O {{ silk_tmp_dir }}/geoip.zip && unzip -f {{ silk_tmp_dir }}/geoip.zip && cat {{ silk_tmp_dir }}/GeoIPCountryWhois.csv | /usr/local/bin/rwgeoip2ccmap --csv-input > {{ silk_tmp_dir }}/country_codes.pmap && mv {{ silk_tmp_dir }}/country_codes.pmap {{ silk_data_dir }}/country_codes.pmap"
     state: present
-  tags: geoip
+  tags:
+    - geoip
+    - config
   become: yes
+  when: silk_geoip_cron
 
 - name: copy rwflowpack systemd service file
   template:

@@ -1,6 +1,8 @@
 silk_user: silk
 silk_group: silk
 
+silk_autostart: true
+silk_binary_only: false
 silk_no_yaf: true
 silk_yaf_interface: eth0
 

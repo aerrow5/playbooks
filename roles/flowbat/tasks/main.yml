@@ -1,0 +1,93 @@
+- name: Create flowbat group
+  group:
+    name: flowbat
+    state: present
+  become: yes
+
+- name: Create flowbat user
+  user:
+    name: flowbat
+    group: flowbat
+  become: yes
+
+- name: Install packages
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - git-core
+    - curl
+    - nodejs
+    - npm
+  become: yes
+
+- name: Install npm packages
+  npm:
+    name: meteorite
+    global: yes
+    state: present
+  become: yes
+
+# Run block as flowbat user
+- block:
+  - name: clean git repo (ansible bug)
+    command: git reset HEAD --hard
+    args:
+      chdir: /home/flowbat/FlowBAT
+
+  - name: git clone flowbat repo
+    git:
+      repo: https://github.com/chrissanders/FlowBAT.git
+      dest: /home/flowbat/FlowBAT
+      clone: yes
+      update: yes
+
+  - name: download meteor install
+    get_url:
+      url: https://install.meteor.com/
+      dest: /home/flowbat/meteor.sh
+      mode: 0755
+
+  - name: run meteor install
+    command: /home/flowbat/meteor.sh
+
+  # - name: copy flowbat settings template
+  #   copy:
+  #     remote_src: true
+  #     src: /home/flowbat/flowbat/settings/prod.sample.json
+  #     dest: /home/flowbat/flowbat/settings/ansible.json
+
+  # - name: update flowbat url settings
+  #   lineinfile:
+  #     dest: /home/flowbat/flowbat/settings/ansible.json
+  #     regexp: '^\s*"baseUrl": '
+  #     line: '  "baseUrl": "http://127.0.0.1:1800",'
+  #     state: present
+
+  # - name: update flowbat email settings
+  #   lineinfile:
+  #     dest: /home/flowbat/flowbat/settings/ansible.json
+  #     regexp: '^\s*"mailUrl": '
+  #     line: '  "mailUrl": "",'
+  #     state: present
+
+  - name: mrt install
+    command: mrt install
+    args:
+      chdir: /home/flowbat/FlowBAT/
+  become_user: flowbat
+  become: yes
+
+# Finish up as root
+- block:
+  - name: Copy systemd flowbat file
+    template:
+      src: templates/flowbat.service.j2
+      dest: /etc/systemd/system/flowbat.service
+
+  - name: Enable flowbat service
+    service:
+      name: flowbat
+      state: restarted
+      enabled: yes
+  become: yes

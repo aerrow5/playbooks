@@ -1,0 +1,16 @@
+[Unit]
+Description=flowbat
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+User={{ flowbat_user }}
+Group={{ flowbat_group }}
+Restart=on-failure
+ExecStart=/home/flowbat/.meteor/meteor --port 1800 run --settings settings/dev.json "$@"
+ExecReload=/bin/kill -HUP $MAINPID
+KillSignal=SIGINT
+WorkingDirectory=/home/flowbat/FlowBAT
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+ansible_user: root
+silk_autostart: false
+silk_binary_only: true
+
+
+image_name: centos-7
+quota: 200
+max_phy_mem: 1536
+brand: lx
+alias: flowbat
+domain: signet
+nics:
+  - {interface: "eth0", nic_tag: "external", ip: "10.0.3.20", netmask: "255.255.255.0", gateway: "10.0.3.1"}
+filesystems:
+  - {source: "/zones/db/netflow", target: "/data", read_only: true}

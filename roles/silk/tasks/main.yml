@@ -43,17 +43,24 @@
 
 ## TODO: Check if installed already
 
-- name: Ensure dirs exist
+- name: Ensure tmp dir exist
   file:
     state: directory
-    path: "{{ item }}"
+    path: "{{ silk_tmp_dir }}"
     owner: "{{ silk_user }}"
     group: "{{ silk_group }}"
     recurse: yes
-  with_items:
-    - "{{ silk_tmp_dir }}"
-    - "{{ silk_data_dir }}"
   become: yes
+
+- name: Ensure data dir exist
+  file:
+    state: directory
+    path: "{{ silk_data_dir }}"
+    owner: "{{ silk_user }}"
+    group: "{{ silk_group }}"
+    recurse: yes
+  become: yes
+  when: not silk_binary_only
 
 ## YAF Setup
 - block:
@@ -128,7 +135,6 @@
       CFLAGS: "-DFB_SUPPRESS_LOGS=1"
     command: "{{ item }} chdir={{ silk_tmp_dir }}/{{ silk_lfb_fn.split('.tar')[0]  }}"
     with_items:
-      - make clean
       - ./configure
       - make -e
   become_user: "{{ silk_user }}"
@@ -142,7 +148,6 @@
 - name: compile silk
   command: "{{ item }} chdir={{ silk_tmp_dir }}/{{ silk_silk_fn.split('.tar')[0]  }}"
   with_items:
-    - make clean
     - ./configure --with-libfixbuf=/usr/local/lib/pkgconfig/ --with-python --enable-ipv6
     - make
   become_user: "{{ silk_user }}"
@@ -171,6 +176,7 @@
   notify: restart rwflowpack
   become_user: "{{ silk_user }}"
   become: yes
+  when: not silk_binary_only
 
 - name: copy sensors.conf template
   template:
@@ -180,6 +186,7 @@
   notify: restart rwflowpack
   become_user: "{{ silk_user }}"
   become: yes
+  when: not silk_binary_only
 
 - name: copy rwflowpack.conf template
   template:
@@ -208,6 +215,7 @@
   tags: geoip
   become_user: "{{ silk_user }}"
   become: yes
+  when: not silk_binary_only
 
 - name: symlink geoip file
   file:
@@ -230,13 +238,14 @@
     - geoip
     - config
   become: yes
-  when: silk_geoip_cron
+  when: silk_geoip_cron and not silk_binary_only
 
 - name: copy rwflowpack systemd service file
   template:
     src: templates/rwflowpack.service.j2
     dest: "/etc/systemd/system/rwflowpack.service"
   become: yes
+  when: silk_autostart
 
 - name: Enable rwflowpack service at boot
   service:
@@ -244,4 +253,5 @@
     state: started
     enabled: yes
   become: yes
+  when: silk_autostart
 

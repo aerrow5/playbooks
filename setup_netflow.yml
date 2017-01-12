@@ -2,4 +2,9 @@
   roles:
     - common
     - silk
+
+- hosts: flowbat
+  roles:
+    - common
     - flowbat
+    - silk

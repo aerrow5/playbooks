@@ -35,9 +35,22 @@ defaults
     timeout check           10s
     maxconn                 3000
 
+listen letsencrypt-tls01-detect
+    mode tcp
+    option tcplog
+
+    bind 0.0.0.0:443
+
+    tcp-request inspect-delay 1s
+    tcp-request content accept if { req.ssl_hello_type 1 }
+
+    use-server letsencrypt-server if { req_ssl_sni -m end .acme.invalid }
+
+    server letsencrypt-server 127.0.0.1:18443 weight 0
+    server default 127.0.0.1:19443 weight 1 send-proxy
+
 frontend https-in
-    bind *:443 ssl crt /opt/local/etc/haproxy.pem
-    bind *:80 transparent
+    bind 127.0.0.1:19443 ssl crt /opt/local/etc/haproxy.pem no-sslv3 accept-proxy
 
     rspadd  Strict-Transport-Security:\ max-age=15768000
     capture request header User-agent len 100

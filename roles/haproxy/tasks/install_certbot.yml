@@ -1,22 +1,44 @@
-- name: Copy certbot auto
-  copy:
-    src=files/certbot-auto
-    dest=/root/certbot-auto
-    mode=0744
+- name: Install python-pip
+  package:
+    name: py27-pip
+    state: present
+  become: yes
 
-- name: Run certbot-auto dependencies
-  command: /root/certbot-auto --os-packages-only --debug -n -q
-  register: cb_reg
-  changed_when: cb_reg.rc != 0
+- name: Install certbot from pip
+  pip:
+    name: certbot
+    state: present
+  become: yes
 
-- name: Combine certs + key for haproxy
-  shell: "cat /etc/letsencrypt/live/{{ haproxy_cb_domains[0] }}/{fullchain,privkey}.pem > /opt/local/etc/haproxy.pem"
-  ignore_errors: yes
+- name: Create tmp cert/key to start haproxy (First time run only)
+  shell: "{{ item }}"
+  args:
+    chdir: /tmp
+    creates: /opt/local/etc/haproxy.pem
+  with_items:
+    - "openssl genrsa -out server.key 2048"
+    - "openssl req -new -key server.key -out server.csr -subj '/C=GB/ST=London/L=London/O=Global Security/OU=IT Department/CN=example.com'"
+    - "openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt"
+    - "cat server.crt server.key > /opt/local/etc/haproxy.pem"
+  become: yes
+
+# - name: Combine certs + key for haproxy
+#   shell: "cat /etc/letsencrypt/live/{{ haproxy_cb_domains[0] }}/{fullchain,privkey}.pem > /opt/local/etc/haproxy.pem"
+#   ignore_errors: yes
+#   become: yes
+
+
+- name: Ensure haproxy started
+  service:
+    name: haproxy
+    state: started
 
 - name: Create certbot certs if needed
-  command: /root/certbot-auto certonly --debug \
+  command: certbot certonly \
+          --debug \
           --standalone \
           --preferred-challenges tls-sni-01 \
+          --tls-sni-01-port 18443 \
           --agree-tos \
           --email {{ haproxy_cb_email }} \
           --keep-until-expiring \
@@ -24,11 +46,11 @@
           --expand \
           -n \
           {% for i in haproxy_cb_domains %} -d {{ i }} {% endfor %} \
-          --pre-hook "{{ haproxy_cb_prehook }}" --post-hook "{{ haproxy_cb_posthook }}"
+          --post-hook "{{ haproxy_cb_posthook }}"
 
 - name: Setup certbot crontab if needed
   cron: name="Autorenew certbot"
-        minute="8" hour="0"
-        job="/root/certbot-auto renew --keep-until-expiring -q -n --preferred-challenges tls-sni-01 --debug --pre-hook '{{ haproxy_cb_prehook }}' --post-hook '{{ haproxy_cb_posthook }}'"
+        special_time="hourly"
+        job="certbot renew --keep-until-expiring -q -n --preferred-challenges tls-sni-01 --tls-sni-01-port 18443 --debug --post-hook '{{ haproxy_cb_posthook }}'"
         cron_file=certbot
         user="root"

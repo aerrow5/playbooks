@@ -1,0 +1,6 @@
+domain: signet
+resolvers:
+  - 10.0.3.254
+
+nics:
+  - {interface: "net0", nic_tag: "external", ip: "{{ lookup('dig', alias + '.' + 'domain' + '.') }}", netmask: "255.255.255.0", gateway: "10.0.3.254"}

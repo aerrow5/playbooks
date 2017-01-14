@@ -7,7 +7,6 @@ max_phy_mem: 512
 quota: 5
 brand: joyent
 alias: git
-nics:
-  - {interface: "net0", nic_tag: "external", vlan_id: "4", ip: "{{ lookup('dig', alias + '.dmz.') }}", netmask: "255.255.255.0", gateway: "10.0.4.1"}
+
 filesystems:
 - {source: "/zones/data/git", target: "/export/git", read_only: false}

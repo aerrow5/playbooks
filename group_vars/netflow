@@ -6,8 +6,7 @@ max_phy_mem: 512
 quota: 100
 brand: lx
 alias: netflow
-nics:
-  - {interface: "net0", nic_tag: "external", ip: "10.0.3.14", netmask: "255.255.255.0", gateway: "10.0.3.1"}
+
 filesystems:
   - {source: "/zones/db/netflow", target: "/data", read_only: false}
 

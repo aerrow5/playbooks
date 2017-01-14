@@ -1,0 +1,7 @@
+image_name: centos-6
+cpu_cap: 100
+max_phy_mem: 1024
+quota: 20
+brand: lx
+alias: prometheus
+domain: signet

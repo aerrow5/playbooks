@@ -39,13 +39,11 @@ syncthing
 
 ## LAN
 [fileserver]
-smb.signet
+fileserver.signet
 
 [radius]
 10.0.3.10
 
-[netflow]
-10.0.3.14
 
 [switch]
 switch.signet
@@ -75,10 +73,29 @@ kim.signet
 10.0.3.12
 
 [prometheus]
-10.0.3.19
+prometheus.signet
+
+[netflow]
+netflow.signet
 
 [flowbat]
-10.0.3.20
+flowbat.signet
+
+[lan:children]
+fileserver
+radius
+netflow
+switch
+dbserver
+ldap
+influxdb
+elasticsearch
+logging
+pimon
+kim
+cyberahome
+prometheus
+flowbat
 
 [consul:children]
 pimon

@@ -8,8 +8,6 @@ quota: 100
 brand: joyent
 alias: fileserver
 
-nics:
-  - {interface: "net0", nic_tag: "external", ip: "10.0.3.15", netmask: "255.255.255.0", gateway: "10.0.3.1"}
 filesystems:
   - {source: "/zones/data/personal", target: "/media/personal", read_only: false}
   - {source: "/zones/data/media/movies", target: "/media/movies", read_only: false}

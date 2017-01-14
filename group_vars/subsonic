@@ -6,8 +6,6 @@ max_phy_mem: 1024
 quota: 40
 brand: lx
 alias: subsonic
-nics:
-  - {interface: "eth0", nic_tag: "external", vlan_id: "4", ip: "10.0.4.13", netmask: "255.255.255.0", gateway: "10.0.4.1"}
 filesystems:
   - {source: "/zones/data/media/music", target: "/var/music", read_only: true}
   - {source: "/zones/db/subsonic", target: "/var/subsonic", read_only: false } 

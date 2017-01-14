@@ -25,7 +25,7 @@ owncloud.dmz
 transmission.dmz
 
 [syncthing]
-syncthing.dms
+syncthing.dmz
 
 [dmz:children]
 shell

@@ -7,8 +7,6 @@ max_phy_mem: 512
 quota: 5
 brand: joyent
 alias: haproxy
-nics:
-  - {interface: "eth0", nic_tag: "external", vlan_id: "4", ip: "10.0.4.20", netmask: "255.255.255.0", gateway: "10.0.4.1"}
 
 haproxy_cb_email: andrewklaus@gmail.com
 haproxy_cb_domains:

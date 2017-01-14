@@ -7,5 +7,3 @@ max_phy_mem: 256
 quota: 5
 brand: joyent
 alias: shell
-nics:
-  - {interface: "net0", nic_tag: "external", vlan_id: "4", ip: "10.0.4.10", netmask: "255.255.255.0", gateway: "10.0.4.1"}

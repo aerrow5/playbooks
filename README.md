@@ -19,4 +19,7 @@ ansible-playbook update_packages.yml --limit=shell
 ansible-playbook site.yml --limit=shell --tags=common
 ```
 
-
+### Setup plex (and update to latest version)
+```
+ansible-playbook site.yml --limit=plex
+```

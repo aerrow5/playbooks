@@ -1,14 +1,17 @@
 - name: Install epel
-  yum: name=epel-release state=present
+  yum:
+    name: epel-release
+    state: present
 
-- name: Install python bs4
-  yum: name={{ item }} state=present
-  with_items:
-    - python-requests
-    - python-beautifulsoup4
+- name: Install python requests
+  yum:
+    name: python-requests
+    state: present
 
 - name: Copy plex version script
-  copy: src=files/get_latest_plex_version.py dest=/tmp/get_latest_plex_version.py
+  copy:
+    src: files/get_latest_plex_version.py
+    dest: /tmp/get_latest_plex_version.py
 
 - name: Run plex version script
   command: python2 /tmp/get_latest_plex_version.py
@@ -27,9 +30,13 @@
   changed_when: no
 
 - name: Download var version if needed
-  get_url: url={{ plex_yum_url }} dest=/tmp/plex-{{ plex_ver }}.rpm
+  get_url:
+    url: "{{ plex_yum_url }}"
+    dest: /tmp/plex-{{ plex_ver }}.rpm
   when: rpm_check.rc == 1
 
 - name: Install package if needed
-  yum: name=/tmp/plex-{{ plex_ver }}.rpm state=present
+  yum:
+    name: /tmp/plex-{{ plex_ver }}.rpm
+    state: present
   when: rpm_check.rc == 1

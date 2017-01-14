@@ -12,31 +12,37 @@
   copy:
     src: files/get_latest_plex_version.py
     dest: /tmp/get_latest_plex_version.py
+  tags: update_packages
 
-- name: Run plex version script
+- name: Get latest plex version from plex.tv
   command: python2 /tmp/get_latest_plex_version.py
   register: plextv_ver
   failed_when: plextv_ver.rc > 0
   changed_when: no
+  tags: update_packages
 
-- name: Set new plex version
+- name: Set latest plex version var
   set_fact: plex_ver = plextv_ver.stdout
   when: plextv_ver.rc == 0
+  tags: update_packages
 
 - name: Get current installed version
   command: rpm -q plexmediaserver-{{ plex_ver }}.x86_64
   register: rpm_check
   failed_when: rpm_check.rc > 1
   changed_when: no
+  tags: update_packages
 
 - name: Download var version if needed
   get_url:
     url: "{{ plex_yum_url }}"
     dest: /tmp/plex-{{ plex_ver }}.rpm
   when: rpm_check.rc == 1
+  tags: update_packages
 
 - name: Install package if needed
   yum:
     name: /tmp/plex-{{ plex_ver }}.rpm
     state: present
   when: rpm_check.rc == 1
+  tags: update_packages

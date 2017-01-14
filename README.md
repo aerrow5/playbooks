@@ -14,12 +14,7 @@ ansible-playbook site.yml --limit=shell
 ansible-playbook update_packages.yml --limit=shell
 ```
 
-### Run playbook to only setup common tag on shell server
+### Update packages on all servers
 ```
-ansible-playbook site.yml --limit=shell --tags=common
-```
-
-### Setup plex (and update to latest version)
-```
-ansible-playbook site.yml --limit=plex
+ansible-playbook site.yml --tags=update_packages
 ```

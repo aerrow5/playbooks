@@ -1,10 +1,10 @@
-ansible_python_interpreter: /opt/local/bin/python2
+ansible_user: root
 
-image_name: minimal-64-lts
+image_name: debian-8
 cpu_cap: 100
 max_phy_mem: 512
 quota: 20
-brand: joyent
+brand: lx
 alias: syncthing
 filesystems:
-  - {source: "/zones/data/syncthing_data", target: "/export/syncthing_data", read_only: false}
+  - {source: "zones/db/syncthing", target: "/export/syncthing_data", read_only: false}

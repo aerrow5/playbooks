@@ -2,12 +2,14 @@
   gather_facts: true
   tasks:
      - group_by: key=os_{{ ansible_distribution }}
+       tags: update_packages
 
 - hosts: os_Archlinux
   gather_facts: False
   tasks:
     - name: Update packages
       pacman: update_cache=yes upgrade=yes
+      tags: update_packages
       become: yes
 
 - hosts: os_CentOS
@@ -16,6 +18,7 @@
     - name: Update packages
       yum: name=* state=latest
       become: yes
+      tags: update_packages
   vars:
     ansible_user: root
 
@@ -24,6 +27,8 @@
   tasks:
     - name: Update packages
       apt: upgrade=dist update_cache=yes 
+      become: yes
+      tags: update_packages
   vars:
     ansible_user: root
 
@@ -33,6 +38,7 @@
     - name: Update packages
       apt: upgrade=dist update_cache=yes 
       become: yes
+      tags: update_packages
 
 - hosts: os_SmartOS
   gather_facts: False
@@ -40,6 +46,7 @@
     - name: Update packages
       pkgin: full_upgrade=yes
       when: smartos_hypervisor is not defined
+      tags: update_packages
   vars:
     ansible_user: root
 
@@ -48,4 +55,6 @@
   tasks:
     - name: Update packages
       pkgng: full_upgrade=yes
+      become: yes
+      tags: update_packages
 

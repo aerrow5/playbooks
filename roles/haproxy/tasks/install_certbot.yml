@@ -1,8 +1,11 @@
 - name: Install python-pip
   package:
-    name: py27-pip
+    name: "{{ item }}"
     state: present
   become: yes
+  with_items:
+    - py27-pip
+    - gcc49
 
 - name: Install certbot from pip
   pip:

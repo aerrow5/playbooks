@@ -1,0 +1,6 @@
+st_user: syncthing
+st_def_folder: /home/syncthing/Default
+st_def_folder_name: Default Folder
+st_gui_listen_address: 0.0.0.0
+st_gui_listen_port: 8384
+st_theme: dark

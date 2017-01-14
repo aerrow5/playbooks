@@ -1,0 +1,77 @@
+- name: Ensure apt-transport-https package installed
+  apt:
+    name: apt-transport-https
+    state: present
+    cache_valid_time: 3600
+  become: yes
+
+- name: Add syncthing apt key
+  apt_key:
+    url: https://syncthing.net/release-key.txt
+    state: present
+  become: yes
+
+- name: Add syncthing apt repo
+  apt_repository:
+    repo: deb https://apt.syncthing.net/ syncthing release
+    state: present
+  become: yes
+
+- name: Update apt cache
+  apt:
+    name: syncthing
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: Create syncthing group
+  group:
+    name: "{{ st_user }}"
+    state: present
+  become: yes
+
+- name: Create syncthing user
+  user:
+    name: "{{ st_user }}"
+    group: "{{ st_user }}"
+    state: present
+  become: yes
+
+- name: Ensure default store folder writable
+  file:
+    state: directory
+    recurse: true
+    path: "{{ st_def_folder }}"
+    owner: "{{ st_user }}"
+  become: yes
+
+- name: Ensure external storage folder writable
+  file:
+    state: directory
+    recurse: true
+    path: "{{ filesystems[0].target }}"
+    owner: "{{ st_user }}"
+  become: yes
+  when: filesystems
+
+# Do stuff as syncthing user
+- block:
+  - name: Ensure syncthing config dir exists
+    file:
+      state: directory
+      path: /home/{{ st_user }}/.config/syncthing/
+
+  - name: Setup syncthing config template
+    template:
+      src: config.xml.j2
+      dest: /home/{{ st_user }}/.config/syncthing/config.xml
+      force: no
+  become_user: "{{ st_user }}"
+  become: yes
+
+- name: Enable syncthing service
+  systemd:
+    name: syncthing@{{ st_user }}.service
+    state: started
+    enabled: yes
+  become: yes

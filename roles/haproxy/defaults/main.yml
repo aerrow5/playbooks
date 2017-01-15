@@ -1,5 +1,9 @@
 haproxy_bind_addr: 0.0.0.0
 haproxy_bind_port: 443
+haproxy_conf: /opt/local/etc/haproxy.cfg
+haproxy_chroot_dir: /var/lib/haproxy
+haproxy_user: haproxy
+haproxy_group: haproxy
 
 haproxy_cb_test: False
 haproxy_cb_keysize: 4096

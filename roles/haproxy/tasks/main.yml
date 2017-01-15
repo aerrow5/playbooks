@@ -1,20 +1,20 @@
 - name: Ensure group present
   group:
-    name: haproxy
+    name: "{{ haproxy_group }}"
     state: present
   become: yes
 
 - name: Ensure user present
   user:
-    name: haproxy
-    group: haproxy
+    name: "{{ haproxy_user }}"
+    group: "{{ haproxy_group }}"
     state: present
   become: yes
 
 - name: Copy haproxy template
   template:
     src: haproxy.conf.j2
-    dest: /opt/local/etc/haproxy.cfg
+    dest: "{{ haproxy_conf }}"
   become: yes
 
 - name: Install haproxy
@@ -26,10 +26,10 @@
 
 - name: Ensure chroot dir created
   file:
-    path: /var/lib/haproxy
+    path: "{{ haproxy_chroot_dir }}"
+    owner: "{{ haproxy_user }}"
+    group: "{{ haproxy_group }}"
     state: directory
-    owner: haproxy
-    group: haproxy
     mode: 0644
   become: yes
 

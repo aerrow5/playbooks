@@ -1,11 +1,11 @@
 global
   log         127.0.0.1 local2
   log-send-hostname
-  chroot      /var/lib/haproxy
+  chroot      {{ haproxy_chroot_dir }}
   pidfile     /var/run/haproxy.pid
   maxconn     4000
-  user        haproxy
-  group       haproxy
+  user        {{ haproxy_user }}
+  group       {{ haproxy_group }}
   nbproc      1
   ulimit-n    9000
   daemon

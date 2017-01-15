@@ -11,18 +11,19 @@
     state: present
   become: yes
 
-- name: Copy haproxy template
-  template:
-    src: haproxy.conf.j2
-    dest: "{{ haproxy_conf }}"
-  become: yes
-
 - name: Install haproxy
   pkgin:
     name: haproxy
     state: present
     update_cache: yes
   become: yes
+
+- name: Copy haproxy template
+  template:
+    src: haproxy.conf.j2
+    dest: "{{ haproxy_conf }}"
+  become: yes
+  notify: reload haproxy
 
 - name: Ensure chroot dir created
   file:

@@ -37,6 +37,13 @@
     state: present
   become: yes
 
+- name: Copy syncthing init script
+  template:
+    src: templates/syncthing.init.j2
+    dest: /etc/init.d/syncthing
+    mode: 0755
+  become: yes
+
 - name: Ensure default store folder writable
   file:
     state: directory
@@ -70,8 +77,8 @@
   become: yes
 
 - name: Enable syncthing service
-  systemd:
-    name: syncthing@{{ st_user }}.service
+  service:
+    name: syncthing
     state: started
     enabled: yes
   become: yes

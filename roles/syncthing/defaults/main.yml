@@ -4,3 +4,4 @@ st_def_folder_name: Default Folder
 st_gui_listen_address: 0.0.0.0
 st_gui_listen_port: 8384
 st_theme: dark
+st_binary: /usr/bin/syncthing

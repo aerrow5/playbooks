@@ -13,7 +13,7 @@
     state: present
   become: yes
 
-- name: Create tmp cert/key to start haproxy (First time run only)
+- name: Create invalid tmp cert/key to start haproxy (to bootstrap new haproxy install)
   shell: "{{ item }}"
   args:
     chdir: /tmp
@@ -25,35 +25,20 @@
     - "cat server.crt server.key > /opt/local/etc/haproxy.pem"
   become: yes
 
-# - name: Combine certs + key for haproxy
-#   shell: "cat /etc/letsencrypt/live/{{ haproxy_cb_domains[0] }}/{fullchain,privkey}.pem > /opt/local/etc/haproxy.pem"
-#   ignore_errors: yes
-#   become: yes
-
-
 - name: Ensure haproxy started
   service:
     name: haproxy
     state: started
+  become: yes
 
 - name: Create certbot certs if needed
-  command: certbot certonly \
-          --debug \
-          --standalone \
-          --preferred-challenges tls-sni-01 \
-          --tls-sni-01-port 18443 \
-          --agree-tos \
-          --email {{ haproxy_cb_email }} \
-          --keep-until-expiring \
-          --quiet \
-          --expand \
-          -n \
-          {% for i in haproxy_cb_domains %} -d {{ i }} {% endfor %} \
-          --post-hook "{{ haproxy_cb_posthook }}"
+  command: "certbot {{ haproxy_cb_certonly_flags }}"
+  become: yes
 
 - name: Setup certbot crontab if needed
   cron: name="Autorenew certbot"
         special_time="hourly"
-        job="certbot renew --keep-until-expiring -q -n --preferred-challenges tls-sni-01 --tls-sni-01-port 18443 --debug --post-hook '{{ haproxy_cb_posthook }}'"
+        job="certbot {{ haproxy_cb_renew_flags }}"
         cron_file=certbot
         user="root"
+  become: yes

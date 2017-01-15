@@ -39,18 +39,18 @@ listen letsencrypt-tls01-detect
     mode tcp
     option tcplog
 
-    bind 0.0.0.0:443
+    bind {{ haproxy_bind_addr }}:{{ haproxy_bind_port }}
 
     tcp-request inspect-delay 1s
     tcp-request content accept if { req.ssl_hello_type 1 }
 
     use-server letsencrypt-server if { req_ssl_sni -m end .acme.invalid }
 
-    server letsencrypt-server 127.0.0.1:18443 weight 0
+    server letsencrypt-server {{ haproxy_cb_tls_bind_addr }}:{{ haproxy_cb_tls_bind_port }} weight 0
     server default 127.0.0.1:19443 weight 1 send-proxy
 
 frontend https-in
-    bind 127.0.0.1:19443 ssl crt /opt/local/etc/haproxy.pem no-sslv3 accept-proxy
+    bind 127.0.0.1:19443 ssl crt {{ haproxy_cb_dest_bundle }} no-sslv3 accept-proxy
 
     rspadd  Strict-Transport-Security:\ max-age=15768000
     capture request header User-agent len 100
@@ -70,7 +70,7 @@ backend host_subsonic_be
     mode http
     balance roundrobin
     option httpclose
-  
+
     cookie HTTPSERVERID insert nocache indirect httponly secure
     server subsonic subsonic.dmz:4040 cookie A check
 
@@ -81,6 +81,6 @@ backend host_owncloud_be
     mode http
     balance roundrobin
     option httpclose
-  
+
     cookie HTTPSERVERID insert nocache indirect httponly secure
     server subsonic owncloud.dmz:80 cookie A check

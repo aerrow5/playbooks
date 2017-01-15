@@ -1,0 +1,10 @@
+- name: Copy enable_autoupdate script
+  copy:
+    src: files/enableAutoUpdate.sh
+    dest: /usr/local/bin/enableAutoUpdate
+    mode: 0755
+  become: yes
+
+- name: Run enable_autoupdate script
+  command: /usr/local/bin/enableAutoUpdate
+  become: yes

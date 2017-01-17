@@ -1,2 +1,5 @@
 ansible_python_interpreter: /usr/bin/python2
 ansible_user: root
+
+st_user: piranha
+st:group: piranha

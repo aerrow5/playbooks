@@ -1,2 +1,5 @@
 admin_group: wheel
 ansible_python_interpreter: /usr/bin/python2
+
+st_user: piranha
+st_group: piranha

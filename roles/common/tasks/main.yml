@@ -3,9 +3,9 @@
 
 - name: Setup Users
   user:
-    name=piranha
-    state=present
-    groups={{ admin_group }}
+    name: piranha
+    state: present
+    groups: "{{ admin_group }}"
 
 - name: Adding github ssh keys
   authorized_key: user={{ item }} key=https://github.com/precurse.keys
@@ -18,7 +18,15 @@
   when: ansible_distribution == "SmartOS"
 
 - name: Enable EPEL Repo for CentOS		
-  yum: name=epel-release state=present		
+  yum:
+    name: epel-release
+    state: present
+  when: ansible_distribution == "CentOS"
+
+- name: Enable SCL Repo for CentOS		
+  yum:
+    name: centos-release-SCL
+    state: present		
   when: ansible_distribution == "CentOS"
 
 - name: Disable Debian auto-start daemons on install

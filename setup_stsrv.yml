@@ -1,3 +1,4 @@
 - hosts: syncthing_relay
   roles:
+    - common
     - syncthing_relay

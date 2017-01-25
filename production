@@ -44,7 +44,6 @@ fileserver.signet
 [radius]
 10.0.3.10
 
-
 [switch]
 switch.signet
 
@@ -69,8 +68,11 @@ alarmpi.signet
 [kim]
 kim.signet
 
-[cyberahome]
-10.0.3.12
+[syncthing_relay]
+stsrv.signet ansible_user=ubuntu
+
+[cybera]
+cybera.signet
 
 [prometheus]
 prometheus.signet
@@ -93,7 +95,7 @@ elasticsearch
 logging
 pimon
 kim
-cyberahome
+cybera
 prometheus
 flowbat
 

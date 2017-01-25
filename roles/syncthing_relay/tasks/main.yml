@@ -1,0 +1,67 @@
+## Arch
+- block:
+  - name: Install syncthing-relay
+    pacman:
+      name: "syncthing-relaysrv"
+      state: present
+      update_cache: yes
+    become: yes
+  when: ansible_distribution == "Arch"
+
+## Debian/Ubuntu
+- block:
+  - name: Ensure syncthing-relay group present
+    group:
+      name: syncthing-relaysrv
+      gid: 992
+      state: present
+
+  - name: Ensure syncthing-relay user present
+    user:
+      name: syncthing-relaysrv
+      uid: 992
+      group: syncthing-relaysrv
+      state: present
+
+  - name: Ensure working directory exists & correct permission
+    file:
+      state: directory
+      path: /var/lib/syncthing-relaysrv
+      owner: syncthing-relaysrv
+      group: syncthing-relaysrv
+
+  - name: Copy syncthing-relay systemd service
+    template:
+      src: syncthing-relaysrv.service.j2
+      dest: /etc/systemd/system/syncthing-relaysrv.service
+
+  - name: Download syncthing-relay
+    get_url:
+      url: "{{ strelay_url }}"
+      dest: /tmp/syncthing-relay.tar.gz
+    become_user: syncthing-relaysrv
+
+  - name: Extract syncthing-relay
+    unarchive:
+      src: /tmp/syncthing-relay.tar.gz
+      dest: /tmp/
+      remote_src: True
+    become_user: syncthing-relaysrv
+
+  - name: Copy syncthing-relay binary to usr/bin
+    copy:
+      src: /tmp/{{ strelay_ver }}/strelaysrv
+      dest: /usr/local/bin/syncthing-relaysrv
+      mode: 0755
+      remote_src: True
+
+  when: ansible_distribution == "Ubuntu"
+  become: yes
+
+- name: Enable/Start syncthing-relay
+  systemd:
+    name: syncthing-relaysrv
+    state: started
+    enabled: true
+    daemon_reload: yes
+  become: yes

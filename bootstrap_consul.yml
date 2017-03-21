@@ -1,0 +1,6 @@
+- hosts: consul
+  vars:
+    consul_bootstrap: true
+  roles:
+    - consul
+

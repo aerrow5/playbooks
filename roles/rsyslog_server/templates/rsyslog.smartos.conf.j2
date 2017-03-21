@@ -1,0 +1,19 @@
+$ModLoad immark
+$ModLoad imsolaris
+# $ModLoad imtcp
+$ModLoad imudp
+$UDPServerRun 514
+$UDPServerAddress 127.0.0.1
+
+local0.*    /var/log/haproxy.log
+
+*.err;kern.notice;auth.notice                   /dev/sysmsg
+*.err;kern.debug;daemon.notice;mail.crit        /var/adm/messages
+*.alert;kern.err;daemon.err                     :omusrmsg:operator
+*.alert                                         :omusrmsg:root
+*.emerg                                         :omusrmsg:*
+
+mail.debug                                      /var/log/syslog
+mail.info                                       /var/log/maillog
+auth.info                                       /var/log/authlog
+

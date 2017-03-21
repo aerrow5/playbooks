@@ -1,3 +1,11 @@
 - name: Install rsyslog
   package: name=rsyslog state=present
+  become: yes
 
+- name: Apply rsyslog template
+  template:
+    src: templates/rsyslog.smartos.conf.j2
+    dest: /opt/local/etc/rsyslog.conf
+  become: yes
+  notify: reload rsyslog
+  when: ansible_distribution == "SmartOS"

@@ -22,7 +22,8 @@
   tags: update_packages
 
 - name: Set latest plex version var
-  set_fact: plex_ver = plextv_ver.stdout
+  set_fact:
+    plex_ver: "{{ plextv_ver.stdout }}"
   when: plextv_ver.rc == 0
   tags: update_packages
 

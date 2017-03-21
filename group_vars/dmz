@@ -1,6 +1,7 @@
+ansible_user: root
 domain: dmz
 resolvers:
-  - 10.0.4.1
+  - 10.0.4.254
 
 nics:
-  - {interface: "net0", nic_tag: "external", vlan_id: "4", ip: "{{ lookup('dig', alias + '.' + domain + '.') }}", netmask: "255.255.255.0", gateway: "10.0.4.1"}
+  - {interface: "net0", nic_tag: "external", vlan_id: "4", ip: "{{ lookup('dig', alias + '.' + domain + '.') }}", netmask: "255.255.255.0", gateway: "10.0.4.254"}

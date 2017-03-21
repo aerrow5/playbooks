@@ -1,5 +1,0 @@
-- hosts: plex
-  remote_user: root
-  roles:
-    - common
-    - plex

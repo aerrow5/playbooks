@@ -56,9 +56,6 @@ ldap.signet
 [influxdb]
 influxdb.signet
 
-[elasticsearch]
-elasticsearch.signet
-
 [logging]
 logging.signet
 
@@ -70,9 +67,6 @@ kim.signet
 
 [syncthing_relay]
 stsrv.signet ansible_user=ubuntu
-
-[cybera]
-cybera.signet
 
 [prometheus]
 prometheus.signet
@@ -91,11 +85,9 @@ switch
 dbserver
 ldap
 influxdb
-elasticsearch
 logging
 pimon
 kim
-cybera
 prometheus
 flowbat
 

@@ -30,6 +30,6 @@ haproxy_cb_prehook: ""
 haproxy_cb_posthook: "cat /etc/letsencrypt/live/{{ haproxy_cb_domains[0] }}/{fullchain,privkey}.pem > {{ haproxy_cb_dest_bundle }}; svcadm restart haproxy"
 
 
-haproxy_cb_all_flags: '{% if haproxy_cb_test %}--test-cert {% endif %} --debug --standalone --keep --agree-tos --preferred-challenges {{ haproxy_cb_pref_challenge }} --tls-sni-01-port {{ haproxy_cb_tls_bind_port }} --http-01-port {{ haproxy_cb_http_bind_port }} --rsa-key-size {{ haproxy_cb_keysize }} --agree-tos --email {{ haproxy_cb_email }} -q -n --expand --pre-hook "{{ haproxy_cb_prehook }}" --post-hook "{{ haproxy_cb_posthook }}" {% for i in haproxy_cb_domains %} -d {{ i }} {% endfor %}'
-haproxy_cb_certonly_flags: "certonly {{ haproxy_cb_all_flags }}"
+haproxy_cb_all_flags: '{% if haproxy_cb_test %}--test-cert {% endif %} --debug --standalone --keep --agree-tos --preferred-challenges {{ haproxy_cb_pref_challenge }} --tls-sni-01-port {{ haproxy_cb_tls_bind_port }} --http-01-port {{ haproxy_cb_http_bind_port }} --rsa-key-size {{ haproxy_cb_keysize }} --agree-tos --email {{ haproxy_cb_email }} -q -n --expand --pre-hook "{{ haproxy_cb_prehook }}" --post-hook "{{ haproxy_cb_posthook }}"'
+haproxy_cb_certonly_flags: "certonly {{ haproxy_cb_all_flags }} {% for i in haproxy_cb_domains %} -d {{ i }} {% endfor %}"
 haproxy_cb_renew_flags: "renew {{ haproxy_cb_all_flags }}"

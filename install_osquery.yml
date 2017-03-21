@@ -1,0 +1,50 @@
+- hosts: all
+  gather_facts: true
+  tasks:
+    - group_by: key=os_{{ ansible_distribution }}
+
+- hosts: os_Ubuntu
+  gather_facts: False
+  tasks:
+    - apt_key:
+        keyserver=keyserver.ubuntu.com
+        id=1484120AC4E9F8A1A577AEEE97A80C63C9D8B80B
+      become: yes
+    - apt_repository:
+        repo="deb [arch=amd64] https://osquery-packages.s3.amazonaws.com/trusty trusty main" state=present
+      become: yes
+    - apt:
+        name=osquery
+        update_cache=yes cache_valid_time=3600
+      become: yes
+
+- hosts: os_Debian
+  gather_facts: False
+  tasks:
+    - apt_key:
+        keyserver=keyserver.ubuntu.com
+        id=1484120AC4E9F8A1A577AEEE97A80C63C9D8B80B
+      become: yes
+    - apt_repository:
+        repo="deb [arch=amd64] https://osquery-packages.s3.amazonaws.com/trusty trusty main" state=present
+      become: yes
+    - apt:
+        name=osquery
+        update_cache=yes cache_valid_time=3600
+      become: yes
+
+- hosts: os_CentOS
+  gather_facts: False
+  tasks:
+    - name: Install repo
+      yum:
+          name=https://osquery-packages.s3.amazonaws.com/centos7/noarch/osquery-s3-centos7-repo-1-0.0.noarch.rpm
+          state=present
+      become: yes
+
+    - name: Install package
+      yum:
+          name=osquery
+          state=present
+      become: yes
+

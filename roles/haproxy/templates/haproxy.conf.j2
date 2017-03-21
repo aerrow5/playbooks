@@ -1,5 +1,5 @@
 global
-  log         127.0.0.1 local2
+  log         127.0.0.1 local0
   log-send-hostname
   {% if haproxy_chroot %}
   chroot      {{ haproxy_chroot_dir }}
@@ -64,6 +64,38 @@ frontend https-in
 
     use_backend host_subsonic_be if host_subsonic
     use_backend host_owncloud_be if host_owncloud
+
+frontend syncthing-in
+    mode tcp
+    option tcplog
+    bind {{ haproxy_bind_addr }}:22000
+
+    use_backend host_syncthing_be
+
+backend host_syncthing_be
+   mode tcp
+   server syncthing syncthing.dmz:22000
+
+frontend transmission-in
+    mode tcp
+    bind {{ haproxy_bind_addr }}:51413
+
+    use_backend host_transmission_be
+
+backend host_transmission_be
+    mode tcp
+    server transmission transmission.dmz:51413
+
+frontend plex-in
+    mode tcp
+    option tcplog
+    bind {{ haproxy_bind_addr }}:32400
+
+    use_backend host_plex_be
+
+backend host_plex_be
+   mode tcp
+   server plex plex.dmz:32400
 
 backend host_subsonic_be
     option forwardfor # This sets X-Forwarded-For

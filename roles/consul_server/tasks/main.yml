@@ -45,16 +45,29 @@
     group: consul
   become: true
 
-- name: setup systemd service file
-  template:
-    src: templates/consul.service.j2
-    dest: /etc/systemd/system/consul.service
-  become: true
+## Systemd
+- block:
+  - name: setup systemd service file
+    template:
+      src: templates/consul.service.j2
+      dest: /etc/systemd/system/consul.service
+    become: true
 
-- name: Setup consul service
-  systemd:
-    name: consul
-    daemon_reload: yes
-    state: started
-    enabled: yes
-  become: true
+  - name: Setup consul systemd service
+    systemd:
+      name: consul
+      daemon_reload: yes
+      state: started
+      enabled: yes
+    become: true
+  when: ansible_service_mgr == "systemd"
+## /Systemd
+
+## SysVInit
+- block:
+- name: setup sysvinit consul file
+
+
+
+
+  when: ansible_service_mgr == "sysvinit"

@@ -9,7 +9,7 @@
 - include: setup_samba.yml
 - include: setup_dbserver.yml
 - include: setup_owncloud.yml
-- include: plex.yml
+- include: setup_plex.yml
 - include: setup_subsonic.yml
 - include: setup_transmission.yml
 - include: setup_shell.yml

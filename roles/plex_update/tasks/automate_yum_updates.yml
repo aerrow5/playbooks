@@ -1,0 +1,19 @@
+- name: Install packages
+  yum:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - python-pip
+    - python-devel
+    - openssl-devel
+    - gcc
+    - git
+    - libffi-devel
+  become: yes
+
+- name: Install ansible
+  pip:
+    name: ansible
+    state: present
+  become: yes

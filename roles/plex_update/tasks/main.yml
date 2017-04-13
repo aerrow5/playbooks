@@ -1,0 +1,13 @@
+- name: Setup plex for apt
+  include: tasks/install_apt.yml
+  when: ansible_pkg_mgr == "apt"
+
+- name: Setup plex for yum
+  include: tasks/install_yum.yml
+  when: ansible_pkg_mgr == "yum"
+
+- name: ensure plexmediaserver is running (and enable it at boot)
+  service:
+    name: plexmediaserver
+    state: started
+    enabled: yes

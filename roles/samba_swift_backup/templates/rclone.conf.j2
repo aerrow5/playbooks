@@ -17,3 +17,10 @@ remote = swifty:photos
 filename_encryption = standard
 password = {{ os_enc_key }}
 password2 = {{ os_enc_salt }}
+
+[syncthing-encrypted]
+type = crypt
+remote = swifty:syncthing
+filename_encryption = standard
+password = {{ os_enc_key }}
+password2 = {{ os_enc_salt }}

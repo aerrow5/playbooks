@@ -64,6 +64,7 @@
     recurse: true
     path: "{{ st_def_folder }}"
     owner: "{{ st_user }}"
+    mode: 0750
   become: yes
 
 - name: Ensure external storage folder writable

@@ -104,6 +104,8 @@ backend host_subsonic_be
     balance roundrobin
     option httpclose
 
+    redirect scheme https if !{ ssl_fc }
+
     cookie HTTPSERVERID insert nocache indirect httponly secure
     server subsonic subsonic.dmz:4040 cookie A check
 

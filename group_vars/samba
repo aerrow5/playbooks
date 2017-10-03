@@ -13,5 +13,5 @@ filesystems:
   - {source: "/zones/data/media/movies", target: "/media/movies", read_only: false}
   - {source: "/zones/data/media/tv", target: "/media/tv", read_only: false}
   - {source: "/zones/data/media/incoming", target: "/media/incoming", read_only: false}
-  - {source: "/zones/data/training", target: "/media/training", read_only: false}
-  - {source: "/zones/data/music", target: "/media/music", read_only: false}
+  - {source: "/zones/data/media/training", target: "/media/training", read_only: false}
+  - {source: "/zones/data/media/music", target: "/media/music", read_only: false}

@@ -38,8 +38,8 @@ transmission
 syncthing
 
 ## LAN
-[fileserver]
-fileserver.signet
+[samba]
+smb.signet
 
 [radius]
 10.0.3.10
@@ -82,7 +82,7 @@ alarmpi.signet
 
 
 [lan:children]
-fileserver
+samba
 radius
 netflow
 switch

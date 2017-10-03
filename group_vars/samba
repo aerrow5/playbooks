@@ -6,7 +6,7 @@ cpu_cap: 100
 max_phy_mem: 1024
 quota: 100
 brand: joyent
-alias: fileserver
+alias: samba
 
 filesystems:
   - {source: "/zones/data/personal", target: "/media/personal", read_only: false}

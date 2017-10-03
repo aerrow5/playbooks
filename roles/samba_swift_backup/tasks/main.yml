@@ -1,0 +1,37 @@
+- name: Install dependencies
+  pkgin:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - build-essential
+    - unzip
+    - py27-pip
+  become: yes
+
+- name: Install Openstack Swift
+  pip:
+    name: "{{ item }}"
+  with_items:
+    - python-keystoneclient
+    - python-swiftclient
+  become: yes
+
+- name: Download rclone
+  get_url:
+    url: "{{ rclone_url }}"
+    dest: /home/piranha/rclone.zip
+  become_user: piranha
+  become: yes
+
+- name: Extract rclone
+  unarchive:
+    src: /home/piranha/rclone.zip
+    dest: /home/piranha/
+    remote_src: yes
+  become_user: piranha
+  become: yes
+
+- name: Move rclone
+  shell: mv /home/piranha/rclone-*-amd64 /home/piranha/rclone
+  become_user: piranha
+  become: yes

@@ -24,6 +24,7 @@
 
 - name: install package
   shell: pacman -U /home/alarm/nut-build/network-ups-tools-*.pkg.tar.xz  --noconfirm
+  when: is_installed.rc == 1
 
 - name: Configure templates
   template: src={{ item }}.j2 dest=/etc/ups/{{ item }} 

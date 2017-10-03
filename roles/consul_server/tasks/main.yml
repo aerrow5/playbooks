@@ -12,27 +12,29 @@
   become_user: consul
   become: true
 
-- name: Download consul binary
-  get_url:
-    url: https://releases.hashicorp.com/consul/{{ consul_ver }}/consul_{{ consul_ver }}_linux_arm.zip
-    dest: /tmp/consul.zip
-    mode: 0644
-    checksum: sha256:e18934a3a38b980bc0cfaa8d74379a6bfe58cf1ecf4b164e28ff37dd6c7198b0
-  become_user: consul
-  become: true
+- name: Check if consul already installed
+  stat:
+    path: /usr/local/sbin/consul
+  register: st_c
 
-- name: Extract consul
-  unarchive:
-    src: /tmp/consul.zip
-    dest: /usr/local/sbin
-    remote_src: True
-  become: true
+- block:
+  - include: download_consul.yml
+
+  - name: Extract consul
+    unarchive:
+      src: /tmp/consul_{{ consul_ver }}.zip
+      dest: /usr/local/sbin
+      remote_src: True
+    become: true
+    notify: restart consul
+  when: st_c.stat.executable is not defined or not st_c.stat.executable
 
 - name: Ensure consul.d directory exists
   file:
     path: /etc/consul.d
     state: directory
     mode: 0755
+  notify: restart consul
   become: true
 
 - name: Ensure consul data directory exists and proper permissions
@@ -64,10 +66,7 @@
 ## /Systemd
 
 ## SysVInit
-- block:
-- name: setup sysvinit consul file
-
-
-
-
-  when: ansible_service_mgr == "sysvinit"
+#- block:
+#  - name: setup sysvinit consul file
+#
+#  when: ansible_service_mgr == "sysvinit"

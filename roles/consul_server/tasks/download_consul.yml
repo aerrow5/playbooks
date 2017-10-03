@@ -1,0 +1,19 @@
+- name: Download consul arm binary
+  get_url:
+    url: https://releases.hashicorp.com/consul/{{ consul_ver }}/consul_{{ consul_ver }}_linux_arm.zip
+    dest: /tmp/consul_{{ consul_ver }}.zip
+    mode: 0644
+    checksum: sha256:{{ consul_shasum_arm }}
+  when: ansible_machine == "armv7l"
+  become_user: consul
+  become: true
+
+- name: Download consul amd64 binary
+  get_url:
+    url: https://releases.hashicorp.com/consul/{{ consul_ver }}/consul_{{ consul_ver }}_linux_amd64.zip
+    dest: /tmp/consul_{{ consul_ver }}.zip
+    mode: 0644
+    checksum: sha256:{{ consul_shasum_amd64 }}
+  when: ansible_machine == "x86_64"
+  become_user: consul
+  become: true

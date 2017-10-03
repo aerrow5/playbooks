@@ -1,2 +1,6 @@
-consul_ver: 0.7.5
+consul_ver: 0.8.0
+consul_shasum_amd64: f4051c2cab9220be3c0ca22054ee4233f1396c7138ffd97a38ffbcea44377f47
+consul_shasum_arm: a6efaabb11990672df0aaf6c70a272484d2f6d654f393c58ec1a41fd30629f0c
 consul_bootstrap: false
+
+consul_install_path: /usr/local/sbin

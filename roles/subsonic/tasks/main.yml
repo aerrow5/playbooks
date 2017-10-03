@@ -37,4 +37,7 @@
 - meta: flush_handlers
 
 - name: Enable subsonic
-  service: name=subsonic state=running enabled=yes
+  service:
+    name: subsonic
+    state: started
+    enabled: yes

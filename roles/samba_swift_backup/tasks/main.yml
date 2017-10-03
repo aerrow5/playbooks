@@ -65,3 +65,14 @@
   become_user: piranha
   become: yes
 
+- name: Setup crontabs
+  cron:
+    name: "{{ item.name }}"
+    user: piranha
+    hour: "{{ (item.job | hash | list | map('int',0,16) | sum ) % 24 }}"
+    minute: "{{ (item.job | hash | list | map('int',0,16) | sum ) % 60  }}"
+    job: "{{ item.job }}"
+  with_items:
+    - { name: pictures, job: '/home/piranha/rclone/rclone sync /media/personal/media/pictures/ photos-encrypted:' }
+    - { name: syncthing, job: '/home/piranha/rclone/rclone sync /media/syncthing syncthing-encrypted:'}
+  tags: cron

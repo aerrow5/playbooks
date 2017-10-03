@@ -14,7 +14,8 @@
       mode: 0644
 
   - name: Setup primary samba user/pass
-    shell: (echo {{ smb_pass }}; echo {{ smb_pass }}) | smbpasswd -a -s {{ smb_user }}
+    shell: (echo {{ samba_password }}; echo {{ samba_password }}) \
+           | smbpasswd -a -s {{ samba_username }}
     tags:
       - setup
 

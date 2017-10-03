@@ -16,6 +16,8 @@ filesystems:
   - {source: "/zones/data/media/training", target: "/media/training", read_only: false}
   - {source: "/zones/data/media/music", target: "/media/music", read_only: false}
 
+samba_username: "{{ vault_samba_username }}"
+samba_password: "{{ vault_samba_password }}"
 os_username: "{{ vault_os_username }}"
 os_password: "{{ vault_os_password }}"
 os_auth_url: "{{ vault_os_auth_url }}"

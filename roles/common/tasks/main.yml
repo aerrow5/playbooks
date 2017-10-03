@@ -5,6 +5,7 @@
   - name: Setup Users
     user:
       name: piranha
+      shell: /bin/bash
       state: present
       groups: "{{ admin_group }}"
 
@@ -35,11 +36,33 @@
     when: ansible_os_family == "Debian"
 
   - name: Install common packages
-    package: name={{ item }} state=present
+    package:
+      name: "{{ item }}"
+      state: present
     with_items:
       - sudo
       - tmux
+      - git
     ignore_errors: yes
+
+  - name: Clone dotfiles
+    git:
+      repo: "https://github.com/precurse/dotfiles"
+      dest: "/home/piranha/dotfiles"
+      clone: yes
+    become_user: piranha
+
+  - name: Link dotfiles
+    file:
+      state: link
+      force: yes
+      src: "/home/piranha/dotfiles/{{ item }}"
+      dest: "/home/piranha/.{{ item }}"
+    with_items:
+      - profile
+      - bashrc
+      - bash_profile
+    become_user: piranha
 
   - name: Setting hostname on SmartOS
     command: sm-set-hostname {{ alias }}
@@ -51,3 +74,4 @@
     when: alias is defined and ansible_system == "Linux"
     changed_when: no
   become: yes
+

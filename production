@@ -77,6 +77,10 @@ netflow.signet
 [flowbat]
 flowbat.signet
 
+[consul]
+alarmpi.signet
+
+
 [lan:children]
 fileserver
 radius

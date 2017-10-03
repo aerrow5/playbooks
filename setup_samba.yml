@@ -1,4 +1,11 @@
 - hosts: samba
+  vars_prompt:
+    - name: "smb_user"
+      prompt: "What is the username to set for the primary samba user?"
+      private: no
+    - name: "smb_pass"
+      prompt: "What is the password to set for this user?"
+      private: yes
   roles:
     - common
     - samba

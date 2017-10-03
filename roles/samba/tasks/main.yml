@@ -7,11 +7,17 @@
       - samba:smbd
       - samba:nmbd
   - template:
-      src=smb.conf.j2 dest=/opt/local/etc/samba/smb.conf owner=root group=root mode=0644
-  - name: Samba Setup
-    shell: (echo password; echo password) | smbpasswd -a -s piranha
+      src: smb.conf.j2
+      dest: /opt/local/etc/samba/smb.conf
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Setup primary samba user/pass
+    shell: (echo {{ smb_pass }}; echo {{ smb_pass }}) | smbpasswd -a -s {{ smb_user }}
     tags:
       - setup
+
   - service: name={{ item }} state=restarted
     with_items:
       - samba:smbd

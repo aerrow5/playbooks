@@ -16,12 +16,18 @@
     - python-swiftclient
   become: yes
 
+- name: Check if rclone already exists
+  stat:
+    path: /home/piranha/rclone/rclone
+  register: rclone_stat
+
 - name: Download rclone
   get_url:
     url: "{{ rclone_url }}"
     dest: /home/piranha/rclone.zip
   become_user: piranha
   become: yes
+  when: not rclone_stat.stat.exists
 
 - name: Extract rclone
   unarchive:
@@ -30,8 +36,32 @@
     remote_src: yes
   become_user: piranha
   become: yes
+  when: not rclone_stat.stat.exists
 
 - name: Move rclone
   shell: mv /home/piranha/rclone-*-amd64 /home/piranha/rclone
   become_user: piranha
   become: yes
+  when: not rclone_stat.stat.exists
+
+- name: Ensure rclone config directory exists
+  file:
+    path: /home/piranha/.config/rclone
+    state: directory
+  become_user: piranha
+  become: yes
+
+- name: Copy openrc
+  template:
+    src: openrc.j2
+    dest: /home/piranha/openrc
+  become_user: piranha
+  become: yes
+
+- name: Copy rclone.conf
+  template:
+    src: rclone.conf.j2
+    dest: /home/piranha/.config/rclone/rclone.conf
+  become_user: piranha
+  become: yes
+

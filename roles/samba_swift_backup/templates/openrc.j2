@@ -1,0 +1,15 @@
+export OS_AUTH_URL={{ os_auth_url }}
+export OS_TENANT_NAME="{{ os_tenant_name }}"
+
+# unsetting v3 items in case set
+unset OS_PROJECT_ID
+unset OS_PROJECT_NAME
+unset OS_USER_DOMAIN_NAME
+unset OS_INTERFACE
+
+export OS_USERNAME="{{ os_username }}"
+export OS_PASSWORD="{{ os_password }}"
+export OS_REGION_NAME="{{ os_region_name }}""
+export OS_ENDPOINT_TYPE={{ os_endpoint_type }}
+export OS_IDENTITY_API_VERSION={{ os_auth_ver }}
+

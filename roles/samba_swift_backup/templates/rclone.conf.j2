@@ -1,0 +1,19 @@
+[swifty]
+type = swift
+user = {{ os_username }}
+key = {{ os_password }}
+auth = {{ os_auth_url }}
+domain = 
+tenant = {{ os_tenant_name }}
+tenant_domain = 
+region = {{ os_region_name }}
+storage_url = 
+auth_version = {{ os_auth_ver }}
+endpoint_type = {{ os_endpoint_type }}
+
+[photos-encrypted]
+type = crypt
+remote = swifty:photos
+filename_encryption = standard
+password = {{ os_enc_key }}
+password2 = {{ os_enc_salt }}

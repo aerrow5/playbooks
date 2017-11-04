@@ -26,7 +26,7 @@ defaults
     option                  http-server-close
     option                  forwardfor       except 127.0.0.0/8
     option                  redispatch
-
+    stats                   enable
     retries                 3
     timeout http-request    10s
     timeout queue           1m
@@ -35,6 +35,14 @@ defaults
     timeout server          1m
     timeout http-keep-alive 10s
     timeout check           10s
+
+listen stats
+    bind :::8082
+    mode http
+    stats enable
+    stats uri /
+    stats realm private
+    stats auth stats:stats
 
 listen letsencrypt-tls01-detect
     mode tcp
@@ -65,37 +73,25 @@ frontend https-in
     use_backend host_subsonic_be if host_subsonic
     use_backend host_owncloud_be if host_owncloud
 
-frontend syncthing-in
+listen syncthing
     mode tcp
     option tcplog
     bind {{ haproxy_bind_addr }}:22000
 
-    use_backend host_syncthing_be
+    server syncthing syncthing.dmz:22000
 
-backend host_syncthing_be
-   mode tcp
-   server syncthing syncthing.dmz:22000
-
-frontend transmission-in
+listen transmission
     mode tcp
     bind {{ haproxy_bind_addr }}:51413
 
-    use_backend host_transmission_be
-
-backend host_transmission_be
-    mode tcp
     server transmission transmission.dmz:51413
 
-frontend plex-in
+listen plex
     mode tcp
     option tcplog
     bind {{ haproxy_bind_addr }}:32400
 
-    use_backend host_plex_be
-
-backend host_plex_be
-   mode tcp
-   server plex plex.dmz:32400
+    server plex plex.dmz:32400
 
 backend host_subsonic_be
     option forwardfor # This sets X-Forwarded-For

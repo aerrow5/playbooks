@@ -24,6 +24,7 @@
     dest: "{{ haproxy_conf }}"
   become: yes
   notify: reload haproxy
+  tags: config
 
 - name: Ensure chroot dir created
   file:

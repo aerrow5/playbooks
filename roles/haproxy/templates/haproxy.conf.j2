@@ -9,7 +9,6 @@ global
   user        {{ haproxy_user }}
   group       {{ haproxy_group }}
   nbproc      1
-  ulimit-n    9000
   daemon
   tune.ssl.default-dh-param {{ haproxy_dhparam }}
   ssl-default-bind-options no-sslv3
@@ -18,23 +17,13 @@ global
   ssl-default-server-ciphers ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:
 
 defaults
-    mode                    http
     log                     global
-    option                  httplog
-#   option                  dontlognull
     option                  http-ignore-probes
-    option                  http-server-close
     option                  forwardfor       except 127.0.0.0/8
-    option                  redispatch
     stats                   enable
-    retries                 3
-    timeout http-request    10s
-    timeout queue           1m
-    timeout connect         10s
-    timeout client          1m
-    timeout server          1m
-    timeout http-keep-alive 10s
-    timeout check           10s
+    timeout connect         5000
+    timeout client          50000
+    timeout server          50000
 
 listen stats
     bind :::8082
@@ -50,28 +39,28 @@ listen letsencrypt-tls01-detect
 
     bind {{ haproxy_bind_addr }}:{{ haproxy_bind_port }}
 
-    tcp-request inspect-delay 1s
+    tcp-request inspect-delay 5s
     tcp-request content accept if { req.ssl_hello_type 1 }
 
     use-server letsencrypt-server if { req_ssl_sni -m end .acme.invalid }
+    use-server https-server if { req.ssl_hello_type 1 }
+    use_backend ssh             if  { payload(0,7) -m bin 5353482d322e30 }
 
     server letsencrypt-server {{ haproxy_cb_tls_bind_addr }}:{{ haproxy_cb_tls_bind_port }} weight 0
-    server default 127.0.0.1:19443 weight 1 send-proxy
+    server https-server 127.0.0.1:19443 weight 0 send-proxy
 
 frontend https-in
+    mode http
+    option httplog
+
     bind 127.0.0.1:19443 ssl crt {{ haproxy_cb_dest_bundle }} no-sslv3 accept-proxy
 
     rspadd  Strict-Transport-Security:\ max-age=15768000
     capture request header User-agent len 100
     redirect scheme https code 301 if !{ ssl_fc }
 
-    # Hosts
     acl host_subsonic hdr(host) -i subsonic.aklaus.ca
-    acl host_owncloud hdr(host) -i owncloud.aklaus.ca
-
-
     use_backend host_subsonic_be if host_subsonic
-    use_backend host_owncloud_be if host_owncloud
 
 listen syncthing
     mode tcp
@@ -93,25 +82,17 @@ listen plex
 
     server plex plex.dmz:32400
 
+backend ssh
+    mode tcp
+    timeout server 2h
+    server ssh-shell shell.dmz:22
+
 backend host_subsonic_be
-    option forwardfor # This sets X-Forwarded-For
-    rspdel ^Strict-Transport-Security:.* #Remove hsts header from backend applications
-    mode http
-    balance roundrobin
-    option httpclose
+    mode                    http
+    option                  httplog
+    option                  forwardfor # This sets X-Forwarded-For
+    rspdel                  ^Strict-Transport-Security:.* #Remove hsts header from backend applications
 
-    redirect scheme https if !{ ssl_fc }
+    http-request add-header X-Proto https if { ssl_fc }
 
-    cookie HTTPSERVERID insert nocache indirect httponly secure
-    server subsonic subsonic.dmz:4040 cookie A check
-
-
-backend host_owncloud_be
-    option forwardfor # This sets X-Forwarded-For
-    rspdel ^Strict-Transport-Security:.* #Remove hsts header from backend applications
-    mode http
-    balance roundrobin
-    option httpclose
-
-    cookie HTTPSERVERID insert nocache indirect httponly secure
-    server subsonic owncloud.dmz:80 cookie A check
+    server subsonic subsonic.dmz:4040 check

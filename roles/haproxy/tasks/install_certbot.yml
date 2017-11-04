@@ -37,7 +37,8 @@
 
 - name: Setup certbot crontab if needed
   cron: name="Autorenew certbot"
-        special_time="hourly"
+        minute="0"
+        hour="*/12"
         job="certbot {{ haproxy_cb_renew_flags }}"
         cron_file=certbot
         user="root"

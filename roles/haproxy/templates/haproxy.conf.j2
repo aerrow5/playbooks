@@ -42,11 +42,11 @@ listen letsencrypt-tls01-detect
     tcp-request inspect-delay 5s
     tcp-request content accept if { req.ssl_hello_type 1 }
 
-    use-server letsencrypt-server if { req_ssl_sni -m end .acme.invalid }
-    use-server https-server if { req.ssl_hello_type 1 }
+    use_backend letsencrypt-tls01 if { req.ssl_sni -m end .acme.invalid }
     use_backend ssh             if  { payload(0,7) -m bin 5353482d322e30 }
+    use_backend openvpn         if  !{ req.ssl_hello_type 1 } !{ req.len 0 }
 
-    server letsencrypt-server {{ haproxy_cb_tls_bind_addr }}:{{ haproxy_cb_tls_bind_port }} weight 0
+    use-server https-server if { req.ssl_hello_type 1  }
     server https-server 127.0.0.1:19443 weight 0 send-proxy
 
 frontend https-in
@@ -58,9 +58,15 @@ frontend https-in
     rspadd  Strict-Transport-Security:\ max-age=15768000
     capture request header User-agent len 100
     redirect scheme https code 301 if !{ ssl_fc }
+    reqadd X-Forwarded-Proto:\ https if { ssl_fc }
 
     acl host_subsonic hdr(host) -i subsonic.aklaus.ca
     use_backend host_subsonic_be if host_subsonic
+
+backend letsencrypt-tls01
+    mode tcp
+    option tcplog
+    server letsencrypt {{ haproxy_cb_tls_bind_addr }}:{{ haproxy_cb_tls_bind_port }}
 
 listen syncthing
     mode tcp
@@ -82,17 +88,20 @@ listen plex
 
     server plex plex.dmz:32400
 
-backend ssh
-    mode tcp
-    timeout server 2h
-    server ssh-shell shell.dmz:22
-
 backend host_subsonic_be
     mode                    http
     option                  httplog
     option                  forwardfor # This sets X-Forwarded-For
     rspdel                  ^Strict-Transport-Security:.* #Remove hsts header from backend applications
 
-    http-request add-header X-Proto https if { ssl_fc }
-
     server subsonic subsonic.dmz:4040 check
+
+backend ssh
+    mode   tcp
+    option tcplog
+    server ssh shell.dmz:22
+
+backend openvpn
+    mode   tcp
+    option tcplog
+    server openvpn openvpn.dmz:1194

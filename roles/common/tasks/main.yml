@@ -19,16 +19,16 @@
     command: passwd -N piranha
     when: ansible_distribution == "SmartOS"
 
-  - name: Enable EPEL Repo for CentOS		
+  - name: Enable EPEL Repo for CentOS
     yum:
       name: epel-release
       state: present
     when: ansible_distribution == "CentOS"
 
-  - name: Enable SCL Repo for CentOS		
+  - name: Enable SCL Repo for CentOS
     yum:
       name: centos-release-SCL
-      state: present		
+      state: present
     when: ansible_distribution == "CentOS"
 
   - name: Disable Debian auto-start daemons on install
@@ -69,8 +69,8 @@
     when: alias is defined and ansible_distribution == "SmartOS"
     changed_when: no
 
-  - name: Setting hostname on Linux	
-    hostname: name={{ alias }}		
+  - name: Setting hostname on Linux
+    hostname: name={{ alias }}
     when: alias is defined and ansible_system == "Linux"
     changed_when: no
   become: yes

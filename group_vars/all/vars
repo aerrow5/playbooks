@@ -8,3 +8,12 @@ root_authorized_keys: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCX5NmP23FhXZ+YiV3un
 domain: signet
 resolvers:
   - 10.0.3.1
+
+ssmtp_dest_email: "{{ vault_ssmtp_dest_email }}"
+ssmtp_usestarttls: true
+ssmtp_hostname: "{{ ansible_hostname }}"
+ssmtp_mailhub_host: smtp.gmail.com
+ssmtp_mailhub_port: 587
+ssmtp_auth_user: "{{ vault_ssmtp_auth_user }}"
+ssmtp_auth_pass: "{{ vault_ssmtp_auth_pass }}"
+

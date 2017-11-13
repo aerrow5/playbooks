@@ -1,0 +1,9 @@
+root={{ ssmtp_dest_email }}
+rewriteDomain=
+UseSTARTTLS={% if ssmtp_usestarttls %}YES{% else %}NO{% endif %}
+
+hostname={{ ssmtp_hostname }}
+mailhub={{ ssmtp_mailhub_host }}:{{ ssmtp_mailhub_port }}
+AuthUser={{ ssmtp_auth_user }}
+AuthPass={{ ssmtp_auth_pass }}
+FromLineOverride=YES

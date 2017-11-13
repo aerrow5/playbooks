@@ -3,8 +3,7 @@
   become: true
   roles:
     - common
-    - openvpn
-    - { role: syncthing, tags: syncthing }
+    - { role: ssmtp, tags: ssmtp }
   tasks:
     - block:
         - name: Copy update_iptables file

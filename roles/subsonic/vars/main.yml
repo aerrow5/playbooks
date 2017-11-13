@@ -1,4 +1,4 @@
-subsonic_ver: '6.1'
+subsonic_ver: '6.1.3'
 subsonic_url: 'http://subsonic.org/download/subsonic-{{ subsonic_ver }}.deb'
-subsonic_sha256: '1ef0b36e6807d476f059456902b661d858ff4ceed8bc2573b6b7b807a476d0a0'
+subsonic_sha256: '143e5608219271eaafc0fc444eb0110df7e6390c7cc2767d25f2d65d8b0dc0ab'
 

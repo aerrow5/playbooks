@@ -2,8 +2,9 @@
   remote_user: piranha
   become: true
   roles:
-    - common
+    - { role: common, tags: common }
     - { role: ssmtp, tags: ssmtp }
+    - { role: docker, tags: docker }
   tasks:
     - block:
         - name: Copy update_iptables file

@@ -1,4 +1,5 @@
 - hosts: syncthing_relay
   roles:
-    - common
+    - { role: common, tags: common }
     - { role: ssmtp, tags: ssmtp }
+    - { role: docker, tags: docker }

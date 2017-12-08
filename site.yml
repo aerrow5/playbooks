@@ -1,6 +1,5 @@
 # file: site.yml
 - include: update_packages.yml
-- include: enable_autoupdate.yml
 - include: setup_consul.yml
 - include: setup_kim.yml
 - include: setup_pimon.yml

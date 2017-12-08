@@ -1,5 +1,5 @@
 # file: production
-[smartos]
+[smartos_hypervisor]
 smartos.signet
 
 ## DMZ
@@ -50,8 +50,8 @@ switch.signet
 [dbserver]
 dbserver.signet
 
-[ldap]
-ldap.signet
+[objectstore]
+objectstore.signet
 
 [influxdb]
 influxdb.signet
@@ -87,7 +87,7 @@ radius
 netflow
 switch
 dbserver
-ldap
+objectstore
 influxdb
 logging
 pimon

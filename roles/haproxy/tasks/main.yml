@@ -12,7 +12,7 @@
   become: yes
 
 - name: Install haproxy
-  pkgin:
+  yum:
     name: haproxy
     state: present
     update_cache: yes
@@ -44,3 +44,26 @@
     state: started
     enabled: yes
   become: yes
+
+- name: Download haproxy exporter
+  get_url:
+    url: https://github.com/prometheus/haproxy_exporter/releases/download/v{{ haproxy_exporter_version }}/haproxy_exporter-{{ haproxy_exporter_version }}.linux-amd64.tar.gz
+    dest: /root/haproxy_exporter-{{ haproxy_exporter_version }}.linux-amd64.tar.gz
+  become: yes
+
+- name: Extract haproxy exporter
+  unarchive:
+    remote_src: true
+    src: haproxy_exporter-{{ haproxy_exporter_version }}.linux-amd64.tar.gz
+    dest: /root/
+  become: yes
+
+- name: Setup haproxy exporter on startup
+  lineinfile:
+    path: /etc/rc.local
+    regexp: '^/root/haproxy_exporter'
+    insertbefore: 'exit 0'
+    line: '/root/haproxy_exporter-{{ haproxy_exporter_version }}.linux-amd64/haproxy_exporter --haproxy.scrape-uri="http://{{ haproxy_stats_user }}:{{ haproxy_stats_pass }}@localhost:8082/haproxy?stats;csv" &'
+  become: yes
+
+

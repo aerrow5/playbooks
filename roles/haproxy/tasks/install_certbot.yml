@@ -1,28 +1,20 @@
-- name: Install python-pip
-  package:
-    name: "{{ item }}"
-    state: present
-  become: yes
-  with_items:
-    - py27-pip
-    - gcc49
-
-- name: Install certbot from pip
-  pip:
-    name: certbot
-    state: present
+- name: Download certbot-auto
+  get_url:
+    url: https://raw.githubusercontent.com/certbot/certbot/master/certbot-auto
+    dest: /root/certbot-auto
+    mode: 0755
   become: yes
 
 - name: Create invalid tmp cert/key to start haproxy (to bootstrap new haproxy install)
   shell: "{{ item }}"
   args:
     chdir: /tmp
-    creates: /opt/local/etc/haproxy.pem
+    creates: "{{ haproxy_cb_dest_bundle }}"
   with_items:
     - "openssl genrsa -out server.key 2048"
     - "openssl req -new -key server.key -out server.csr -subj '/C=GB/ST=London/L=London/O=Global Security/OU=IT Department/CN=example.com'"
     - "openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt"
-    - "cat server.crt server.key > /opt/local/etc/haproxy.pem"
+    - "cat server.crt server.key > {{ haproxy_cb_dest_bundle }}"
   become: yes
 
 - name: Ensure haproxy started
@@ -32,14 +24,13 @@
   become: yes
 
 - name: Create certbot certs if needed
-  command: "certbot {{ haproxy_cb_certonly_flags }}"
+  command: "/root/certbot-auto {{ haproxy_cb_certonly_flags }}"
   become: yes
 
 - name: Setup certbot crontab if needed
   cron: name="Autorenew certbot"
-        minute="0"
-        hour="*/12"
-        job="certbot {{ haproxy_cb_renew_flags }}"
+        special_time="daily"
+        job="/root/certbot-auto {{ haproxy_cb_renew_flags }}"
         cron_file=certbot
         user="root"
   become: yes

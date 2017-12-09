@@ -1,11 +1,10 @@
 ansible_user: root
-ansible_python_interpreter: /opt/local/bin/python
 
-image_name: base-64-lts
+image_name: centos-7
 cpu_cap: 200
 max_phy_mem: 512
 quota: 5
-brand: joyent
+brand: lx
 alias: haproxy
 
 haproxy_cb_email: andrewklaus@gmail.com

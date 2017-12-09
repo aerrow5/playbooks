@@ -27,7 +27,7 @@
 
   - name: Enable SCL Repo for CentOS
     yum:
-      name: centos-release-SCL
+      name: centos-release-scl
       state: present
     when: ansible_distribution == "CentOS"
 

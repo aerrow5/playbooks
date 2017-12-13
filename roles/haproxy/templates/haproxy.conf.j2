@@ -11,8 +11,8 @@ global
   nbproc      1
   daemon
   tune.ssl.default-dh-param {{ haproxy_dhparam }}
-  ssl-default-bind-options no-sslv3 no-tls-tickets force-tlsv12
-  ssl-default-bind-ciphers AES128+EECDH:AES128+EDH
+  ssl-default-bind-options no-tls-tickets ssl-min-ver TLSv1.2
+  ssl-default-bind-ciphers EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH
 
 
 defaults
@@ -55,7 +55,7 @@ frontend https-in
     option http-server-close
     option httpclose
 
-    bind 127.0.0.1:19443 ssl crt {{ haproxy_cb_dest_bundle }} ciphers AES128+EECDH:AES128+EDH force-tlsv12 no-sslv3 accept-proxy
+    bind 127.0.0.1:19443 ssl crt {{ haproxy_cb_dest_bundle }} accept-proxy
 
     rspadd Strict-Transport-Security:\ max-age=31536000;\ includeSubDomains;\ preload
     capture request header User-agent len 100

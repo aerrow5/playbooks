@@ -4,7 +4,7 @@ silk_binary_only: true
 
 
 image_name: centos-7
-quota: 200
+quota: 300
 max_phy_mem: 1536
 brand: lx
 alias: flowbat

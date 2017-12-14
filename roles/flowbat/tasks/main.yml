@@ -19,28 +19,27 @@
     - curl
     - nodejs
     - npm
+    - gcc-c++
   become: yes
 
 - name: Install npm packages
   npm:
-    name: meteorite
+    name: "{{ item }}"
     global: yes
     state: present
   become: yes
+  with_items:
+    - meteorite
 
 # Run block as flowbat user
 - block:
-  - name: clean git repo (ansible bug)
-    command: git reset HEAD --hard
-    args:
-      chdir: /home/flowbat/FlowBAT
-
   - name: git clone flowbat repo
     git:
       repo: https://github.com/chrissanders/FlowBAT.git
       dest: /home/flowbat/FlowBAT
       clone: yes
       update: yes
+      force: yes
 
   - name: download meteor install
     get_url:
@@ -50,6 +49,15 @@
 
   - name: run meteor install
     command: /home/flowbat/meteor.sh
+
+  - name: Install local packages
+    npm:
+      name: "{{ item }}"
+      state: present
+      path: /home/flowbat/FlowBAT
+    with_items:
+      - babel-runtime
+      - bcrypt
 
   # - name: copy flowbat settings template
   #   copy:

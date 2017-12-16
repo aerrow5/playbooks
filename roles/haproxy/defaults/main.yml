@@ -15,7 +15,7 @@ haproxy_stats_pass: stats
 
 # Certbot vars
 haproxy_cb_test: False
-haproxy_cb_keysize: 4096
+haproxy_cb_keysize: 2048
 haproxy_cb_pref_challenge: tls-sni-01
 haproxy_cb_tls_bind_addr: 127.0.0.1
 haproxy_cb_tls_bind_port: 18443

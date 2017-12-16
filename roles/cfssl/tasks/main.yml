@@ -1,0 +1,5 @@
+- name: Install golang
+  yum:
+    name: golang
+    update_cache: yes
+  become: yes

@@ -1,0 +1,4 @@
+- hosts: cfssl
+  roles:
+    - common
+    - cfssl

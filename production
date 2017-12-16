@@ -53,8 +53,8 @@ dbserver.signet
 [objectstore]
 objectstore.signet
 
-[influxdb]
-influxdb.signet
+[cfssl]
+cfssl.signet
 
 [logging]
 logging.signet
@@ -88,7 +88,7 @@ netflow
 switch
 dbserver
 objectstore
-influxdb
+cfssl
 logging
 pimon
 kim

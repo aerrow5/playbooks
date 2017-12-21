@@ -35,10 +35,7 @@
     shell: echo "exit 101" > /usr/sbin/policy-rc.d creates=/usr/sbin/policy-rc.d
     when: ansible_os_family == "Debian"
 
-  - name: Enable debian auto-updates
-    apt:
-      name: unattended-upgrades
-    when: ansible_os_family == "Debian"
+  - import_tasks: auto_updates.yml
 
   - name: Install common packages
     package:

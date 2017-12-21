@@ -1,0 +1,42 @@
+- name: Enable debian auto-updates
+  apt:
+    name: unattended-upgrades
+    update_cache: yes
+  become: yes
+  when: ansible_os_family == "Debian"
+
+- name: Copy auto-upgrade template (apt)
+  template:
+    src: apt-20auto-upgrades.j2
+    dest: /etc/apt/apt.conf.d/20auto-upgrades
+  become: yes
+  when: ansible_os_family == "Debian"
+
+- name: Ensure yum fully updates
+  yum:
+    name: yum
+    state: latest
+    update_cache: yes
+  become: yes
+  when: ansible_distribution == "CentOS"
+
+- name: Install yum-cron
+  yum:
+    name: yum-cron
+  become: yes
+  when: ansible_distribution == "CentOS"
+
+- name: Copy yum-cron template
+  template:
+    src: yum-cron.conf.j2
+    dest: /etc/yum/yum-cron.conf
+  become: yes
+  when: ansible_distribution == "CentOS"
+
+- name: Enable yum-cron service
+  service:
+    name: yum-cron
+    state: started
+    enabled: yes
+  become: yes
+  when: ansible_distribution == "CentOS"

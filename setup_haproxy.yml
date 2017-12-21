@@ -1,4 +1,5 @@
 - hosts: haproxy
   roles:
-    - common
+    - { role: common, tags: common }
+    - rsyslog_server
     - haproxy

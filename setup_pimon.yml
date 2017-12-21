@@ -1,9 +1,4 @@
 - hosts: pimon
   roles:
-    - common
-    - { role: syncthing, tags: syncthing }
-    - cups_server
-    - consul_server
-    - ups
-    - pxeserver
+    - { role: common, tags: common }
     - rsyslog_server

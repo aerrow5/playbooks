@@ -1,6 +1,6 @@
 - hosts: owncloud
   roles:
-    - common
+    - { role: common, tags: common }
   tasks:
     - name: Adding https apt support
       package: name=apt-transport-https state=present

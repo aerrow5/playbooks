@@ -1,4 +1,4 @@
 - hosts: transmission
   roles:
-    - common
+    - { role: common, tags: common }
     - transmission

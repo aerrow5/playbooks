@@ -1,5 +1,5 @@
 - hosts: samba
   roles:
-    - common
+    - { role: common, tags: common }
     - samba
     - samba_swift_backup

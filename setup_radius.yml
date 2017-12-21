@@ -1,4 +1,4 @@
 - hosts: radius
   roles:
-      - common
+      - { role: common, tags: common }
       - radius_server

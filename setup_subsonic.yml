@@ -1,4 +1,4 @@
 - hosts: subsonic
   roles:
-    - common
+    - { role: common, tags: common }
     - subsonic

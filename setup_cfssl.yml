@@ -1,4 +1,4 @@
 - hosts: cfssl
   roles:
-    - common
+    - { role: common, tags: common }
     - cfssl

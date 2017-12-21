@@ -1,4 +1,4 @@
 - hosts: git
   roles:
-    - common
+    - { role: common, tags: common }
     - git_server

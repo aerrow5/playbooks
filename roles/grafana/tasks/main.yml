@@ -1,12 +1,28 @@
-- name: Update packages
-  yum: name=* state=latest
-  tags: update_packages
-- name: Add grafana key
-  rpm_key: state=present key=https://grafanarel.s3.amazonaws.com/RPM-GPG-KEY-grafana
-- name: Add grafana repo
-  template: src=grafana.repo.j2 dest=/etc/yum.repos.d/grafana.repo owner=root group=root
-- name: Install grafana
-  package: name=grafana state=present
+- name: Copy Grafana yum repo
+  copy:
+    src: grafana.yum
+    dest: /etc/yum.repos.d/grafana.repo
+  become: yes
+
+- name: Copy PGP keys
+  rpm_key:
+    state: present
+    key: "{{ item }}"
+  become: yes
+  with_items:
+    - "https://packagecloud.io/gpg.key"
+    - "https://grafanarel.s3.amazonaws.com/RPM-GPG-KEY-grafana"
+
+- name: Ensure Grafana installed
+  yum:
+    name: grafana
+    state: present
+    update_cache: yes
+  become: yes
+
 - name: Enable grafana service
-  service: name=grafana-server state=running enabled=yes
+  service:
+    name: grafana-server
+    state: started
+    enabled: yes
 

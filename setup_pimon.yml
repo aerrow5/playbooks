@@ -1,4 +1,5 @@
 - hosts: pimon
   roles:
     - { role: common, tags: common }
-    - rsyslog_server
+    - { role: cups_server, tags: cups }
+    - { role: precurse.pi_docker_images, tags: docker }

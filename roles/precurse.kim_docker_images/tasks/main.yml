@@ -1,0 +1,125 @@
+- name: Ensure Ubuntu docker-py not installed
+  apt:
+    name: python-docker
+    state: absent
+  become: yes
+
+- name: Install python-pip
+  apt:
+    name: python-pip
+    state: present
+  become: yes
+
+- name: Install docker-py from pip
+  pip:
+    name: docker-py
+    state: present
+  become: yes
+
+- name: Fetch docker images
+  docker_image:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - linuxserver/radarr
+    - linuxserver/sonarr
+    - linuxserver/transmission
+    - plexinc/pms-docker
+    - precurse/syncthing
+    - precurse/syncthing-relay
+    - kylemanna/openvpn
+  become: yes
+
+- name: Create docker volumes
+  docker_volume:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - syncthing_config
+    - sonarr_config
+    - radarr_config
+    - transmission_config
+    - plex_config
+    # - ovpn-data-tcp443
+    # - ovpn-data
+  become: yes
+
+- name: Ensure syncthing container created
+  docker_container:
+    name: syncthing
+    image: precurse/syncthing
+    state: started
+    restart_policy: unless-stopped
+    published_ports:
+      - "127.0.0.1:8384:8384"
+      - "22000:22000"
+      - "21027:21027/udp"
+    volumes:
+      - syncthing_config:/var/syncthing
+      - /home/piranha/syncthing:/data
+  become: yes
+
+- name: Ensure radarr container created
+  docker_container:
+    name: radarr
+    image: linuxserver/radarr
+    state: started
+    restart_policy: unless-stopped
+    published_ports:
+      - "127.0.0.1:7878:7878"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /home/media:/media
+      - radarr_config:/config
+    links:
+      - transmission:transmission
+      - plex:plexmediaserver
+  become: yes
+
+- name: Ensure sonarr container created
+  docker_container:
+    name: sonarr
+    image: linuxserver/sonarr
+    state: started
+    restart_policy: unless-stopped
+    published_ports:
+      - "127.0.0.1:8989:8989"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /home/media:/media
+      - sonarr_config:/config
+    links:
+      - transmission:transmission
+      - plex:plexmediaserver
+  become: yes
+
+- name: Ensure transmission container created
+  docker_container:
+    name: transmission
+    image: linuxserver/transmission
+    state: started
+    restart_policy: unless-stopped
+    published_ports:
+      - "127.0.0.1:9091:9091"
+      - "51413:51413/tcp"
+      - "51413:51413/udp"
+    volumes:
+      - /home/media/downloads:/media/downloads
+      - /home/media/watch:/watch
+      - transmission_config:/config
+  become: yes
+
+- name: Ensure plex container created
+  docker_container:
+    name: plex
+    image: plexinc/pms-docker
+    state: started
+    restart_policy: unless-stopped
+    published_ports:
+      - "32400:32400"
+    volumes:
+      - /home/media/movies:/media/movies
+      - /home/media/tv:/media/tv
+      - plex_config:/config
+  become: yes
+

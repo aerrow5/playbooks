@@ -1,0 +1,56 @@
+- name: Clone docker build repo
+  git:
+    repo: https://github.com/precurse/docker-stuff
+    dest: "{{ docker_repo_path }}"
+    update: yes
+    force: yes
+
+- name: Ensure docker-py installed
+  apt:
+    name: python-docker
+    state: present
+    cache_valid_time: 3600
+  become: yes
+
+- name: Build docker images
+  docker_image:
+    path: "{{ docker_repo_path }}/{{ item }}"
+    name: "precurse/{{ item }}"
+  become: yes
+  with_items:
+    - networkupstools
+    - smartospxe
+    - syncthing
+    - tftpd
+
+- name: Create tftpd container
+  docker_container:
+    name: tftpd
+    image: precurse/tftpd
+    state: started
+    restart_policy: unless-stopped
+    published_ports:
+      - "69:69/udp"
+  become: yes
+
+- name: Create smartospxe container
+  docker_container:
+    name: smartospxe
+    image: precurse/smartospxe
+    state: started
+    restart_policy: unless-stopped
+    published_ports:
+      - "80:80/tcp"
+  become: yes
+
+- name: Create networkupstools container
+  docker_container:
+    name: networkupstools
+    image: precurse/networkupstools
+    state: started
+    restart_policy: unless-stopped
+    published_ports:
+      - "3493:3493/tcp"
+    devices:
+      - /dev/bus/usb/001/004
+  become: yes

@@ -1,33 +1,32 @@
 - name: Install cups
-  pacman:
-    name={{ item }}
-    update_cache=yes
-    state=present
+  apt:
+    name: "{{ item }}"
+    cache_valid_time: 3600
+    state: present
   with_items:
     - cups
-    - ghostscript
-    - gsfonts
+    - google-cloud-print-connector
   become: yes
 
 - name: Configure cupsd.conf
   template:
-    src=templates/cupsd.conf.j2
-    dest=/etc/cups/cupsd.conf
+    src: templates/cupsd.conf.j2
+    dest: /etc/cups/cupsd.conf
   become: yes
   notify: restart cups
 
 - name: Ensure username part of sys group
   user:
-    name=alarm
-    groups=sys
+    name: "{{ ansible_user }}"
+    groups: lpadmin
   become: yes
 
 - name: Start services
   service:
-    name={{ item }}
-    state=started
-    enabled=yes
+    name: "{{ item }}"
+    state: started
+    enabled: yes
   with_items:
-    - org.cups.cupsd
-    - cups-browsed
+    - cups.service
+    - cups-browsed.service
   become: yes

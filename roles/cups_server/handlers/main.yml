@@ -1,4 +1,5 @@
 - name: restart cups
   service:
-    name=org.cups.cupsd
-    state=restarted
+    name: cups.service
+    state: restarted
+  become: yes

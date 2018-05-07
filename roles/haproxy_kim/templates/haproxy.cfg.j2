@@ -58,10 +58,12 @@ frontend frontend_ip
   acl trans_path url_beg /transmission
   acl sonarr_path url_beg /sonarr
   acl radarr_path url_beg /radarr
+  acl minio_path url_beg /minio
 
   use_backend transmission if trans_path
   use_backend sonarr if sonarr_path
   use_backend radarr if radarr_path
+  use_backend minio if minio_path
 
   default_backend syncthing
 
@@ -102,6 +104,12 @@ backend transmission
   option                  httplog
   option                  forwardfor # This sets X-Forwarded-For
   server transmission localhost:9091
+
+backend minio
+  mode http
+  option                  httplog
+  option                  forwardfor # This sets X-Forwarded-For
+  server minio localhost:9000
 
 backend ssh
     mode   tcp

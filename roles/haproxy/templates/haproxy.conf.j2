@@ -71,13 +71,6 @@ backend letsencrypt-tls01
     option tcplog
     server letsencrypt {{ haproxy_cb_tls_bind_addr }}:{{ haproxy_cb_tls_bind_port }}
 
-listen syncthing
-    mode tcp
-    option tcplog
-    bind {{ haproxy_bind_addr }}:22000
-
-    server syncthing syncthing.dmz:22000
-
 listen transmission
     mode tcp
     bind {{ haproxy_bind_addr }}:51413

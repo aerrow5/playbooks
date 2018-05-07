@@ -28,6 +28,7 @@
     - precurse/syncthing
     - precurse/syncthing-relay
     - kylemanna/openvpn
+    - minio/minio
   become: yes
 
 - name: Create docker volumes
@@ -149,4 +150,20 @@
     volumes:
       - syncthing_relay_config:/var/syncthing-relay
       - /home/piranha/syncthing:/data
+  become: yes
+
+- name: Ensure minio container created
+  docker_container:
+    name: minio
+    image: minio/minio
+    command: server /data
+    state: started
+    restart_policy: unless-stopped
+    published_ports:
+      - "127.0.0.1:9000:9000"
+    volumes:
+      - /home/media:/data
+    env:
+      MINIO_ACCESS_KEY: "{{ kim_minio_access_key }}"
+      MINIO_SECRET_KEY: "{{ kim_minio_secret_key }}"
   become: yes

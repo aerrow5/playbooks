@@ -1,0 +1,14 @@
+[[source]]
+verify_ssl = true
+name = "pypi"
+url = "https://pypi.org/simple"
+
+[packages]
+ansible = "*"
+docker-py = "*"
+dnspython = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "2.7"

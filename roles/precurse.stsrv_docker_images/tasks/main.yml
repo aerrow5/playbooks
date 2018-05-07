@@ -1,0 +1,46 @@
+- name: Ensure Ubuntu docker-py not installed
+  apt:
+    name: python-docker
+    state: absent
+  become: yes
+
+- name: Install python-pip
+  apt:
+    name: python-pip
+    state: present
+  become: yes
+
+- name: Install docker-py from pip
+  pip:
+    name: docker-py
+    state: present
+  become: yes
+
+- name: Fetch docker images
+  docker_image:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - precurse/syncthing-relay
+  become: yes
+
+- name: Create docker volumes
+  docker_volume:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - syncthing_relay_config
+  become: yes
+
+- name: Ensure syncthing-relay container created
+  docker_container:
+    name: syncthing-relay
+    image: precurse/syncthing-relay
+    state: started
+    restart_policy: unless-stopped
+    published_ports:
+      - "22067:22067"
+      - "22070:22070"
+    volumes:
+      - syncthing_relay_config:/var/syncthing-relay
+  become: yes

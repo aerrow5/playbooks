@@ -36,12 +36,48 @@
     state: present
   with_items:
     - syncthing_config
+    - syncthing_relay_config
     - sonarr_config
     - radarr_config
     - transmission_config
     - plex_config
-    # - ovpn-data-tcp443
-    # - ovpn-data
+  become: yes
+
+- name: Ensure plex container created
+  docker_container:
+    name: plex
+    image: plexinc/pms-docker
+    state: started
+    restart_policy: unless-stopped
+    published_ports:
+      - "32400:32400"
+    volumes:
+      - /home/media/movies:/media/movies
+      - /home/media/tv:/media/tv
+      - plex_config:/config
+    env:
+      PLEX_UID: 911
+      PLEX_GID: 911
+  become: yes
+
+- name: Ensure transmission container created
+  docker_container:
+    name: transmission
+    image: linuxserver/transmission
+    state: started
+    restart_policy: unless-stopped
+    published_ports:
+      - "127.0.0.1:9091:9091"
+      - "51413:51413/tcp"
+      - "51413:51413/udp"
+    volumes:
+      - /home/media/downloads:/media/downloads
+      - /home/media/watch:/watch
+      - transmission_config:/config
+    env:
+      TZ: America/Edmonton
+      PUID: 911
+      PGID: 911
   become: yes
 
 - name: Ensure syncthing container created
@@ -74,6 +110,10 @@
     links:
       - transmission:transmission
       - plex:plexmediaserver
+    env:
+      TZ: America/Edmonton
+      PUID: 911
+      PGID: 911
   become: yes
 
 - name: Ensure sonarr container created
@@ -91,35 +131,22 @@
     links:
       - transmission:transmission
       - plex:plexmediaserver
+    env:
+      TZ: America/Edmonton
+      PUID: 911
+      PGID: 911
   become: yes
 
-- name: Ensure transmission container created
+- name: Ensure syncthing-relay container created
   docker_container:
-    name: transmission
-    image: linuxserver/transmission
+    name: syncthing-relay
+    image: precurse/syncthing-relay
     state: started
     restart_policy: unless-stopped
     published_ports:
-      - "127.0.0.1:9091:9091"
-      - "51413:51413/tcp"
-      - "51413:51413/udp"
+      - "22067:22067"
+      - "22070:22070"
     volumes:
-      - /home/media/downloads:/media/downloads
-      - /home/media/watch:/watch
-      - transmission_config:/config
+      - syncthing_relay_config:/var/syncthing-relay
+      - /home/piranha/syncthing:/data
   become: yes
-
-- name: Ensure plex container created
-  docker_container:
-    name: plex
-    image: plexinc/pms-docker
-    state: started
-    restart_policy: unless-stopped
-    published_ports:
-      - "32400:32400"
-    volumes:
-      - /home/media/movies:/media/movies
-      - /home/media/tv:/media/tv
-      - plex_config:/config
-  become: yes
-

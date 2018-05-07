@@ -3,3 +3,4 @@
     - { role: common, tags: common }
     - { role: ssmtp, tags: ssmtp }
     - { role: docker, tags: docker }
+    - { role: precurse.stsrv_docker_images, tags: docker }

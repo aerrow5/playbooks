@@ -1,28 +1,8 @@
 - hosts: kim
-  remote_user: piranha
   become: true
   roles:
     - { role: common, tags: common }
+    - { role: haproxy_kim, tags: haproxy }
     - { role: ssmtp, tags: ssmtp }
     - { role: docker, tags: docker }
-  tasks:
-    - block:
-        - name: Copy update_iptables file
-          copy:
-            src: files/update_iptables.bash
-            dest: /root/update_iptables.bash
-            owner: root
-            group: root
-            mode: 0700
-          become: yes
-        - name: Test update_iptables
-          command: /root/update_iptables.bash
-        - name: Setup crontab
-          cron: name="update iptables"
-            minute="0,30"
-            job="/root/update_iptables.bash"
-            cron_file=update_iptables
-            user="root"
-      become_user: root
-      become: yes
-      tags: update_iptables
+    - { role: precurse.kim_docker_images, tags: docker }

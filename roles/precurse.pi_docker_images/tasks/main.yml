@@ -5,19 +5,46 @@
     update: yes
     force: yes
 
-- name: Ensure docker-py installed
+- name: Remove system docker-py
   apt:
     name: python-docker
+    state: absent
+  become: yes
+
+- name: Install python-pip
+  apt:
+    name: python-pip
     state: present
     cache_valid_time: 3600
   become: yes
+
+- name: Install docker-py
+  pip:
+    name: docker-py
+    state: present
+  become: yes
+
+- name: Create volume(s)
+  docker_volume:
+    name: syncthing_config
+  become: yes
+
+# - name: Download alpine rootfs
+#   command: ./fetch.sh
+#   args:
+#     chdir: "{{ docker_repo_path }}/alpine-armhf"
+#     creates: "{{ docker_repo_path }}/alpine-armhf/rootfs.tar.gz"
 
 - name: Build docker images
   docker_image:
     path: "{{ docker_repo_path }}/{{ item }}"
     name: "precurse/{{ item }}"
+    buildargs:
+      ARCH: arm
+
   become: yes
   with_items:
+    # - alpine-armhf
     - networkupstools
     - smartospxe
     - syncthing
@@ -53,4 +80,16 @@
       - "3493:3493/tcp"
     devices:
       - /dev/bus/usb/001/004
+  become: yes
+
+- name: Create syncthing container
+  docker_container:
+    name: syncthing
+    image: precurse/syncthing
+    state: started
+    restart_policy: unless-stopped
+    network_mode: host
+    volumes:
+      - syncthing_config:/var/syncthing
+      - /home/piranha/syncthing:/data
   become: yes

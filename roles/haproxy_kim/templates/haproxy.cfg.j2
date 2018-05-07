@@ -1,0 +1,114 @@
+global
+  log /dev/log      local0
+  log /dev/log      local1 notice
+  chroot /var/lib/haproxy
+  stats socket /run/haproxy/admin.sock mode 660 level admin
+  stats timeout 30s
+  user haproxy
+  group haproxy
+  daemon
+
+  ca-base /etc/ssl/certs
+  crt-base /etc/ssl/private
+
+  tune.ssl.default-dh-param 2048
+  ssl-default-bind-options no-sslv3
+  ssl-default-bind-ciphers EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH
+
+
+defaults
+  log     global
+  mode    http
+  option  httplog
+  option  dontlognull
+  stats   enable
+  timeout connect 5000
+  timeout client  50000
+  timeout server  50000
+  errorfile 400 /etc/haproxy/errors/400.http
+  errorfile 403 /etc/haproxy/errors/403.http
+  errorfile 408 /etc/haproxy/errors/408.http
+  errorfile 500 /etc/haproxy/errors/500.http
+  errorfile 502 /etc/haproxy/errors/502.http
+  errorfile 503 /etc/haproxy/errors/503.http
+  errorfile 504 /etc/haproxy/errors/504.http
+
+
+listen stats
+  bind 127.0.0.1:8082
+  mode http
+  stats enable
+  stats uri /
+  stats realm private
+
+frontend frontend_ip
+  bind 0.0.0.0:443 ssl crt /etc/haproxy/haproxy.pem
+  bind :::443 ssl crt /etc/haproxy/haproxy.pem
+
+  bind 0.0.0.0:80 transparent
+  bind :::80 transparent
+
+  acl white_list src {{ kim_acl_ip }}/32
+  tcp-request content accept if white_list
+  tcp-request content reject
+
+  # Always redirect to https
+  http-request redirect scheme https code 301 if !{ ssl_fc }
+
+  acl trans_path url_beg /transmission
+  acl sonarr_path url_beg /sonarr
+  acl radarr_path url_beg /radarr
+
+  use_backend transmission if trans_path
+  use_backend sonarr if sonarr_path
+  use_backend radarr if radarr_path
+
+  default_backend syncthing
+
+listen hastats_ip
+  bind 0.0.0.0:19101
+  acl white_list src {{ kim_acl_ip }}/32
+  server haexport localhost:9101
+  tcp-request content accept if white_list
+  tcp-request content reject
+
+listen sys_stats_ip
+  bind 0.0.0.0:19100
+  acl white_list src {{ kim_acl_ip }}/32
+  server haexport localhost:9100
+  tcp-request content accept if white_list
+  tcp-request content reject
+
+backend syncthing
+  mode http
+  option                  httplog
+  option                  forwardfor # This sets X-Forwarded-For
+  server sonarr localhost:8384
+
+backend sonarr
+  mode http
+  option                  httplog
+  option                  forwardfor # This sets X-Forwarded-For
+  server sonarr localhost:8989
+
+backend radarr
+  mode http
+  option                  httplog
+  option                  forwardfor # This sets X-Forwarded-For
+  server radarr localhost:7878
+
+backend transmission
+  mode http
+  option                  httplog
+  option                  forwardfor # This sets X-Forwarded-For
+  server transmission localhost:9091
+
+backend ssh
+    mode   tcp
+    option tcplog
+    server ssh localhost:22
+
+backend openvpn
+    mode   tcp
+    option tcplog
+    server openvpn localhost:1443

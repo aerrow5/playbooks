@@ -1,4 +1,4 @@
-admin_group: adm
+admin_groups: adm
 
 autoboot: "true"
 hypervisor_host: smartos.signet

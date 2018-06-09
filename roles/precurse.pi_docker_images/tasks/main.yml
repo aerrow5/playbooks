@@ -79,7 +79,7 @@
     published_ports:
       - "3493:3493/tcp"
     devices:
-      - /dev/bus/usb/001/004
+      - /dev/bus/usb/001/005
   become: yes
 
 - name: Create syncthing container

@@ -1,11 +1,8 @@
 - name: Install cups
   apt:
-    name: "{{ item }}"
+    name: ['cups', 'google-cloud-print-connector']
     cache_valid_time: 3600
     state: present
-  with_items:
-    - cups
-    - google-cloud-print-connector
   become: yes
 
 - name: Configure cupsd.conf

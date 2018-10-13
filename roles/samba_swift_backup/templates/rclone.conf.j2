@@ -24,3 +24,10 @@ remote = swifty:syncthing
 filename_encryption = standard
 password = {{ os_enc_key }}
 password2 = {{ os_enc_salt }}
+
+[backup-encrypted]
+type = crypt
+remote = swifty:backup
+filename_encryption = standard
+password = {{ os_enc_key }}
+password2 = {{ os_enc_salt }}

@@ -75,4 +75,5 @@
   with_items:
     - { name: pictures, job: '/home/piranha/rclone/rclone copy /media/personal/media/pictures/ photos-encrypted:' }
     - { name: syncthing, job: '/home/piranha/rclone/rclone copy /media/syncthing syncthing-encrypted:'}
+    - { name: backup, job: '/home/piranha/rclone/rclone copy /media/personal/auto_backup backup-encrypted:'}
   tags: cron

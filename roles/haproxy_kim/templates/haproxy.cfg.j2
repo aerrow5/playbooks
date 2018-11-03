@@ -42,15 +42,18 @@ listen stats
   stats realm private
 
 frontend frontend_ip
-  bind 0.0.0.0:443 ssl crt /etc/haproxy/haproxy.pem
-  bind :::443 ssl crt /etc/haproxy/haproxy.pem
+  bind 0.0.0.0:443 ssl crt /etc/haproxy/haproxy.pem ca-file {{ ca_pem_file }} verify optional
+  bind :::443 ssl crt /etc/haproxy/haproxy.pem ca-file {{ ca_pem_file }} verify optional
 
   bind 0.0.0.0:80 transparent
   bind :::80 transparent
 
-  acl white_list src {{ kim_acl_ip }}/32
-  tcp-request content accept if white_list
-  tcp-request content reject
+  {% for ip in kim_acl_ips %}
+  acl white_list src {{ ip }}
+  {% endfor %}
+
+  # Allow white-list and client-cert verified
+  http-request deny unless white_list || { ssl_c_used }
 
   # Always redirect to https
   http-request redirect scheme https code 301 if !{ ssl_fc }
@@ -58,26 +61,37 @@ frontend frontend_ip
   acl trans_path url_beg /transmission
   acl sonarr_path url_beg /sonarr
   acl radarr_path url_beg /radarr
-  acl minio_path url_beg /minio
 
   use_backend transmission if trans_path
   use_backend sonarr if sonarr_path
   use_backend radarr if radarr_path
-  use_backend minio if minio_path
 
   default_backend syncthing
 
 listen hastats_ip
   bind 0.0.0.0:19101
-  acl white_list src {{ kim_acl_ip }}/32
+  {% for ip in kim_acl_ips %}
+  acl white_list src {{ ip }}
+  {% endfor %}
   server haexport localhost:9101
   tcp-request content accept if white_list
   tcp-request content reject
 
 listen sys_stats_ip
   bind 0.0.0.0:19100
-  acl white_list src {{ kim_acl_ip }}/32
+  {% for ip in kim_acl_ips %}
+  acl white_list src {{ ip }}
+  {% endfor %}
   server haexport localhost:9100
+  tcp-request content accept if white_list
+  tcp-request content reject
+
+listen minio_ip
+  bind 0.0.0.0:9001 ssl crt /etc/haproxy/haproxy.pem
+  {% for ip in kim_acl_ips %}
+  acl white_list src {{ ip }}
+  {% endfor %}
+  server minio localhost:9000
   tcp-request content accept if white_list
   tcp-request content reject
 
@@ -104,12 +118,6 @@ backend transmission
   option                  httplog
   option                  forwardfor # This sets X-Forwarded-For
   server transmission localhost:9091
-
-backend minio
-  mode http
-  option                  httplog
-  option                  forwardfor # This sets X-Forwarded-For
-  server minio localhost:9000
 
 backend ssh
     mode   tcp

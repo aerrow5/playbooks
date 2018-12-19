@@ -11,6 +11,15 @@
     dest: "{{ ca_pem_file }}"
   become: yes
 
+- name: Copy haproxy key-crt
+  copy:
+    content: "{{ kim_haproxy_crt + kim_haproxy_key }}"
+    dest: "{{ haproxy_key_file }}"
+    owner: root
+    group: haproxy
+    mode: 0640
+  become: yes
+
 - name: Setup haproxy.cfg
   template:
     src: haproxy.cfg.j2

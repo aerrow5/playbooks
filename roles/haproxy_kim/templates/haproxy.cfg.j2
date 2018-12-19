@@ -42,8 +42,8 @@ listen stats
   stats realm private
 
 frontend frontend_ip
-  bind 0.0.0.0:443 ssl crt /etc/haproxy/haproxy.pem ca-file {{ ca_pem_file }} verify optional
-  bind :::443 ssl crt /etc/haproxy/haproxy.pem ca-file {{ ca_pem_file }} verify optional
+  bind 0.0.0.0:443 ssl crt {{ haproxy_key_file }} ca-file {{ ca_pem_file }} verify optional
+  bind :::443 ssl crt {{ haproxy_key_file }} ca-file {{ ca_pem_file }} verify optional
 
   bind 0.0.0.0:80 transparent
   bind :::80 transparent
@@ -87,7 +87,7 @@ listen sys_stats_ip
   tcp-request content reject
 
 listen minio_ip
-  bind 0.0.0.0:9001 ssl crt /etc/haproxy/haproxy.pem
+  bind 0.0.0.0:9001 ssl crt {{ haproxy_key_file }}
   {% for ip in kim_acl_ips %}
   acl white_list src {{ ip }}
   {% endfor %}

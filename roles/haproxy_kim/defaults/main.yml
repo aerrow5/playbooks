@@ -1,1 +1,3 @@
 ca_pem_file: /usr/local/share/ca-certificates/ca.pem
+
+haproxy_key_file: /etc/haproxy/haproxy-key.pem

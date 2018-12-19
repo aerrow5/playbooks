@@ -17,34 +17,10 @@ ssmtp_mailhub_port: 587
 ssmtp_auth_user: "{{ vault_ssmtp_auth_user }}"
 ssmtp_auth_pass: "{{ vault_ssmtp_auth_pass }}"
 
-kim_acl_ip: "{{ vault_kim_acl_ip }}"
+kim_acl_ips: "{{ vault_kim_acl_ips }}"
 kim_minio_access_key: "{{ vault_kim_minio_access_key }}"
 kim_minio_secret_key: "{{ vault_kim_minio_secret_key }}"
 
-ca_pem: |
-  -----BEGIN CERTIFICATE-----
-  MIIETjCCAzagAwIBAgIBADANBgkqhkiG9w0BAQsFADB4MQswCQYDVQQGEwJDQTEL
-  MAkGA1UECBMCQUIxETAPBgNVBAcTCEVkbW9udG9uMRQwEgYDVQQKEwtBIEtsYXVz
-  IEluYzEfMB0GCSqGSIb3DQEJARYQYW5kcmV3QGFrbGF1cy5jYTESMBAGA1UEAxMJ
-  YWtsYXVzLmNhMB4XDTE2MTIyODA5MDU1NloXDTI2MTIyNjA5MDU1NloweDELMAkG
-  A1UEBhMCQ0ExCzAJBgNVBAgTAkFCMREwDwYDVQQHEwhFZG1vbnRvbjEUMBIGA1UE
-  ChMLQSBLbGF1cyBJbmMxHzAdBgkqhkiG9w0BCQEWEGFuZHJld0Bha2xhdXMuY2Ex
-  EjAQBgNVBAMTCWFrbGF1cy5jYTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC
-  ggEBANHMCOou+WPZdHO2BCH4z3fEWBk4vXR8a6y4QglwUW04Vh9WXqqkRvBT5juH
-  Va4BuOX8z7/0RSCiyXuTCzIk/Eaia86J0HCWKtooVqyLoTDD3NTuiDCjCLQ6h61a
-  GXV+IyrL2ywdlPIIfpR1CHVshCn7RtKAoJuG3gPpBBrorIrv7c4PgCeuOJpHXpC/
-  xMYF8qjROeA6kMqbUw+o3CcAUzlZTc9i9VpeGmu+Vx3YphITEqStd2HIpPKEyBSo
-  kveVp9Xupb7Ubbhxq5J6wXx5HnngPZgNdaVSFCrfrncYUNU6kgIhUeYHoEW1qcop
-  zNpgxNlgqrRGaoFZiUZTL7r/RdsCAwEAAaOB4jCB3zAdBgNVHQ4EFgQUSzGafDqg
-  XEa5Q5fwEQW2FzpuIWQwgaIGA1UdIwSBmjCBl4AUSzGafDqgXEa5Q5fwEQW2Fzpu
-  IWShfKR6MHgxCzAJBgNVBAYTAkNBMQswCQYDVQQIEwJBQjERMA8GA1UEBxMIRWRt
-  b250b24xFDASBgNVBAoTC0EgS2xhdXMgSW5jMR8wHQYJKoZIhvcNAQkBFhBhbmRy
-  ZXdAYWtsYXVzLmNhMRIwEAYDVQQDEwlha2xhdXMuY2GCAQAwDAYDVR0TBAUwAwEB
-  /zALBgNVHQ8EBAMCAQYwDQYJKoZIhvcNAQELBQADggEBADt3O4byN2cOhHfzvwip
-  Ebo1QWloG/h/sgVGjaAxCZx07yTzIrznc3tKL63jppvMYoFgxDiEe/6b3clnJcgS
-  /CJ/ZqrNnGyh6OlkCfp3boklmmD3pc2Muccjyi3+XHpgXD5urc6vnGjHmkX2ClVE
-  CM1n7FxV2Tx4p/L0VL5XKPCiJ1d9d1hsozYCQr+iGZFuHSaodki9xaxabQDoWI61
-  pRtyuKjih7e3O2dFtKFgVLDoIAgweQYmz/eSLVe7xeDdxrFg1shhxdZiQPMp8Qrd
-  Hfs6sa1UQfiORYI0cYRUZRUVXR7H/oZBRrHe/b1UOligL5qttPlpD01HDKxMvX5A
-  2HI=
-  -----END CERTIFICATE-----
+kim_haproxy_crt: "{{ vault_kim_haproxy_crt }}"
+kim_haproxy_key: "{{ vault_kim_haproxy_key }}"
+ca_pem: "{{ vault_ca_pem }}"

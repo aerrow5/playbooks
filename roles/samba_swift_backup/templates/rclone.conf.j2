@@ -3,11 +3,9 @@ type = swift
 user = {{ os_username }}
 key = {{ os_password }}
 auth = {{ os_auth_url }}
-domain = 
-tenant = {{ os_tenant_name }}
-tenant_domain = 
+domain = {{ os_domain }}
+tenant_domain = {{ os_username }}
 region = {{ os_region_name }}
-storage_url = 
 auth_version = {{ os_auth_ver }}
 endpoint_type = {{ os_endpoint_type }}
 
@@ -31,3 +29,18 @@ remote = swifty:backup
 filename_encryption = standard
 password = {{ os_enc_key }}
 password2 = {{ os_enc_salt }}
+
+[pcloud]
+type = pcloud
+client_id = 
+client_secret = 
+token = {{ pcloud_token }}
+
+[pcloud-encrypted]
+type = crypt
+remote = pcloud:crypt_auto
+filename_encryption = standard
+directory_name_encryption = true
+password = {{ pcloud_enc_key }}
+password2 = {{ pcloud_enc_salt }}
+
